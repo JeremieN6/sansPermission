@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "093a13a9f75ed08fef065e00964d6f7a",
+    "content-hash": "bf55aed4ab074e4d3d8086a5af514da6",
     "packages": [
         {
             "name": "amphp/amp",
@@ -3068,52 +3068,6 @@
             "time": "2024-03-23T07:42:40+00:00"
         },
         {
-            "name": "mercuryseries/flashy-bundle",
-            "version": "v5.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mercuryseries/flashy-bundle.git",
-                "reference": "9d89512068c310eb1e3b2670a59197b6a2d67b63"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mercuryseries/flashy-bundle/zipball/9d89512068c310eb1e3b2670a59197b6a2d67b63",
-                "reference": "9d89512068c310eb1e3b2670a59197b6a2d67b63",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3|^8.0",
-                "symfony/config": "^4.4 || ^5.3 || ^6.0",
-                "symfony/dependency-injection": "^4.4 || ^5.3 || ^6.0",
-                "symfony/http-kernel": "^4.4 || ^5.3 || ^6.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^4.4 || ^5.3 || ^6.0"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "MercurySeries\\FlashyBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Honore Hounwanou",
-                    "email": "mercuryseries@gmail.com"
-                }
-            ],
-            "description": "Easy flash notifications in Symfony",
-            "support": {
-                "issues": "https://github.com/mercuryseries/flashy-bundle/issues",
-                "source": "https://github.com/mercuryseries/flashy-bundle/tree/v5.1.0"
-            },
-            "time": "2022-03-27T04:24:03+00:00"
-        },
-        {
             "name": "monolog/monolog",
             "version": "3.6.0",
             "source": {
@@ -4017,6 +3971,65 @@
                 "source": "https://github.com/revoltphp/event-loop/tree/v1.0.6"
             },
             "time": "2023-11-30T05:34:44+00:00"
+        },
+        {
+            "name": "stripe/stripe-php",
+            "version": "v14.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stripe/stripe-php.git",
+                "reference": "cc4108812a0b6db06041e520fe340f6d8ecfeff1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/cc4108812a0b6db06041e520fe340f6d8ecfeff1",
+                "reference": "cc4108812a0b6db06041e520fe340f6d8ecfeff1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stripe\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stripe and contributors",
+                    "homepage": "https://github.com/stripe/stripe-php/contributors"
+                }
+            ],
+            "description": "Stripe PHP Library",
+            "homepage": "https://stripe.com/",
+            "keywords": [
+                "api",
+                "payment processing",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v14.6.0"
+            },
+            "time": "2024-05-09T19:39:17+00:00"
         },
         {
             "name": "symfony/asset",

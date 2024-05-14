@@ -4,4 +4,10 @@
 
 {% block body %}
 
+{% for item in plans %}
+    <a target="_blank" href="{{ item.paymentLink }}">
+        <button>{{item.name}}</button>
+    </a>
+{% endfor %} 
+
 {% endblock %}

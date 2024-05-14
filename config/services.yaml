@@ -6,6 +6,9 @@
 parameters:
     OPENAI_API_KEY: '%env(OPENAI_API_KEY)%'
     app.jwtsecret: '%env(JWT_SECRET)%'
+    stripe_webhook_secret: '%env(resolve:STRIPE_WEBHOOK_SECRET)%'
+    stripe_sk: '%env(resolve:STRIPE_SK)%'
+    stripe_pk: '%env(resolve:STRIPE_PK)%'
 
 services:
     # default configuration for services in *this* file
