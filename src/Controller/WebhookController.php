@@ -121,6 +121,14 @@ class WebhookController extends AbstractController
 					sleep(5);
 				}
 
+                if ($subscription) {
+                    // Vous avez trouvé la subscription, vous pouvez maintenant obtenir son ID
+                    $subscriptionId = $subscription->getId();
+                } else {
+                    $logger->info('Subscription not found in the database');
+                    break;
+                }
+
 				$invoice = new Invoice();
 				$invoice->setStripeId($event->data->object->id);
 				$invoice->setSubscription($subscription);
