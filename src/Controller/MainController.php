@@ -19,4 +19,11 @@ class MainController extends AbstractController
             'plans' => $plans
         ]);
     }
+
+    #[Route('/testenv', name: 'app_testenv')]
+    public function checkEnv(): Response
+    {
+        $openAiApiKey = $this->getParameter('OPENAI_API_KEY');
+        return new Response('<pre>' . print_r($openAiApiKey, true) . '</pre>');
+    }
 }

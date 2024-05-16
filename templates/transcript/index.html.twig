@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TranscriptController!{% endblock %}
+
+{% block body %}
+<h1>Upload Transcript</h1>
+    <form action="{{ path('app_transcript') }}" method="post" enctype="multipart/form-data">
+        <label for="transcript">Choose a transcript file:</label>
+        <input type="file" id="transcript" name="transcript" required>
+        <button type="submit">Upload</button>
+    </form>
+{% endblock %}
