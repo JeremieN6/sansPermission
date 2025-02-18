@@ -9,6 +9,10 @@ parameters:
     stripe_webhook_secret: '%env(resolve:STRIPE_WEBHOOK_SECRET)%'
     stripe_sk: '%env(resolve:STRIPE_SK)%'
     stripe_pk: '%env(resolve:STRIPE_PK)%'
+    youtube_script_path: '%kernel.project_dir%/scripts/youtube_service.py'
+    youtube_api_key: '%env(resolve:YOUTUBE_API_KEY)%'
+    youtube_channel_id: '%env(resolve:YOUTUBE_CHANNEL_ID)%'
+    python_path: '%env(resolve:PYTHON_PATH)%'
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +23,15 @@ services:
     App\Service\OpenAIService:
         arguments:
             $apiKey: '%OPENAI_API_KEY%'
+
+
+    App\Service\YouTubeScriptService:
+        arguments:
+            $pythonPath: 'C:/Users/Ngoyi/AppData/Local/Programs/Python/Python312/python.exe'
+            $scriptPath: '%kernel.project_dir%/scripts/youtube_service.py'
+            $apiKey: '%env(YOUTUBE_API_KEY)%'
+            $channelId: '%env(YOUTUBE_CHANNEL_ID)%'
+            $logger: '@logger'
     
     # Service pour TextPreprocessor
     App\Service\TextPreprocessor: ~
