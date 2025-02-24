@@ -1,0 +1,23 @@
+{% extends '@EasyAdmin/crud/detail.html.twig' %}
+
+{% block main %}
+    {{ parent() }}
+    
+    {% if entity.instance.status == 'TRAINING' %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Le modèle est en cours d'entraînement. Utilisez le bouton "Vérifier le statut" pour mettre à jour son état.
+        </div>
+    {% endif %}
+
+    {% if entity.instance.trainingMetrics %}
+        <div class="card">
+            <div class="card-header">
+                <h3>Métriques d'entraînement</h3>
+            </div>
+            <div class="card-body">
+                <pre>{{ entity.instance.trainingMetrics|json_decode|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %} 

@@ -13,6 +13,9 @@ use Orhanerday\OpenAi\OpenAi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\AIModel;
+use App\Entity\Episodes;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 class OpenAIService
@@ -44,14 +47,19 @@ class OpenAIService
     private $parameterBag;
     private $logger;
     private $entityManager;
+    private string $apiKey;
    
     public function __construct(
         ParameterBagInterface $parameterBag,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EntityManagerInterface $entityManager,
+        string $apiKey
     )
     {
         $this->parameterBag = $parameterBag;
         $this->logger = $logger;
+        $this->entityManager = $entityManager;
+        $this->apiKey = $apiKey;
         $this->client = new Client([
             'base_uri' => 'https://api.openai.com/v1/',
             'headers' => [
@@ -292,5 +300,225 @@ class OpenAIService
             ]);
             throw $e;
         }
+    }
+
+    public function prepareTrainingData(array $episodes): array
+    {
+        $trainingData = [];
+        foreach ($episodes as $episode) {
+            // Découper le transcript en sections plus petites si nécessaire
+            $transcript = $episode->getTranscript();
+            $sections = $this->splitTranscript($transcript);
+            
+            foreach ($sections as $section) {
+                $trainingData[] = [
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Vous êtes un expert en génération de questions basées sur des transcriptions vidéo. Générez des questions pertinentes et leurs réponses.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => "Générez des questions et réponses basées sur cette transcription : $section"
+                        ],
+                        [
+                            'role' => 'assistant',
+                            'content' => "Voici les questions et réponses basées sur la transcription :\n\nQ1: [Question générée]\nR1: [Réponse détaillée]\n\nQ2: [Question générée]\nR2: [Réponse détaillée]"
+                        ]
+                    ]
+                ];
+            }
+        }
+        return $trainingData;
+    }
+
+    private function splitTranscript(string $transcript, int $maxLength = 2000): array
+    {
+        // Découper le transcript en sections plus petites pour respecter les limites de tokens
+        $sections = [];
+        $words = explode(' ', $transcript);
+        $currentSection = '';
+        
+        foreach ($words as $word) {
+            if (strlen($currentSection . ' ' . $word) > $maxLength) {
+                $sections[] = trim($currentSection);
+                $currentSection = $word;
+            } else {
+                $currentSection .= ' ' . $word;
+            }
+        }
+        
+        if (!empty($currentSection)) {
+            $sections[] = trim($currentSection);
+        }
+        
+        return $sections;
+    }
+
+    public function startFineTuning(array $episodes): AIModel
+    {
+        // Créer un nouveau modèle
+        $aiModel = new AIModel();
+        $aiModel->setStatus(AIModel::STATUS_PENDING);
+        
+        // Ajouter les épisodes utilisés pour l'entraînement
+        foreach ($episodes as $episode) {
+            $aiModel->addTrainingEpisode($episode);
+        }
+
+        // Préparer les données d'entraînement
+        $trainingData = $this->prepareTrainingData($episodes);
+
+        try {
+            // Créer le fichier d'entraînement
+            $response = $this->createTrainingFile($trainingData);
+            $fileId = $response['id'];
+
+            // Démarrer le fine-tuning
+            $response = $this->startFineTuningJob($fileId);
+            $aiModel->setModelId($response['id']);
+            $aiModel->setStatus(AIModel::STATUS_TRAINING);
+            
+            $this->entityManager->persist($aiModel);
+            $this->entityManager->flush();
+
+            return $aiModel;
+        } catch (\Exception $e) {
+            $aiModel->setStatus(AIModel::STATUS_ERROR);
+            throw $e;
+        }
+    }
+
+    private function createTrainingFile(array $trainingData): array
+    {
+        // Créer un fichier JSONL temporaire
+        $tempFile = tempnam(sys_get_temp_dir(), 'training_');
+        $jsonlFile = $tempFile . '.jsonl';
+        rename($tempFile, $jsonlFile);
+
+        // Écrire les données au format JSONL
+        $handle = fopen($jsonlFile, 'w');
+        foreach ($trainingData as $data) {
+            fwrite($handle, json_encode($data) . "\n");
+        }
+        fclose($handle);
+
+        try {
+            // Préparer les données multipart
+            $boundary = '----WebKitFormBoundary' . bin2hex(random_bytes(16));
+            
+            $data = '';
+            // Ajouter le champ purpose
+            $data .= "--{$boundary}\r\n";
+            $data .= "Content-Disposition: form-data; name=\"purpose\"\r\n\r\n";
+            $data .= "fine-tune\r\n";
+            
+            // Ajouter le fichier
+            $data .= "--{$boundary}\r\n";
+            $data .= "Content-Disposition: form-data; name=\"file\"; filename=\"training_data.jsonl\"\r\n";
+            $data .= "Content-Type: application/json\r\n\r\n";
+            $data .= file_get_contents($jsonlFile) . "\r\n";
+            $data .= "--{$boundary}--\r\n";
+
+            // Envoyer à l'API OpenAI
+            $client = HttpClient::create();
+            $response = $client->request('POST', 'https://api.openai.com/v1/files', [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->apiKey}",
+                    'Content-Type' => 'multipart/form-data; boundary=' . $boundary,
+                ],
+                'body' => $data
+            ]);
+
+            // Pour le débogage
+            $this->logger->info('Réponse OpenAI:', [
+                'status' => $response->getStatusCode(),
+                'content' => $response->getContent(false)
+            ]);
+
+            return $response->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de l\'envoi du fichier:', [
+                'error' => $e->getMessage(),
+                'file_content' => file_get_contents($jsonlFile)
+            ]);
+            throw $e;
+        } finally {
+            // Nettoyer
+            if (file_exists($jsonlFile)) {
+                unlink($jsonlFile);
+            }
+        }
+    }
+
+    private function startFineTuningJob(string $fileId): array
+    {
+        $client = HttpClient::create();
+        $response = $client->request('POST', 'https://api.openai.com/v1/fine_tuning/jobs', [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiKey}",
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'training_file' => $fileId,
+                'model' => 'gpt-3.5-turbo',
+            ],
+        ]);
+
+        return $response->toArray();
+    }
+
+    public function generateQuestion(string $transcript, ?string $modelId = null): array
+    {
+        $client = HttpClient::create();
+        $endpoint = 'https://api.openai.com/v1/chat/completions';
+        
+        $data = [
+            'model' => $modelId ?? 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => 'Vous êtes un expert en génération de questions basées sur des transcriptions vidéo.'],
+                ['role' => 'user', 'content' => "Générez des questions pertinentes basées sur cette transcription : $transcript"],
+            ],
+            'temperature' => 0.7,
+        ];
+
+        $response = $client->request('POST', $endpoint, [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiKey}",
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $data,
+        ]);
+
+        return $response->toArray();
+    }
+
+    public function checkTrainingStatus(AIModel $model): array
+    {
+        $client = HttpClient::create();
+        $response = $client->request('GET', 'https://api.openai.com/v1/fine_tuning/jobs/' . $model->getModelId(), [
+            'headers' => [
+                'Authorization' => "Bearer {$this->apiKey}",
+            ],
+        ]);
+
+        $status = $response->toArray();
+        
+        // Log pour debug
+        $this->logger->debug('Réponse API OpenAI:', $status);
+        
+        // Mettre à jour le statut du modèle
+        if ($status['status'] === 'succeeded') {
+            $model->setStatus(AIModel::STATUS_COMPLETED);
+            if (isset($status['training_metrics'])) {
+                $model->setTrainingMetrics(json_encode($status['training_metrics']));
+            }
+        } elseif ($status['status'] === 'failed') {
+            $model->setStatus(AIModel::STATUS_ERROR);
+        }
+        
+        $this->entityManager->flush();
+        
+        return $status;
     }
 }

@@ -15,29 +15,11 @@ parameters:
     python_path: '%env(resolve:PYTHON_PATH)%'
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        
-    App\Service\OpenAIService:
-        arguments:
-            $apiKey: '%OPENAI_API_KEY%'
+        autowire: true
+        autoconfigure: true
+        public: true
 
-
-    App\Service\YouTubeScriptService:
-        arguments:
-            $pythonPath: 'C:/Users/Ngoyi/AppData/Local/Programs/Python/Python312/python.exe'
-            $scriptPath: '%kernel.project_dir%/scripts/youtube_service.py'
-            $apiKey: '%env(YOUTUBE_API_KEY)%'
-            $channelId: '%env(YOUTUBE_CHANNEL_ID)%'
-            $logger: '@logger'
-    
-    # Service pour TextPreprocessor
-    App\Service\TextPreprocessor: ~
-
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
         exclude:
@@ -45,5 +27,28 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    # Configuration explicite du YouTubeScriptService
+    App\Service\YouTubeScriptService:
+        public: true
+        bind:
+            $pythonPath: '%python_path%'
+            $scriptPath: '%youtube_script_path%'
+            $apiKey: '%youtube_api_key%'
+
+    # Service pour TextPreprocessor
+    App\Service\TextPreprocessor: ~
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\OpenAIService:
+        bind:
+            $apiKey: '%env(OPENAI_API_KEY)%'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    App\Controller\Admin\:
+        resource: '../src/Controller/Admin/'
+        tags: ['controller.service_arguments']

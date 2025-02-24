@@ -8,6 +8,7 @@ use App\Service\OpenAIService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class TestController extends AbstractController
@@ -26,27 +27,9 @@ class TestController extends AbstractController
     #[Route('/fetch-scripts', name: 'fetch_scripts')]
     public function fetchScripts(): Response
     {
-        $scripts = $this->youTubeScriptService->fetchScripts();
-        $response = $this->openAIService->fineTuneModel($scripts);
+        // Cette route sera modifiée plus tard pour le fine-tuning
         return $this->render('test/fetch_scripts.html.twig', [
-            'response' => $response,
+            'response' => 'Fine-tuning temporairement désactivé',
         ]);
-    }
-
-    #[Route('/test-youtube', name: 'test_youtube')]
-    public function testYoutube(): Response
-    {
-        try {
-            $scripts = $this->youTubeScriptService->fetchScripts();
-            return $this->json([
-                'success' => true,
-                'scripts' => $scripts
-            ]);
-        } catch (\Exception $e) {
-            return $this->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ]);
-        }
     }
 }

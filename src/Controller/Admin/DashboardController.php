@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\AIModel;
 use App\Entity\Answers;
 use App\Entity\Episodes;
 use App\Entity\Invoice;
@@ -56,9 +57,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Quizz', 'fas fa-question', Quizzes::class);
         yield MenuItem::linkToCrud('Questions', 'fas fa-circle-question', Questions::class);
         yield MenuItem::linkToCrud('Bonnes Réponses', 'fas fa-check', Answers::class);
-        yield MenuItem::linkToCrud('Réponse Utilisateur', 'fas fa-users', UserAnswers::class);
-        yield MenuItem::linkToCrud('Réponses Multiples', 'fas fa-layer-group', UserAnswerChoices::class);
         yield MenuItem::linkToCrud('Episodes', 'fas fa-video', Episodes::class);
+        yield MenuItem::linkToCrud('Modèle AI', 'fas fa-brain', AIModel::class);
 
 
         yield MenuItem::section('Abonnements');
@@ -68,5 +68,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Utilisateurs');
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user', Users::class);
+        yield MenuItem::linkToCrud('Réponse Utilisateur', 'fas fa-users', UserAnswers::class);
+        yield MenuItem::linkToCrud('Réponses Multiples', 'fas fa-layer-group', UserAnswerChoices::class);
     }
 }
