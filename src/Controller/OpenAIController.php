@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Episodes;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\OpenAIService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class OpenAIController extends AbstractController
@@ -39,5 +41,24 @@ class OpenAIController extends AbstractController
 
         // Affiche la question générée dans la vue ou retourne une réponse JSON
         return $this->json($generatedQuestion);
+    }
+
+    #[Route('/generate-questions', name: 'generate_questions')]
+    public function generateQuestions(OpenAIService $openAIService, EntityManagerInterface $entityManager): Response
+    {
+       // Récupérer un transcript spécifique depuis la base de données
+       $episode = $entityManager->getRepository(Episodes::class)->find(2); // Remplacez 2 par l'ID de l'épisode souhaité
+       $transcript = $episode->getTranscript();
+
+       // Afficher le transcript pour vérification
+       dump($transcript); // ou utilisez un logger pour enregistrer le transcript
+
+       // Appel à la méthode pour générer des questions
+       $generatedQuestions = $openAIService->generateQuestion($transcript);
+
+       // Retourner les questions générées dans une réponse JSON ou les afficher dans une vue
+       return $this->render('openai/generate_questions.html.twig', [
+           'questions' => $generatedQuestions,
+       ]);
     }
 }
