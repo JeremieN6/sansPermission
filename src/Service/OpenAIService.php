@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\AIModel;
 use App\Entity\Episodes;
 use Symfony\Component\HttpClient\HttpClient;
+use App\Service\TextPreprocessor;
 
 
 class OpenAIService
@@ -468,20 +469,135 @@ class OpenAIService
         return $response->toArray();
     }
 
+    private function logApiCall(string $modelId, string $transcript, array $response): void
+    {
+        $this->logger->info('Appel API OpenAI', [
+            'model_id' => $modelId,
+            'transcript_length' => strlen($transcript),
+            'response' => $response
+        ]);
+    }
+
+
     public function generateQuestion(string $transcript, ?string $modelId = null): array
     {
         $client = HttpClient::create();
+        
+        try {
+            // Vérifier si le transcript est valide
+            if (empty($transcript) || strpos($transcript, 'Erreur:') === 0) {
+                throw new \RuntimeException('Transcript invalide ou contenant des erreurs');
+            }
+            
+            // Limiter la taille du transcript pour éviter les erreurs
+            if (strlen($transcript) > 15000) {
+                $transcript = substr($transcript, 0, 15000) . "...";
+                $this->logger->info('Transcript tronqué pour la génération de questions', [
+                    'original_length' => strlen($transcript),
+                    'truncated_length' => 15000
+                ]);
+            }
+            
+            // Utiliser un modèle standard pour la génération de questions
+            $modelId = 'gpt-3.5-turbo';
+            $endpoint = 'https://api.openai.com/v1/chat/completions';
+            
+            $data = [
+                'model' => $modelId,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Vous êtes un expert en analyse de contenu et en génération de questions pertinentes à partir de transcriptions de vidéos ou de podcasts. 
+                    Votre objectif est de produire des questions engageantes, variées et fidèles au contenu abordé dans la transcription fournie.
+                    Les questions doivent couvrir plusieurs aspects : compréhension, analyse et curiosité.'],
+                    ['role' => 'user', 'content' => "Analysez attentivement la transcription suivante et identifiez les thèmes clés, les idées majeures et les arguments principaux.
+                    À partir de ces éléments, générez **20 questions pertinentes et engageantes** en respectant ces règles :
+                    - Chaque question doit être sur une ligne séparée.
+                    - Elle doit être numérotée (ex: 1. / 2. / 3.).
+                    - Les questions doivent être **variées** : 
+                        1. Compréhension (explication d'un concept, reformulation d'une idée).
+                        2. Analyse (développement d'un argument, implications d’un point de vue).
+                        3. Curiosité & Exploration (perspectives nouvelles sur un point évoqué).
+
+                    Pour **chaque question**, fournissez **quatre réponses possibles** sous le format suivant :
+                    - La réponse correcte doit être précédée de `[✔]`.
+                    - Les réponses incorrectes doivent être précédées de `[❌]`.
+                    - Les réponses doivent être variées mais crédibles, en lien avec la question.
+
+                    Exemple de format attendu :
+                    1. Quel est le principal argument avancé dans la vidéo concernant la transition énergétique ?
+                    - [✔] La nécessité d'investir massivement dans les énergies renouvelables pour réduire les émissions de CO2.
+                    - [❌] L'abolition totale des énergies fossiles dès 2030 sans transition.
+                    - [❌] L'importance d’augmenter la production de charbon pour stabiliser l'économie.
+                    - [❌] L'idée que la transition énergétique n’aura aucun impact sur le climat.
+
+                    Voici la transcription : 
+                    $transcript"],
+                ],
+                'temperature' => 0.7,
+                'max_tokens' => 700
+            ];
+
+            $this->logger->info('Envoi de requête pour génération de questions', [
+                'model_id' => $modelId,
+                'transcript_length' => strlen($transcript)
+            ]);
+
+            $response = $client->request('POST', $endpoint, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->apiKey}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $data,
+                'timeout' => 30,
+            ]);
+
+            $responseData = $response->toArray();
+            $this->logger->info('Appel API OpenAI', [
+                'model_id' => $modelId,
+                'transcript_length' => strlen($transcript),
+                'response' => $responseData
+            ]);
+            
+            return $responseData;
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de l\'appel à l\'API OpenAI', [
+                'error' => $e->getMessage(),
+                'model_id' => $modelId ?? 'non défini'
+            ]);
+            
+            // En cas d'erreur, retourner un format compatible avec des questions génériques
+            return [
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => "1. Quels sont les principaux sujets abordés dans ce podcast ?\n2. Qui sont les intervenants principaux et quels sont leurs rôles ?\n3. Quelles sont les informations clés présentées dans cette discussion ?\n4. Quelles conclusions ou recommandations sont formulées ?\n5. Comment ce contenu pourrait-il être appliqué dans un contexte pratique ?"
+                        ]
+                    ]
+                ]
+            ];
+        }
+    }
+
+    private function generateQuestionWithFallbackModel(string $transcript): array
+    {
+        $client = HttpClient::create();
         $endpoint = 'https://api.openai.com/v1/chat/completions';
+        $modelId = 'gpt-3.5-turbo';
         
         $data = [
-            'model' => $modelId ?? 'gpt-3.5-turbo',
+            'model' => $modelId,
             'messages' => [
                 ['role' => 'system', 'content' => 'Vous êtes un expert en génération de questions basées sur des transcriptions vidéo.'],
                 ['role' => 'user', 'content' => "Générez des questions pertinentes basées sur cette transcription : $transcript"],
             ],
             'temperature' => 0.7,
+            'max_tokens' => 500
         ];
-
+        
+        $this->logger->info('Envoi de requête au modèle de secours', [
+            'model_id' => $modelId,
+            'transcript_preview' => substr($transcript, 0, 100) . '...',
+        ]);
+        
         $response = $client->request('POST', $endpoint, [
             'headers' => [
                 'Authorization' => "Bearer {$this->apiKey}",
@@ -489,8 +605,11 @@ class OpenAIService
             ],
             'json' => $data,
         ]);
-
-        return $response->toArray();
+        
+        $responseData = $response->toArray();
+        $this->logApiCall($modelId, $transcript, $responseData);
+        
+        return $responseData;
     }
 
     public function checkTrainingStatus(AIModel $model): array
@@ -520,5 +639,136 @@ class OpenAIService
         $this->entityManager->flush();
         
         return $status;
+    }
+    
+    private function splitIntoChunks(string $text): array
+    {
+        // Réduire la taille des chunks pour éviter les erreurs 400
+        $chunkSizeChars = 1200; // Taille plus petite et sécurisée
+        
+        // Diviser le texte en paragraphes
+        $paragraphs = str_split($text, $chunkSizeChars);
+        
+        $chunks = [];
+        $currentChunk = '';
+        
+        foreach ($paragraphs as $paragraph) {
+            // Si l'ajout de ce paragraphe dépasse la taille du chunk
+            if (strlen($currentChunk) + strlen($paragraph) > $chunkSizeChars && !empty($currentChunk)) {
+                $chunks[] = $currentChunk;
+                $currentChunk = $paragraph;
+            } else {
+                $currentChunk .= (empty($currentChunk) ? '' : "\n") . $paragraph;
+            }
+        }
+        
+        // Ajouter le dernier chunk s'il n'est pas vide
+        if (!empty($currentChunk)) {
+            $chunks[] = $currentChunk;
+        }
+        
+        return $chunks;
+    }
+    /**
+     * Génère un résumé pour un chunk de texte
+     */
+    public function generateSummary(string $chunk): array
+    {
+        $client = HttpClient::create();
+    
+        try {
+            // Vérifier si le texte est valide UTF-8
+            if (!mb_check_encoding($chunk, 'UTF-8')) {
+                $chunk = mb_convert_encoding($chunk, 'UTF-8', 'auto');
+            }
+            
+            $modelId = 'gpt-3.5-turbo';
+            $endpoint = 'https://api.openai.com/v1/chat/completions';
+            
+            $data = [
+                'model' => $modelId,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Vous êtes un expert en résumé de texte. Résumez le texte fourni en conservant les informations importantes.'],
+                    ['role' => 'user', 'content' => "Résumez ce texte en conservant les points clés et les informations importantes : $chunk"],
+                ],
+                'temperature' => 0.5,
+                'max_tokens' => 500
+            ];
+            
+            $this->logger->info('Envoi de requête pour résumé', [
+                'model_id' => $modelId,
+                'chunk_length' => strlen($chunk)
+            ]);
+            
+            $response = $client->request('POST', $endpoint, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->apiKey}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $data,
+                'timeout' => 30, // Augmenter le timeout pour éviter les erreurs
+            ]);
+            
+            return $response->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la génération du résumé', [
+                'error' => $e->getMessage(),
+                'chunk_preview' => substr($chunk, 0, 100)
+            ]);
+            
+            // En cas d'erreur, retourner un format compatible
+            return [
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => "Erreur: " . $e->getMessage()
+                        ]
+                    ]
+                ]
+            ];
+        }
+    }
+
+    /**
+     * Génère un résumé final à partir des résumés combinés
+     */
+    public function generateFinalSummary(string $combinedSummaries): array
+    {
+        $client = HttpClient::create();
+        
+        try {
+            $modelId = 'gpt-3.5-turbo';
+            $endpoint = 'https://api.openai.com/v1/chat/completions';
+            
+            $data = [
+                'model' => $modelId,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Vous êtes un expert en synthèse de texte. Créez une synthèse cohérente à partir des résumés fournis.'],
+                    ['role' => 'user', 'content' => "Créez une synthèse cohérente à partir de ces résumés : $combinedSummaries"],
+                ],
+                'temperature' => 0.5,
+                'max_tokens' => 1000
+            ];
+            
+            $this->logger->info('Envoi de requête pour résumé final', [
+                'model_id' => $modelId,
+                'combined_summaries_length' => strlen($combinedSummaries)
+            ]);
+            
+            $response = $client->request('POST', $endpoint, [
+                'headers' => [
+                    'Authorization' => "Bearer {$this->apiKey}",
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $data,
+            ]);
+            
+            return $response->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la génération du résumé final', [
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
     }
 }
