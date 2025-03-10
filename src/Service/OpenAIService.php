@@ -87,96 +87,6 @@ class OpenAIService
     public function generateQuestions(string $text): string
     {
 
-
-        // $response = $this->client->post('completions', [
-        //     'json' => [
-        //         'model' => 'text-davinci-003',
-        //         'prompt' => "Based on the following text, generate some quiz questions:\n$text",
-        //         'max_tokens' => 150,
-        //     ],
-        // ]);
-
-
-        // $data = json_decode($response->getBody(), true);
-        // return $data['choices'][0]['text'];
-
-
-        // $openai_api_key = $this->parameterBag->get('OPENAI_API_KEY');
-        // $open_ai = new OpenAi($openai_api_key);
-
-
-        // $complete = $open_ai->completion([
-        //     'model' => 'text-davinci-003',
-        //     'prompt' => "Based on the following text, generate some quiz questions:\n$text",
-        //     'temperature' => 0,
-        //     'max_tokens' => 3500,
-        //     'frequency_penalty' => 0.5,
-        //     'presence_penalty' => 0,
-        // ]);
-
-
-        // $json = json_decode($complete, true);
-
-
-        // if (isset($json['choices'][0]['text'])) {
-        //     $json = $json['choices'][0]['text'];
-
-
-        //     return $json;
-        // }
-
-
-        // $json = 'Une erreur est survenue !';
-
-
-        // return $json;
-
-
-
-
-        // OK FONCTIONNEL
-
-
-        // try {
-        //     $openai_api_key = $this->parameterBag->get('OPENAI_API_KEY');
-        //     $open_ai = new OpenAi($openai_api_key);
-
-
-        //     $complete = $open_ai->completion([
-        //         'model' => 'gpt-3.5-turbo-instruct',
-        //         'prompt' => "Based on the following text, generate some quiz questions:\n$text",
-        //         'temperature' => 0,
-        //         'max_tokens' => 3500,
-        //         'frequency_penalty' => 0.5,
-        //         'presence_penalty' => 0,
-        //     ]);
-
-
-        //     $json = json_decode($complete, true);
-
-
-        //     // Ajouter des logs pour vérifier le contenu de $complete et $json
-        //     dd($complete);
-        //     dd($json);
-
-
-        //     if (isset($json['choices'][0]['text'])) {
-        //         return $json['choices'][0]['text'];
-        //     }
-
-
-        //     return 'Une erreur est survenue ! (No text found in response)';
-
-
-        // } catch (\Exception $e) {
-        //     // Ajouter des logs pour capturer les exceptions
-        //     dd($e->getMessage());
-        //     return 'Une erreur est survenue ! (Exception: ' . $e->getMessage() . ')';
-        // }
-
-
-
-
         try {
             $openai_api_key = $this->parameterBag->get('OPENAI_API_KEY');
             $open_ai = new OpenAi($openai_api_key);
@@ -220,32 +130,7 @@ class OpenAIService
 
 
 
-    // Final Mais sans IA
-   
-    //     try {
-    //         // Simuler une réponse de l'API OpenAI
-    //         $simulatedResponse = [
-    //             'choices' => [
-    //                 [
-    //                     'text' => "Question 1: What is the main topic discussed in the text?\nOption A: Topic A\nOption B: Topic B\nOption C: Topic C\nOption D: Topic D\n"
-    //                 ]
-    //             ]
-    //         ];
-   
-    //         $this->logger->info('Simulated response from OpenAI API', ['response' => $simulatedResponse]);
-   
-    //         if (isset($simulatedResponse['choices'][0]['text'])) {
-    //             return $simulatedResponse['choices'][0]['text'];
-    //         }
-   
-    //         $this->logger->error('No text found in simulated API response', ['response' => $simulatedResponse]);
-   
-    //         return 'Une erreur est survenue ! (No text found in simulated response)';
-   
-    //     } catch (\Exception $e) {
-    //         $this->logger->error('Exception occurred while simulating OpenAI API call', ['exception' => $e->getMessage()]);
-    //         return 'Une erreur est survenue ! (Exception: ' . $e->getMessage() . ')';
-    //     }
+
     }
 
 
@@ -482,61 +367,51 @@ class OpenAIService
     public function generateQuestion(string $transcript): array
     {
         try {
-            // Vérifier si le transcript est valide
             if (empty($transcript) || strpos($transcript, 'Erreur:') === 0) {
                 throw new \RuntimeException('Transcript invalide ou contenant des erreurs');
             }
             
-            $modelId = 'gpt-3.5-turbo';
+            $modelId = 'gpt-3.5-turbo-16k'; // Utiliser le modèle avec plus de contexte
             $endpoint = 'https://api.openai.com/v1/chat/completions';
             
             $data = [
                 'model' => $modelId,
                 'messages' => [
-                    ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz, en analyse de contenu et en génération de questions pertinentes à partir de transcriptions de vidéos ou de podcasts. 
-                    Votre tâche est de générer 20 questions pertinentes avec 4 réponses possibles pour chacune.'],
-                    ['role' => 'user', 'content' => "Analysez attentivement la transcription suivante et identifiez les thèmes clés, 
-                    les entreprises, les technologies mentionnées, les fondateurs d'entreprises mentionnées, les anêctodes, les chiffres clés, les dates importantes, les événements marquants, 
-                    les idées majeures et les arguments principaux par exemple.
-                     À partir de ces éléments et de la transcription, générez **20 questions pertinentes et engageantes** en respectant ces règles :
-                    - Chaque question doit être sur une ligne séparée.
-                    - Elle doit être numérotée (ex: 1. / 2. / 3.).
-                    - Les questions doivent être **variées** : 
-                        1. Compréhension (explication d'un concept, reformulation d'une idée).
-                        2. Analyse (développement d'un argument, implications d’un point de vue).
-                        3. Curiosité & Exploration (perspectives nouvelles sur un point évoqué).
+                    ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Générez EXACTEMENT 20 questions pertinentes avec leurs réponses.'],
+                    ['role' => 'user', 'content' => "Analysez cette transcription et générez EXACTEMENT 20 questions en traversant tous les sujets du transcript.
+                    Autrement dit en choisissant les sujets abordé tout le long de la vidéo, jusqu'à la fin.
 
-
-                    Pour chaque question :
-                        - Numérotez-la (1. 2. 3. etc.)
-                        - Fournissez 4 réponses possibles
-                        - Marquez la bonne réponse avec [✓] et les mauvaises avec [✗]
-                        - Séparez chaque question par une ligne vide
-
-                    Format attendu :
+                    Règles IMPORTANTES :
+                    - Générez EXACTEMENT 20 questions numérotées de 1 à 20
+                    - Chaque question DOIT avoir EXACTEMENT 4 réponses
+                    - Une seule réponse doit être correcte par question
+                    - Les questions doivent être variées et pertinentes
+                    
+                    Format STRICT à respecter :
                     1. Question
                     [✓] Bonne réponse
                     [✗] Mauvaise réponse 1
                     [✗] Mauvaise réponse 2
                     [✗] Mauvaise réponse 3
 
+                    (ligne vide entre chaque question)
+
                     Transcription à analyser :
                     $transcript"],
                 ],
                 'temperature' => 0.7,
-                'max_tokens' => 3000, // Augmenté pour permettre plus de contenu
+                'max_tokens' => 4000,
                 'presence_penalty' => 0.6,
                 'frequency_penalty' => 0.3
             ];
 
-            $client = HttpClient::create();
-            $response = $client->request('POST', $endpoint, [
+            $response = HttpClient::create()->request('POST', $endpoint, [
                 'headers' => [
                     'Authorization' => "Bearer {$this->apiKey}",
                     'Content-Type' => 'application/json',
                 ],
                 'json' => $data,
-                'timeout' => 120, // Augmenté pour éviter les timeouts
+                'timeout' => 180 // 3 minutes pour permettre la génération complète
             ]);
 
             return $response->toArray();

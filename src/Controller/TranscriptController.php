@@ -117,14 +117,62 @@ class TranscriptController extends AbstractController
                 $response = $openAIService->generateQuestion($chunk);
                 
                 if (isset($response['choices'][0]['message']['content'])) {
-                    $newQuestions = array_filter(
-                        explode("\n", $response['choices'][0]['message']['content']),
+                    $content = $response['choices'][0]['message']['content'];
+                    $lines = array_values(array_filter(
+                        explode("\n", $content),
                         function($line) {
                             return !empty(trim($line));
                         }
-                    );
-                    $questions = array_merge($questions, $newQuestions);
+                    ));
+
+                    // Parcourir les lignes pour extraire les questions et réponses
+                    $currentQuestion = null;
+                    $currentAnswers = [];
+                    $questionSet = [];
+
+                    foreach ($lines as $line) {
+                        $line = trim($line);
+                        
+                        // Si c'est une nouvelle question (commence par un chiffre suivi d'un point)
+                        if (preg_match('/^\d+\./', $line)) {
+                            // Si on avait une question précédente complète, l'ajouter
+                            if ($currentQuestion && count($currentAnswers) === 4) {
+                                $questionSet[] = $currentQuestion;
+                                $questionSet = array_merge($questionSet, $currentAnswers);
+                            }
+                            $currentQuestion = $line;
+                            $currentAnswers = [];
+                        }
+                        // Si c'est une réponse (commence par [✓] ou [✗])
+                        elseif (strpos($line, '[✓]') === 0 || strpos($line, '[✗]') === 0) {
+                            $currentAnswers[] = $line;
+                        }
+                    }
+
+                    // Ajouter la dernière question si elle est complète
+                    if ($currentQuestion && count($currentAnswers) === 4) {
+                        $questionSet[] = $currentQuestion;
+                        $questionSet = array_merge($questionSet, $currentAnswers);
+                    }
+
+                    $questions = array_merge($questions, $questionSet);
                 }
+            }
+
+            // Log pour debug
+            $this->logger->info('Questions générées', [
+                'total_questions' => count($questions) / 5, // Diviser par 5 car chaque question a 4 réponses
+                'questions_sample' => array_slice($questions, 0, 10)
+            ]);
+            
+            // S'assurer d'avoir exactement 20 questions (4 parties × 5 questions)
+            $this->logger->info('Nombre total de questions avant filtrage', ['count' => count($questions)]);
+
+            // Réorganiser les questions en groupes de 5 (question + 4 réponses)
+            $questionGroups = array_chunk($questions, 5);
+            if (count($questionGroups) > 20) {
+                $questionGroups = array_slice($questionGroups, 0, 20); // Garder seulement 20 groupes
+                $questions = array_merge(...$questionGroups);
             }
 
             // Vérification du nombre total de questions
