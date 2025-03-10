@@ -17,25 +17,25 @@ class MainController extends AbstractController
     {
         $plans = $planRepository->findAll();
 
-        $episode = $entityManager->getRepository(Episodes::class)
-        ->findOneBy(
-            ['status' => Episodes::STATUS_COMPLETED],
-            ['releaseDate' => 'DESC']
-        );
+        // $episode = $entityManager->getRepository(Episodes::class)
+        // ->findOneBy(
+        //     ['status' => Episodes::STATUS_COMPLETED],
+        //     ['releaseDate' => 'DESC']
+        // );
 
-        $transcript = $episode->getTranscript();
-        // dd($transcript);
-        // $transcriptSize = strlen($transcript);
-        // dd($transcriptSize);
+        // $transcript = $episode->getTranscript();
+        // // dd($transcript);
+        // // $transcriptSize = strlen($transcript);
+        // // dd($transcriptSize);
 
-        $summaryResponse = $openAIService->generateSummary($transcript);
+        // $summaryResponse = $openAIService->generateSummary($transcript);
 
-        // dd($summaryResponse);
+        // // dd($summaryResponse);
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'plans' => $plans,
-            'summary' => $summaryResponse,
+            // 'summary' => $summaryResponse,
         ]);
     }
 

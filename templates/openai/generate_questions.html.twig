@@ -4,40 +4,46 @@
     <div class="container">
         <h1>Questions Générées</h1>
         
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Épisode : {{ episode.title }}</h2>
-            </div>
-            <div class="card-body">
-                <h3>Transcript :</h3>
-                <div class="transcript-content">
-                    {% if transcript is iterable %}
-                        {% for part in transcript %}
-                            <div class="transcript-part">
-                                {{ part|nl2br }}
-                            </div>
-                            {% if not loop.last %}
-                                <hr>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        {{ transcript|nl2br }}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
         <div class="card">
             <div class="card-header">
-                <h3>Questions générées :</h3>
+                <h2>Quiz : {{ episode.title }}</h2>
             </div>
             <div class="card-body">
-                <ol>
-                    {% for question in questions %}
-                        <li>{{ question }}</li>
-                    {% endfor %}
-                </ol>
+                {% for question in questions %}
+                    {% if question matches '/^\\d+\\./' %} {# Si c'est une nouvelle question #}
+                        {% if not loop.first %}
+                            </div> {# Fermer le div de la question précédente #}
+                        {% endif %}
+                        <div class="question-block mb-4">
+                            <h5>{{ question }}</h5>
+                    {% else %}
+                        <div class="answer-option {% if '[✓]' in question %}correct-answer{% endif %}">
+                            {{ question|replace({'[✓]': '<span class="badge bg-success">Correct</span>', '[✗]': '<span class="badge bg-danger">Incorrect</span>'}) | raw }}
+                        </div>
+                    {% endif %}
+                    
+                    {% if loop.last %}
+                        </div> {# Fermer le dernier div #}
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .question-block {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+    }
+    .answer-option {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        border-radius: 4px;
+    }
+    .correct-answer {
+        background-color: #f8fff8;
+    }
+</style>
 {% endblock %}

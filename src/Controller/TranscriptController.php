@@ -95,60 +95,43 @@ class TranscriptController extends AbstractController
             // Prétraiter le transcript (chunking + résumé) avec mise en cache
             $processedTranscript = $textPreprocessor->processLargeTranscript($transcript, $episode->getId());
             
-            if (empty($processedTranscript) || strpos($processedTranscript, 'Erreur') === 0) {
-                $this->logger->warning('Utilisation d\'extraits du transcript original suite à une erreur de traitement');
-                $processedTranscript = [];
-                
-                // Diviser manuellement le transcript en 4 parties égales
-                $totalLength = strlen($transcript);
-                $partLength = (int)($totalLength / 4);
-                
-                // Extrait du début (premier quart)
-                $startPart = substr($transcript, 0, $partLength);
-                $this->logger->info('Traitement du chunk du début', ['length' => strlen($startPart)]);
-                $processedTranscript[] = "Voici un extrait du début du podcast:\n\n" . substr($startPart, 0, 3000) . "...";
-                
-                // Extrait du deuxième quart
-                $secondPart = substr($transcript, $partLength, $partLength);
-                $this->logger->info('Traitement du chunk du deuxième quart', ['length' => strlen($secondPart)]);
-                $processedTranscript[] = "Voici un extrait du deuxième quart du podcast:\n\n" . substr($secondPart, 0, 3000) . "...";
-                
-                // Extrait du troisième quart
-                $thirdPart = substr($transcript, $partLength * 2, $partLength);
-                $this->logger->info('Traitement du chunk du troisième quart', ['length' => strlen($thirdPart)]);
-                $processedTranscript[] = "Voici un extrait du troisième quart du podcast:\n\n" . substr($thirdPart, 0, 3000) . "...";
-                
-                // Extrait de la fin (dernier quart)
-                $endPart = substr($transcript, $partLength * 3);
-                $this->logger->info('Traitement du chunk de la fin', ['length' => strlen($endPart)]);
-                $processedTranscript[] = "Voici un extrait de la fin du podcast:\n\n" . substr($endPart, 0, 3000) . "...";
-            }
+            // Diviser manuellement le transcript en 4 parties égales
+            $totalLength = strlen($transcript);
+            $partLength = (int)($totalLength / 4);
+            $chunks = [
+                substr($transcript, 0, $partLength),
+                substr($transcript, $partLength, $partLength),
+                substr($transcript, $partLength * 2, $partLength),
+                substr($transcript, $partLength * 3)
+            ];
             
-            $this->logger->info('Transcript traité:', [
-                'processed_length' => strlen(implode("\n", $processedTranscript)),
-                'processed_preview' => substr(implode("\n", $processedTranscript), 0, 200) . '...',
-                'sections_count' => count($processedTranscript)
-            ]);
-
             // Générer les questions à partir de chaque extrait
             $questions = [];
-            foreach ($processedTranscript as $index => $transcriptPart) {
-                $partType = $index == 0 ? "début" : ($index == count($processedTranscript) - 1 ? "fin" : "milieu");
-                $this->logger->info('Génération de questions pour la partie', ['part' => $partType, 'length' => strlen($transcriptPart)]);
+            foreach ($chunks as $index => $chunk) {
+                $partType = $index == 0 ? "début" : ($index == count($chunks) - 1 ? "fin" : "milieu");
+                $this->logger->info('Génération de questions pour la partie', [
+                    'part' => $partType, 
+                    'length' => strlen($chunk)
+                ]);
                 
-                $response = $openAIService->generateQuestion($transcriptPart);
+                $response = $openAIService->generateQuestion($chunk);
                 
-                // Ajouter les questions générées à la liste
                 if (isset($response['choices'][0]['message']['content'])) {
-                    $newQuestions = explode("\n", $response['choices'][0]['message']['content']);
+                    $newQuestions = array_filter(
+                        explode("\n", $response['choices'][0]['message']['content']),
+                        function($line) {
+                            return !empty(trim($line));
+                        }
+                    );
                     $questions = array_merge($questions, $newQuestions);
                 }
             }
 
-            // Limiter le nombre de questions si nécessaire
-            if (count($questions) > 20) {
-                $questions = array_slice($questions, 0, 20);
-            }
+            // Vérification du nombre total de questions
+            $this->logger->info('Nombre total de questions générées', [
+                'count' => count($questions),
+                'questions_preview' => array_slice($questions, 0, 5)
+            ]);
             
             // Si aucune question n'a été générée, créer des questions génériques
             if (empty($questions)) {
@@ -172,8 +155,7 @@ class TranscriptController extends AbstractController
             return $this->render('openai/generate_questions.html.twig', [
                 'episode' => $episode,
                 'questions' => $questions,
-                'transcript' => $processedTranscript, // Utiliser le transcript traité
-                'original_transcript' => substr($transcript, 0, 500) . '...' // Aperçu du transcript original
+                'transcript' => $chunks // Passer les chunks au lieu du processedTranscript
             ]);
         } catch (\Exception $e) {
             // Log l'erreur et afficher un message d'erreur
