@@ -379,13 +379,14 @@ class OpenAIService
                 'messages' => [
                     ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Générez EXACTEMENT 20 questions pertinentes avec leurs réponses.'],
                     ['role' => 'user', 'content' => "Analysez cette transcription et générez EXACTEMENT 20 questions en traversant tous les sujets du transcript.
-                    Autrement dit en choisissant les sujets abordé tout le long de la vidéo, jusqu'à la fin.
+                    Autrement dit en choisissant les sujets abordés tout le long de la vidéo, jusqu'à la fin. Ne posez jamais deux fois la même question.
 
                     Règles IMPORTANTES :
                     - Générez EXACTEMENT 20 questions numérotées de 1 à 20
                     - Chaque question DOIT avoir EXACTEMENT 4 réponses
                     - Une seule réponse doit être correcte par question
                     - Les questions doivent être variées et pertinentes
+                    - Ne pose jamais deux fois la même question
                     
                     Format STRICT à respecter :
                     1. Question

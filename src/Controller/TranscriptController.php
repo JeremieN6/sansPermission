@@ -14,6 +14,12 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use App\Entity\Episodes;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use App\Entity\Quizzes;
+use App\Entity\Questions;
+use App\Entity\Answers;
+use App\Repository\EpisodesRepository;
+use App\Repository\QuestionsRepository;
+use App\Repository\QuizzesRepository;
 
 class TranscriptController extends AbstractController
 {
@@ -69,7 +75,12 @@ class TranscriptController extends AbstractController
     }
 
     #[Route('/generate-questions', name: 'generate_questions')]
-    public function generateQuestions(OpenAIService $openAIService, EntityManagerInterface $entityManager, TextPreprocessor $textPreprocessor): Response
+    public function generateQuestions(
+        OpenAIService $openAIService, 
+        EntityManagerInterface $entityManager, 
+        TextPreprocessor $textPreprocessor,
+        QuizzesRepository $quizzesRepository,
+        QuestionsRepository $questionsRepository): Response
     {
         try {
             // Récupérer l'épisode complété le plus récent
@@ -198,19 +209,96 @@ class TranscriptController extends AbstractController
                 'episode_title' => $episode->getTitle(),
                 'questions_count' => count($questions),
             ]);
+
+            // Vérifier si un quiz existe déjà pour cet épisode
+            $existingQuiz = $entityManager->getRepository(Quizzes::class)->findOneBy(['episodeId' => $episode]);
+            if ($existingQuiz !== null) {
+                $this->addFlash('error', 'Un quiz existe déjà pour cet épisode. La génération de nouvelles questions est refusée.');
+                return $this->redirectToRoute('app_main');
+            }
+
+            // Vérifier si des questions existent déjà pour ce quiz
+            $existingQuestions = $entityManager->getRepository(Questions::class)->findBy(['quizId' => $existingQuiz]);
+            if (!empty($existingQuestions)) {
+                $this->addFlash('error', 'Des questions existent déjà pour ce quiz. La génération de nouvelles questions est refusée.');
+                return $this->redirectToRoute('app_main');
+            } 
             
-            // Retourner les questions générées
+            // Créer un nouveau quiz
+            $quiz = new Quizzes();
+            $quiz->setEpisodeId($episode);
+            $quiz->setTitle("Quiz: " . $episode->getTitle());
+            $quiz->setCreatedAt(new \DateTimeImmutable());
+            $quiz->setUpdatedAt(new \DateTimeImmutable());
+            
+            $entityManager->persist($quiz);
+            
+            // Parcourir les questions générées et les sauvegarder
+            $currentQuestion = null;
+            $questionText = '';
+            $answers = [];
+            
+            foreach ($questions as $line) {
+                if (preg_match('/^\d+\./', $line)) { // Si c'est une nouvelle question
+                    // Sauvegarder la question précédente si elle existe
+                    if ($currentQuestion !== null) {
+                        $this->saveQuestion($currentQuestion, $answers, $quiz, $entityManager);
+                    }
+                    
+                    // Initialiser une nouvelle question
+                    $questionText = $line;
+                    $answers = [];
+                    $currentQuestion = new Questions();
+                    $currentQuestion->setContent($questionText);
+                    $currentQuestion->setQuizId($quiz);
+                    $currentQuestion->setCreatedAt(new \DateTimeImmutable());
+                    $currentQuestion->setUpdatedAt(new \DateTimeImmutable());
+                } elseif (strpos($line, '[✓]') === 0 || strpos($line, '[✗]') === 0) {
+                    // Ajouter la réponse
+                    $isCorrect = strpos($line, '[✓]') === 0;
+                    $answerText = trim(mb_substr($line, 3)); // Supprimer le préfixe [✓] ou [✗] avec mb_substr pour une gestion plus précise des caractères spéciaux
+                    
+                    $answer = new Answers();
+                    $answer->setContent($answerText);
+                    $answer->setCorrect($isCorrect);
+                    $answer->setCreatedAt(new \DateTimeImmutable());
+                    $answer->setUpdatedAt(new \DateTimeImmutable());
+                    
+                    $answers[] = $answer;
+                }
+            }
+            
+            // Sauvegarder la dernière question
+            if ($currentQuestion !== null) {
+                $this->saveQuestion($currentQuestion, $answers, $quiz, $entityManager);
+            }
+            
+            $entityManager->flush();
+            
+            $this->addFlash('success', 'Les questions ont été générées et sauvegardées avec succès !');
+
             return $this->render('openai/generate_questions.html.twig', [
                 'episode' => $episode,
                 'questions' => $questions,
-                'transcript' => $chunks // Passer les chunks au lieu du processedTranscript
+                'quiz' => $quiz
             ]);
+            
         } catch (\Exception $e) {
             // Log l'erreur et afficher un message d'erreur
             $this->logger->error('Erreur lors de la génération des questions: ' . $e->getMessage());
             return $this->render('openai/error.html.twig', [
                 'error' => $e->getMessage()
             ]);
+        }
+    }
+
+    private function saveQuestion(Questions $question, array $answers, Quizzes $quiz, EntityManagerInterface $entityManager): void
+    {
+        $entityManager->persist($question);
+        
+        foreach ($answers as $answer) {
+            $answer->setQuestionId($question);
+            $entityManager->persist($answer);
         }
     }
 }
