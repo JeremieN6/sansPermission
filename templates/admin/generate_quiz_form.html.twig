@@ -1,0 +1,14 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content %}
+    <h2>Générer un quiz</h2>
+
+    {{ form_start(form) }}
+        {{ form_row(form.episode) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+    <a href="{{ path('admin') }}">
+        <button class="btn btn-secondary mt-3">Retour</button>
+    </a>
+{% endblock %}
