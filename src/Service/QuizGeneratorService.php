@@ -80,6 +80,10 @@ class QuizGeneratorService extends AbstractController
                 if (!empty(trim($question))) {
                     $generatedQuestions[] = trim($question);
                 }
+
+                if (count($generatedQuestions) >= 20) {
+                    break 2; // STOPPE TOUTE LA GÉNÉRATION UNE FOIS 20 QUESTIONS OBTENUES
+                }
             }
         }
     
@@ -135,6 +139,7 @@ class QuizGeneratorService extends AbstractController
 
             $this->entityManager->persist($answerEntity);
         }
+        $this->entityManager->flush(); // 🔥 FLUSH APRÈS CHAQUE GROUPE DE RÉPONSES
     }
 
     private function saveQuestion(Questions $question, array $answers, Quizzes $quiz, EntityManagerInterface $entityManager): void
