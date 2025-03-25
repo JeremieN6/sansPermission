@@ -61,6 +61,9 @@ class QuizGeneratorService extends AbstractController
             }
     
             $questions = $this->openAIService->generateQuestion($chunk);
+
+            // Log de la réponse brute de l'API OpenAI
+            $this->logger->info("Réponse brute OpenAI : ", ['response' => $questions]);
     
             // Vérification du format de retour de l'API OpenAI
             if (!is_array($questions)) {
@@ -81,9 +84,9 @@ class QuizGeneratorService extends AbstractController
                     $generatedQuestions[] = trim($question);
                 }
 
-                if (count($generatedQuestions) >= 20) {
-                    break 2; // STOPPE TOUTE LA GÉNÉRATION UNE FOIS 20 QUESTIONS OBTENUES
-                }
+                // if (count($generatedQuestions) >= 20) {
+                //     break 2; // STOPPE TOUTE LA GÉNÉRATION UNE FOIS 20 QUESTIONS OBTENUES
+                // }
             }
         }
     
@@ -117,7 +120,22 @@ class QuizGeneratorService extends AbstractController
             return;
         }
 
-        $questionText = array_shift($questionSet);
+        // $questionText = array_shift($questionSet);
+
+        // Vérifie que la question ne commence pas par [✓] ou [✗]
+        foreach ($questionSet as $index => $line) {
+            if (strpos($line, '[✓]') === false && strpos($line, '[✗]') === false) {
+                $questionText = trim($line);
+                unset($questionSet[$index]);
+                break;
+            }
+        }
+
+        // Si aucune question trouvée, on skip
+        if (!isset($questionText)) {
+            $this->logger->error("Aucune question valide détectée dans ce set : ", ['set' => $questionSet]);
+            return;
+        }
         $questionEntity = new Questions();
         $questionEntity->setContent($questionText);
         $questionEntity->setQuizId($quiz);
@@ -138,8 +156,9 @@ class QuizGeneratorService extends AbstractController
             $answerEntity->setQuestionId($questionEntity);
 
             $this->entityManager->persist($answerEntity);
+            $this->entityManager->flush(); // flush à cet endroit pour ne pas dépasser le max_execution_time
         }
-        $this->entityManager->flush(); // 🔥 FLUSH APRÈS CHAQUE GROUPE DE RÉPONSES
+        
     }
 
     private function saveQuestion(Questions $question, array $answers, Quizzes $quiz, EntityManagerInterface $entityManager): void
