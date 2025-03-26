@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block body %}
+<h1>🏆 Leaderboard</h1>
+
+<table>
+    <tr>
+        <th>Position</th>
+        <th>Joueur</th>
+        <th>Score total</th>
+    </tr>
+    {% for row in leaderboard %}
+    <tr>
+        <td>#{{ loop.index }}</td>
+        <td>{{ row.pseudo }}</td>
+        <td>{{ row.totalScore }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

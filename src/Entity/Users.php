@@ -71,10 +71,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, UserScores>
+     */
+    #[ORM\OneToMany(targetEntity: UserScores::class, mappedBy: 'user')]
+    private Collection $userScores;
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
+        $this->userScores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -311,5 +318,35 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->pseudo ? (string) $this->pseudo : '';
+    }
+
+    /**
+     * @return Collection<int, UserScores>
+     */
+    public function getUserScores(): Collection
+    {
+        return $this->userScores;
+    }
+
+    public function addUserScore(UserScores $userScore): static
+    {
+        if (!$this->userScores->contains($userScore)) {
+            $this->userScores->add($userScore);
+            $userScore->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserScore(UserScores $userScore): static
+    {
+        if ($this->userScores->removeElement($userScore)) {
+            // set the owning side to null (unless already changed)
+            if ($userScore->getUser() === $this) {
+                $userScore->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

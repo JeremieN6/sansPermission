@@ -13,6 +13,7 @@ use App\Entity\Subscription;
 use App\Entity\UserAnswerChoices;
 use App\Entity\UserAnswers;
 use App\Entity\Users;
+use App\Entity\UserScores;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -57,6 +58,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Quizz', 'fas fa-question', Quizzes::class);
         yield MenuItem::linkToCrud('Questions', 'fas fa-circle-question', Questions::class);
         yield MenuItem::linkToCrud('Bonnes Réponses', 'fas fa-check', Answers::class);
+        yield MenuItem::linkToCrud('Scores', 'fas fa-trophy', UserScores::class);
         yield MenuItem::linkToCrud('Episodes', 'fas fa-video', Episodes::class);
         yield MenuItem::linkToCrud('Modèle AI', 'fas fa-brain', AIModel::class);
 
