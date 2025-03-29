@@ -3,19 +3,9 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block body %}
-
-{% for item in plans %}
-    <a target="_blank" href="{{ item.paymentLink }}">
-        <button>{{item.name}}</button>
-    </a>
-{% endfor %} 
-
-<a href="{{path('app_transcript')}}">
-    <p>Formulaire Upload Transcript</p>
-</a>
-
-<a href="{{path('generate_questions')}}">
-    <p>Page Generate Question</p>
-</a>
-
+    {% include '_components/episodes/latest_episodes.html.twig' %}
+    {% include '_components/podcast_banner.html.twig' %}
+    {% include '_components/hosts_carousel.html.twig' %}    
+    {% include '_components/testimonials.html.twig' %}
+    {% include '_components/collaboration.html.twig' %}
 {% endblock %}

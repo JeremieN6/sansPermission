@@ -2,39 +2,38 @@
 
 namespace App\Controller;
 
-use App\Entity\Episodes;
+use App\Form\CollaborationType;
 use App\Repository\PlanRepository;
-use App\Service\OpenAIService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_main')]
-    public function index(PlanRepository $planRepository, OpenAIService $openAIService, EntityManagerInterface $entityManager): Response
+    public function index(PlanRepository $planRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $plans = $planRepository->findAll();
 
-        // $episode = $entityManager->getRepository(Episodes::class)
-        // ->findOneBy(
-        //     ['status' => Episodes::STATUS_COMPLETED],
-        //     ['releaseDate' => 'DESC']
-        // );
+        $form = $this->createForm(CollaborationType::class);
+        $form->handleRequest($request);
 
-        // $transcript = $episode->getTranscript();
-        // // dd($transcript);
-        // // $transcriptSize = strlen($transcript);
-        // // dd($transcriptSize);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $collaboration = $form->getData();
+            $entityManager->persist($collaboration);
+            $entityManager->flush();
 
-        // $summaryResponse = $openAIService->generateSummary($transcript);
+            $this->addFlash('success', 'Votre demande de collaboration a bien été envoyée !');
 
-        // // dd($summaryResponse);
+            return $this->redirectToRoute('app_main');
+        }
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
             'plans' => $plans,
+            'form' => $form->createView(),
             // 'summary' => $summaryResponse,
         ]);
     }
