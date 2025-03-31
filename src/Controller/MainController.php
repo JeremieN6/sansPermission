@@ -9,13 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\YouTubeScriptService;
 
 class MainController extends AbstractController
 {
+    private YouTubeScriptService $YouTubeScriptService;
+
+    // Injecter YouTubeScriptService dans le constructeur
+    public function __construct(YouTubeScriptService $YouTubeScriptService)
+    {
+        $this->YouTubeScriptService = $YouTubeScriptService;
+    }
+
     #[Route('/', name: 'app_main')]
     public function index(PlanRepository $planRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $plans = $planRepository->findAll();
+        // $plans = $planRepository->findAll();
+
+        //Youtube Channel URL
+        $youtube_channel_url = "https://www.youtube.com/@sanspermissionpodcast";
+
+        // Récupérer les vidéos
+        $videos = $this->YouTubeScriptService->getLatestVideos(3);
 
         $form = $this->createForm(CollaborationType::class);
         $form->handleRequest($request);
@@ -32,8 +47,10 @@ class MainController extends AbstractController
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
-            'plans' => $plans,
+            // 'plans' => $plans,
+            'videos' => $videos,
             'form' => $form->createView(),
+            'youtube_channel_url' => $youtube_channel_url
             // 'summary' => $summaryResponse,
         ]);
     }
