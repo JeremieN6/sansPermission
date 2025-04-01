@@ -32,6 +32,10 @@ class MainController extends AbstractController
         // Récupérer les vidéos
         $videos = $this->YouTubeScriptService->getLatestVideos(3);
 
+        // Récupérer la description de la chaîne
+        $channelInfo = $this->YouTubeScriptService->getChannelDetails();
+
+        //Formulaire de collaboration
         $form = $this->createForm(CollaborationType::class);
         $form->handleRequest($request);
 
@@ -50,6 +54,7 @@ class MainController extends AbstractController
             // 'plans' => $plans,
             'videos' => $videos,
             'form' => $form->createView(),
+            'channel' => $channelInfo,
             'youtube_channel_url' => $youtube_channel_url
             // 'summary' => $summaryResponse,
         ]);

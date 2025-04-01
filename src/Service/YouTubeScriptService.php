@@ -119,4 +119,37 @@ class YouTubeScriptService
     
         return array_slice($filteredVideos, 0, $maxResults); // Retourne le bon nombre de vidéos
     }
+
+    private function formatNumber(int $number): string
+    {
+        if ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M';
+        } elseif ($number >= 1000) {
+            return round($number / 1000, 1) . 'k';
+        }
+        return (string) $number;
+    }
+
+    public function getChannelDetails(): array
+    {
+        $url = "https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id={$this->channelId}&key={$this->youtube_api_key}";
+    
+        $response = $this->httpClient->request('GET', $url);
+        $data = $response->toArray();
+    
+        if (empty($data['items'])) {
+            return [];
+        }
+    
+        $channel = $data['items'][0];
+    
+        return [
+            'title' => $channel['snippet']['title'], // Nom de la chaîne
+            'description' => $channel['snippet']['description'], // Nom de la chaîne
+            'logo' => $channel['snippet']['thumbnails']['default']['url'], // Logo de la chaîne
+            'subscribers' => $this->formatNumber((int) $channel['statistics']['subscriberCount']),
+            'totalViews' => $this->formatNumber((int) $channel['statistics']['viewCount']),
+            'videoCount' => $this->formatNumber((int) $channel['statistics']['videoCount']),
+        ];
+    }
 }

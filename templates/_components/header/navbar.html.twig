@@ -1,14 +1,13 @@
 <nav class="flex items-center justify-between py-4 px-8 max-w-7xl mx-auto">
     <div class="text-2xl font-bold text-white">
-        SANS PERMISSION
+        <img src="{{channel.logo}}" alt="Logo Sans Permission">
     </div>
     
     <div class="flex space-x-8">
-        <a href="#" class="text-white font-medium hover:text-green-400 {{ app.request.get('_route') == 'home' ? 'text-green-400' : '' }}">Home</a>
-        <a href="#" class="text-white font-medium hover:text-green-400">Episodes</a>
-        <a href="#" class="text-white font-medium hover:text-green-400">About us</a>
-        <a href="#" class="text-white font-medium hover:text-green-400">Blogs</a>
-        <a href="#" class="text-white font-medium hover:text-green-400">Book Studios</a>
+        <a href="{{path('app_main')}}" class="text-white font-medium transition duration-300 hover:text-green-400 {{ app.request.get('_route') == 'home' ? 'text-green-400' : '' }}">Accueil</a>
+        <a href="#" class="text-white font-medium transition duration-300 hover:text-green-400">Episodes</a>
+        <a href="#" class="text-white font-medium transition duration-300 hover:text-green-400">A Propos</a>
+        <a href="#" class="text-white font-medium transition duration-300 hover:text-green-400">Quiz</a>
     </div>
 
     <div>
