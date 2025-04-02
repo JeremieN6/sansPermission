@@ -11,6 +11,7 @@ parameters:
     stripe_pk: '%env(resolve:STRIPE_PK)%'
     youtube_script_path: '%kernel.project_dir%/scripts/youtube_service.py'
     youtube_api_key: '%env(resolve:YOUTUBE_API_KEY)%'
+    youtube_api_key_2: '%env(resolve:YOUTUBE_API_KEY_2)%'
     youtube_channel_id: '%env(resolve:YOUTUBE_CHANNEL_ID)%'
     python_path: '%env(resolve:PYTHON_PATH)%'
 

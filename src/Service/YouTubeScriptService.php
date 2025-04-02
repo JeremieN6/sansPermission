@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpClient\HttpClient;
 use GuzzleHttp\Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class YouTubeScriptService
 {
@@ -17,10 +19,12 @@ class YouTubeScriptService
     private string $scriptPath;
     private string $apiKey;
     private string $youtube_api_key;
+    private string $youtube_api_key_2;
     private $channelId;
     private HttpClientInterface $httpClient;  // Déclare la propriété
     private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
+    private CacheInterface $cache;
 
     public function __construct(
         string $pythonPath,
@@ -28,6 +32,7 @@ class YouTubeScriptService
         string $apiKey,
         HttpClientInterface $httpClient,  // Injection du client HTTP
         EntityManagerInterface $entityManager,
+        CacheInterface $cache,  // Injection du cache
         ?LoggerInterface $logger = null
     ) {
         $this->pythonPath = $pythonPath;
@@ -36,7 +41,9 @@ class YouTubeScriptService
         $this->httpClient = $httpClient;  // Assigner l'instance du client HTTP
         $this->channelId = $_ENV['YOUTUBE_CHANNEL_ID']; // Récupérer la variable d'environnement ici
         $this->youtube_api_key = $_ENV['YOUTUBE_API_KEY'];  // Si tu as également une API key dans .env
+        $this->youtube_api_key_2 = $_ENV['YOUTUBE_API_KEY_2'];  // Si tu as également une API key dans .env
         $this->entityManager = $entityManager;
+        $this->cache = $cache;
         $this->logger = $logger ?? new NullLogger();
     }
 
@@ -77,47 +84,51 @@ class YouTubeScriptService
 
     public function getLatestVideos(int $maxResults = 3): array
     {
-        $url = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={$this->channelId}&maxResults={$maxResults}&order=date&type=video&videoDuration=long&key={$this->youtube_api_key}";
+        return $this->cache->get('youtube_latest_videos', function (ItemInterface $item) use ($maxResults) {
+            $item->expiresAfter(3600); // 🔥 Stocke en cache pour 1 heure
     
-        $response = $this->httpClient->request('GET', $url);
-        $data = $response->toArray();
+            $url = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={$this->channelId}&maxResults={$maxResults}&order=date&type=video&videoDuration=long&key={$this->youtube_api_key_2}";
     
-        $videos = [];
-        $videoIds = [];
+            $response = $this->httpClient->request('GET', $url);
+            $data = $response->toArray();
     
-        foreach ($data['items'] as $item) {
-            if (!isset($item['id']['videoId'])) {
-                continue;
+            $videos = [];
+            $videoIds = [];
+    
+            foreach ($data['items'] as $item) {
+                if (!isset($item['id']['videoId'])) {
+                    continue;
+                }
+    
+                $videoId = $item['id']['videoId'];
+                $videoIds[] = $videoId;
+    
+                $videos[$videoId] = [
+                    'title' => $item['snippet']['title'],
+                    'thumbnail' => $item['snippet']['thumbnails']['medium']['url'],
+                    'publishedAt' => new \DateTime($item['snippet']['publishedAt']),
+                    'url' => "https://www.youtube.com/watch?v={$videoId}"
+                ];
             }
-            
-            $videoId = $item['id']['videoId'];
-            $videoIds[] = $videoId;
     
-            $videos[$videoId] = [
-                'title' => $item['snippet']['title'],
-                'thumbnail' => $item['snippet']['thumbnails']['medium']['url'],
-                'publishedAt' => new \DateTime($item['snippet']['publishedAt']),
-                'url' => "https://www.youtube.com/watch?v={$videoId}"
-            ];
-        }
+            // 🔹 2e requête pour récupérer les durées et filtrer les Shorts
+            $durations = $this->getVideoDetails($videoIds);
     
-        // 🔹 2e requête pour récupérer les durées et filtrer les Shorts
-        $durations = $this->getVideoDetails($videoIds);
-    
-        $filteredVideos = [];
-        foreach ($videos as $id => $video) {
-            if (isset($durations[$id]) && $durations[$id] >= 60) { // Exclut les Shorts
-                $seconds = $durations[$id];
-                $hours = floor($seconds / 3600);
-                $minutes = floor(($seconds % 3600) / 60);
-                $formattedDuration = ($hours > 0) ? sprintf("%dh %02dmin", $hours, $minutes) : sprintf("%02dmin", $minutes);
-                
-                $video['duration'] = $formattedDuration;
-                $filteredVideos[] = $video;
+            $filteredVideos = [];
+            foreach ($videos as $id => $video) {
+                if (isset($durations[$id]) && $durations[$id] >= 60) { // Exclut les Shorts
+                    $seconds = $durations[$id];
+                    $hours = floor($seconds / 3600);
+                    $minutes = floor(($seconds % 3600) / 60);
+                    $formattedDuration = ($hours > 0) ? sprintf("%dh %02dmin", $hours, $minutes) : sprintf("%02dmin", $minutes);
+                    
+                    $video['duration'] = $formattedDuration;
+                    $filteredVideos[] = $video;
+                }
             }
-        }
     
-        return array_slice($filteredVideos, 0, $maxResults); // Retourne le bon nombre de vidéos
+            return array_slice($filteredVideos, 0, $maxResults); // Retourne le bon nombre de vidéos
+        });
     }
 
     private function formatNumber(int $number): string

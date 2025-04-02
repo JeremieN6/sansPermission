@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\CollaborationType;
+use App\Form\ContactFormType;
 use App\Repository\PlanRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,6 +87,41 @@ class MainController extends AbstractController
             'channel' => $channelInfo,
             'youtube_channel_url' => $youtube_channel_url
             // 'summary' => $summaryResponse,
+        ]);
+    }
+
+    #[Route('/contact', name: 'app_contact')]
+    public function Contact(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        //Youtube Channel URL
+        $youtube_channel_url = "https://www.youtube.com/@sanspermissionpodcast";
+
+        // Récupérer les vidéos
+        $videos = $this->YouTubeScriptService->getLatestVideos(3);
+
+        // Récupérer la description de la chaîne
+        $channelInfo = $this->YouTubeScriptService->getChannelDetails();
+
+        //Formulaire de contact
+        $contactForm = $this->createForm(ContactFormType::class);
+        $contactForm->handleRequest($request);
+
+        if ($contactForm->isSubmitted() && $contactForm->isValid()) {
+            $contact = $contactForm->getData();
+            $entityManager->persist($contact);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre message a bien été envoyée !');
+
+            return $this->redirectToRoute('app_main');
+        }
+                
+        return $this->render('_components/contact.html.twig', [
+            'controller_name' => 'MainController',
+            'videos' => $videos,
+            'channel' => $channelInfo,
+            'youtube_channel_url' => $youtube_channel_url,
+            'contactForm' => $contactForm->createView(),
         ]);
     }
 
