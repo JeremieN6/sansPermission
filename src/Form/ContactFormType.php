@@ -36,7 +36,7 @@ class ContactFormType extends AbstractType
                 'label' => 'Message',
                 'attr' => [
                     'placeholder' => 'Message',
-                    'class' => 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+                    'class' => 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2',
                 ],
                 'label_attr' => ['class' => 'block text-sm font-medium text-gray-700 my-2'],
             ])

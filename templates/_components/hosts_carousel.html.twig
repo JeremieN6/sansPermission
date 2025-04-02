@@ -1,28 +1,115 @@
 <div class="bg-[#FFFFFF] py-24">
-    <div class="flex justify-center items-center gap-8 px-16 w-full">
-        <!-- Left Column -->
-        <div class="w-full pr-8">
-            <h2 class="text-4xl font-bold text-[#091D1C] mb-4">Nos derniers invités</h2>
-            <div class="mb-6">
-                <h3 class="text-2xl font-semibold">Mounir Laggoune</h3>
-                <p class="text-gray-600">Paris, France</p>
-            </div>
-            <p class="text-lg text-gray-800 mb-4">
-               Mounir Laggoune est le co-fondateur et PDG de Finary, une plateforme innovante de gestion de patrimoine lancée en 2020. Finary permet aux investisseurs de suivre, gérer et optimiser leurs investissements via une application unique.
-            </p>
-            <p class="text-lg text-gray-800 mb-4">
-                Sous sa direction, Finary a connu une croissance significative, atteignant un chiffre d'affaires récurrent annuel de 6,5 millions d'euros en 2024, soit une multiplication par 4,3 par rapport à 2023. De plus, la plateforme a traité 100 millions d'euros de transactions cryptographiques et est devenue rentable au quatrième trimestre 2024.                 
-            </p>
-            <div class="flex space-x-4 mb-4">
-                <a href="https://www.linkedin.com/in/mounirlaggoune/" target="_blank"><i class="fa-brands fa-linkedin color-[#002626] text-2xl"></i></a>
-                <a href="https://www.instagram.com/mounir_laggoune/?hl=fr" target="_blank"><i class="fa-brands fa-instagram color-[#002626] text-2xl"></i></a>
-                <a href="https://finary.com/fr"><i class="fa-solid fa-globe color-[#002626] text-2xl"></i></a>
-            </div>
-        </div>
+	<div class="max-w-7xl mx-auto px-8">
+		<div class="flex justify-center items-center flex-col">
+			<div class="flex justify-center items-center w-full">
+				<div class="w-1/2 pr-8">
+			        <h2 class="text-4xl font-bold text-[#091D1C] mb-4">Nos derniers invités</h2>
+					<div class="mb-6">
+						<h3 id="host-name" class="text-2xl font-semibold">Mounir Laggoune</h3>
+						<p id="host-location" class="text-gray-600">Paris, France</p>
+					</div>
+					<p id="host-description" class="text-lg text-gray-800 mb-4">
+						Mounir Laggoune est le co-fondateur et PDG de Finary, une plateforme innovante de gestion de patrimoine lancée en 2020. Finary permet aux investisseurs de suivre, gérer et optimiser leurs investissements via une application unique.
+					</p>
+					<div class="flex space-x-4 mb-4">
+						<a id="host-linkedin" href="#" target="_blank" style="display: none;">
+							<i class="fa-brands fa-linkedin text-lg"></i>
+						</a>
+						<a id="host-instagram" href="#" target="_blank" style="display: none;">
+							<i class="fa-brands fa-instagram text-lg"></i>
+						</a>
+						<a id="host-website" href="#" target="_blank" style="display: none;">
+							<i class="fa-solid fa-globe text-lg"></i>
+						</a>
+						<a id="host-twitter" href="#" target="_blank" style="display: none;">
+							<i class="fa-brands fa-twitter text-lg"></i>
+						</a>
+						<a id="host-tiktok" href="#" target="_blank" style="display: none;">
+							<i class="fa-brands fa-tiktok text-lg"></i>
+						</a>
+					</div>
+				</div>
 
-        <!-- Right Column -->
-        <div class="flex justify-center items-center w-full">
-            <img src="{{asset('assets/images/guests/mounir-laggoune.jpg')}}" alt="Guest Image" class="rounded-lg">
-        </div>
-    </div>
+				<div class="flex justify-center items-center w-1/2">
+					<img id="host-image" src="{{ asset('assets/images/guests/mounir-laggoune-2.jpg') }}" alt="Guest Image" class="rounded-2xl guest-img">
+				</div>
+			</div>
+
+			<!-- Carousel Controls -->
+			<div class="flex justify-center mt-6">
+				<button id="prevHost" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300">←</button>
+				<button id="nextHost" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300 ml-4">→</button>
+			</div>
+		</div>
+	</div>
 </div>
+
+<script>
+	const hosts = [
+		{
+			name: "Fabrice Epelboin",
+			location: "Paris, France",
+			description: "Fabrice Epelboin est un entrepreneur, enseignant et spécialiste des médias et de la cybersécurité. Il est connu pour son expertise sur les sujets liés à la surveillance numérique, la cyberdéfense, la censure sur internet et l'influence des réseaux sociaux.",
+			linkedin: "https://www.linkedin.com/in/epelboin?originalSubdomain=fr",
+			twitter: "https://x.com/epelboin?lang=fr",
+			image: "{{ asset('assets/images/guests/fabrice-epelboin.jpg') }}"
+		},
+		{
+			name: "Mounir Laggoune",
+			location: "Paris, France",
+			description: "Mounir Laggoune est le co-fondateur et PDG de Finary, une plateforme innovante de gestion de patrimoine lancée en 2020.",
+			linkedin: "https://www.linkedin.com/in/mounirlaggoune/",
+			instagram: "https://www.instagram.com/mounir_laggoune/?hl=fr",
+			website: "https://finary.com/fr",
+			image: "{{ asset('assets/images/guests/mounir-laggoune-2.jpg') }}"
+		},
+		{
+			name: "Yoan Drahy",
+			location: "Nice, France",
+			description: "Yoan Drahy est un entrepreneur spécialisé dans l'intelligence artificielle et les solutions SaaS.",
+			linkedin: "https://www.linkedin.com/in/yoan-drahy-624652333/",
+			instagram: "https://www.instagram.com/yoandrahy/",
+			website: "https://www.limova.ai/en/",
+			tiktok: "https://www.tiktok.com/@yoan.drahy",
+			image: "{{ asset('assets/images/guests/yoan-drahy.jpg') }}"
+		},
+		// Ajoutez d'autres hôtes ici
+	];
+
+	let currentHostIndex = 0;
+
+	function updateHost() {
+		const host = hosts[currentHostIndex];
+		document.getElementById('host-name').innerText = host.name;
+		document.getElementById('host-location').innerText = host.location;
+		document.getElementById('host-description').innerText = host.description;
+		document.getElementById('host-image').src = host.image;
+
+		// Mettre à jour les liens des réseaux sociaux
+		document.getElementById('host-linkedin').href = host.linkedin || '#';
+		document.getElementById('host-instagram').href = host.instagram || '#';
+		document.getElementById('host-website').href = host.website || '#';
+		document.getElementById('host-twitter').href = host.twitter || '#';
+		document.getElementById('host-tiktok').href = host.tiktok || '#';
+
+		// Afficher ou masquer les icônes en fonction de la disponibilité des liens
+		document.getElementById('host-linkedin').style.display = host.linkedin ? 'inline' : 'none';
+		document.getElementById('host-instagram').style.display = host.instagram ? 'inline' : 'none';
+		document.getElementById('host-website').style.display = host.website ? 'inline' : 'none';
+		document.getElementById('host-twitter').style.display = host.twitter ? 'inline' : 'none';
+		document.getElementById('host-tiktok').style.display = host.tiktok ? 'inline' : 'none';
+	}
+
+	document.getElementById('prevHost').onclick = function() {
+		currentHostIndex = (currentHostIndex > 0) ? currentHostIndex - 1 : hosts.length - 1;
+		updateHost();
+	};
+
+	document.getElementById('nextHost').onclick = function() {
+		currentHostIndex = (currentHostIndex < hosts.length - 1) ? currentHostIndex + 1 : 0;
+		updateHost();
+	};
+
+	// Initialiser le premier hôte
+	updateHost();
+</script>

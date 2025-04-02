@@ -54,7 +54,7 @@ class YouTubeScriptService
         }
     
         $ids = implode(',', $videoIds);
-        $url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id={$ids}&key={$this->youtube_api_key}";
+        $url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id={$ids}&key={$this->youtube_api_key_2}";
     
         $response = $this->httpClient->request('GET', $url);
         $data = $response->toArray();
@@ -143,7 +143,7 @@ class YouTubeScriptService
 
     public function getChannelDetails(): array
     {
-        $url = "https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id={$this->channelId}&key={$this->youtube_api_key}";
+        $url = "https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id={$this->channelId}&key={$this->youtube_api_key_2}";
     
         $response = $this->httpClient->request('GET', $url);
         $data = $response->toArray();

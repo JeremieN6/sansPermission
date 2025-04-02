@@ -1,22 +1,72 @@
 <div class="bg-[#002626] py-24">
-    <div class="flex justify-center items-center flex-col max-w-7xl mx-auto px-8">
-        <!-- Left Column -->
-        <div class="w-1/2">
-            <blockquote class="text-2xl italic text-white text-center mb-4">
-                "<br>
-                    Tous les gens pourraient devenir millionnaire, en partant de ZÉRO, avec la bourse !
+    <div class="max-w-7xl mx-auto px-8">
+        <div class="flex justify-center items-center flex-col">
+            <div class="text-2xl italic text-white text-center mb-4">
+                <span class="text-4xl" style="font-family: fantasy;">"</span><br>
+                <span id="testimonial-quote" class="testimonial-quote">Tous les gens pourraient devenir millionnaire, en partant de ZÉRO, avec la bourse !</span>
                 <br>
-                "
-            </blockquote>
-            <div class="flex justify-center items-center flex-col">
-                <p class="text-lg font-semibold text-[#FFFFFF]">Mounir Laggoune</p>
-                <p class="text-white">CEO de Finary</p>
+                <span class="text-4xl" style="font-family: fantasy;">"</span>
+            </div>
+            <div class="flex justify-center items-center flex-col mb-4">
+                <p id="testimonial-name" class="text-lg font-semibold text-[#FFFFFF]">Mounir Laggoune</p>
+                <p id="testimonial-profession" class="text-white">CEO de Finary</p>
+            </div>
+            <div class="flex justify-center items-center">
+                <img id="testimonial-image" src="{{asset('assets/images/guests/mounir-laggoune.jpg')}}" alt="Invité Sans Permission" class="rounded-full w-24 h-24 object-cover">
             </div>
         </div>
 
-        <!-- Right Column -->
-        <div class="flex justify-center items-center pt-8">
-            <img src="{{asset('assets/images/guests/mounir-laggoune.jpg')}}" w-12 alt="Robo White" class="rounded-full">
+        <!-- Carousel Controls -->
+        <div class="flex justify-center mt-6">
+            <button id="prevTestimonial" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300">←</button>
+            <button id="nextTestimonial" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300 ml-4">→</button>
         </div>
     </div>
-</div> 
+</div>
+
+<script>
+    const testimonials = [
+        {
+            quote: "L'innovation est la clé du succès dans le monde moderne.",
+            name: "Fabrice Epelboin",
+            profession: "Entrepreneur & spécialiste en cybersécurité",
+            image: "{{ asset('assets/images/guests/fabrice-epelboin.jpg') }}"
+        },
+        {
+            quote: "Tous les gens pourraient devenir millionnaire, en partant de ZÉRO, avec la bourse !",
+            name: "Mounir Laggoune",
+            profession: "CEO de Finary",
+            image: "{{ asset('assets/images/guests/mounir-laggoune.jpg') }}"
+        },
+        {
+            quote: "Le succès est le résultat de la préparation, du travail acharné et de l'apprentissage de l'échec.",
+            name: "Yoan Drahy",
+            profession: "Co-fondateur LIMOVA AI / MOVALI AI",
+            image: "{{ asset('assets/images/guests/yoan-drahy.jpg') }}"
+        }
+    ];
+
+    let currentIndex = 0;
+
+    function updateTestimonial() {
+        const testimonial = testimonials[currentIndex];
+        document.getElementById('testimonial-quote').textContent = testimonial.quote;
+        document.getElementById('testimonial-name').textContent = testimonial.name;
+        document.getElementById('testimonial-profession').textContent = testimonial.profession;
+        document.getElementById('testimonial-image').src = testimonial.image;
+        document.getElementById('testimonial-image').alt = "Photo de " + testimonial.name;
+    }
+
+    document.getElementById('prevTestimonial').addEventListener("click", function() {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : testimonials.length - 1;
+        updateTestimonial();
+    });
+
+    document.getElementById('nextTestimonial').addEventListener("click", function() {
+        currentIndex = (currentIndex < testimonials.length - 1) ? currentIndex + 1 : 0;
+        updateTestimonial();
+    });
+
+    // Initialisation avec le premier témoignage
+    updateTestimonial();
+</script>
