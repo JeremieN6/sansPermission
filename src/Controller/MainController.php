@@ -66,4 +66,28 @@ class MainController extends AbstractController
         $openAiApiKey = $this->getParameter('OPENAI_API_KEY');
         return new Response('<pre>' . print_r($openAiApiKey, true) . '</pre>');
     }
+
+    #[Route('/about', name: 'app_aboutus')]
+    public function aboutUs(): Response
+    {
+        //Youtube Channel URL
+        $youtube_channel_url = "https://www.youtube.com/@sanspermissionpodcast";
+
+        // Récupérer les vidéos
+        $videos = $this->YouTubeScriptService->getLatestVideos(3);
+
+        // Récupérer la description de la chaîne
+        $channelInfo = $this->YouTubeScriptService->getChannelDetails();
+                
+        return $this->render('_components/about_us.html.twig', [
+            'controller_name' => 'MainController',
+            // 'plans' => $plans,
+            'videos' => $videos,
+            'channel' => $channelInfo,
+            'youtube_channel_url' => $youtube_channel_url
+            // 'summary' => $summaryResponse,
+        ]);
+    }
+
+
 }

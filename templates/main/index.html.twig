@@ -3,6 +3,8 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block body %}
+    {% include '_components/hero.html.twig' %}
+    {% include '_components/stats.html.twig' %}
     {% include '_components/episodes/latest_episodes.html.twig' %}
     {% include '_components/podcast_banner.html.twig' %}
     {% include '_components/hosts_carousel.html.twig' %}    

@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À Propos{% endblock %}
+
+{% block body %}
+<section class="py-14 lg:py-6 relative z-0 bg-gray-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
+        <h1
+            class="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl  text-gray-900 mb-5 md:text-5xl md:leading-normal">
+            À propos </span>
+        </h1>
+        <p class="max-w-sm mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9">Quelques mots concernant le podcast.</p>
+    </div>
+</section>
+<section class="bg-[#FFFFFF] py-12">
+    <div class="max-w-7xl mx-auto px-8">
+        <section class="py-14 relative">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative ">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-9">
+                    <div class="img-box">
+                        <img src="{{asset('assets/images/aboutus-2.webp')}}" alt="About Us page"
+                            class="max-lg:mx-auto rounded-full object-cover">
+                    </div>
+                    <div class="lg:pl-[50px] flex items-center">
+                        <div class="data w-full">
+                            <h2
+                                class="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center relative">
+                                Le podcast qui brise les codes</h2>
+                            <p class="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
+                                Sans Permission, c'est le podcast qui dérange, qui inspire et qui pousse à l'action. Animé par des figures emblématiques de l'entrepreneuriat et du business en ligne comme Oussama Ammar et Yomi Denzel, ce rendez-vous hebdomadaire met en lumière des parcours hors du commun, des stratégies business percutantes et des discussions sans filtre sur le monde de l'entrepreneuriat.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-14 relative">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative ">
+                <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-9 ">
+
+                    <div class="lg:pr-24 flex items-center">
+                        <div class="data w-full">
+                            <img src="{{asset('assets/images/aboutus-1.webp')}}" alt="About Us page"
+                                class="block lg:hidden mb-9 mx-auto object-cover">
+                            <h2 class="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center">Pourquoi "Sans Permission" ?</h2>
+                            <p class="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
+                                Parce que l'entrepreneuriat, l'innovation et la réussite ne demandent pas de permission. Ce podcast est un manifeste pour celles et ceux qui osent prendre des risques, qui refusent les dogmes établis et qui veulent créer un impact réel.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="img-box ">
+                        <img src="{{asset('assets/images/aboutus-1.webp')}}" alt="About Us page"
+                            class="hidden lg:block rounded-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+ <section class="py-20 bg-white">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h2 class="font-manrope text-4xl text-center text-gray-900 font-bold mb-14">Ce que vous allez trouver dans chaque épisode</h2>
+        <div class="grid grid-cols-3 gap-8">
+            <!-- Community Card -->
+            <div class="bg-[#002626] backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-lg shadow-black/5">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-3xl font-bold text-white">🏅Authentique</h3>
+                    <span class="p-2 bg-white/20 backdrop-blur-md rounded-full -rotate-45">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </span>
+                </div>
+                <p class="text-white font-medium mb-2">Des conversations authentiques</p>
+                <p class="text-white/60 text-sm">Pas de politiquement correct, juste des échanges francs et pertinents sur le business, l'investissement, la psychologie du succès et bien plus encore.</p>
+            </div>
+
+            <!-- Subscribers Card -->
+            <div class="bg-[#002626] backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-lg shadow-black/5">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-3xl font-bold text-white">🏅Stratégies</h3>
+                    <span class="p-2 bg-white/20 backdrop-blur-md rounded-full -rotate-45">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </span>
+                </div>
+                <p class="text-white font-medium mb-2">Des stratégies actionnables</p>
+                <p class="text-white/60 text-sm">Chaque épisode dévoile des conseils concrets pour avancer dans votre propre parcours entrepreneurial.</p>
+            </div>
+
+            <!-- Guests Card -->
+            <div class="bg-[#002626] backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-lg shadow-black/5">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-3xl font-bold text-white">🏅Rareté</h3>
+                    <span class="p-2 bg-white/20 backdrop-blur-md rounded-full -rotate-45">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </span>
+                </div>
+                <p class="text-white font-medium mb-2">Des invités d'exception</p>
+                <p class="text-white/60 text-sm">Entrepreneurs à succès, investisseurs, personnalités du digital... Tous viennent partager leurs secrets et leçons tirées de leur expérience.</p>
+            </div>
+        </div>
+        </div>
+    </section> 
+
+<section class=" py-14 lg:py-18 bg-gray-50">
+    <div class="flex justify-start flex-col items-start max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+        <div class="mb-8 rounded-full">
+        <h2 class="text-4xl font-manrope font-bold text-gray-900 text-center">Pour qui est ce podcast ?</h2>
+        </div>
+
+        <div>
+            <p class="text-lg text-gray-500 leading-8 text-left">
+                Que vous soyez un entrepreneur aguerri, un aspirant business leader ou simplement curieux de comprendre les rouages de la réussite, Sans Permission est fait pour vous. Ici, pas de théories abstraites, mais du concret, du réel, et surtout de l'énergie pour vous pousser à passer à l'action.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class=" py-14 lg:py-18 bg-white">
+    <div class="flex justify-start flex-col items-start max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+        <div class="mb-8 rounded-full">
+        <h2 class="text-4xl font-manrope font-bold text-gray-900 text-center">Où nous retrouver ?</h2>
+        </div>
+
+        <div>
+            <p class="text-lg text-gray-500 leading-8 text-left">
+                Le podcast est disponible gratuitement sur YouTube et sur toutes les plateformes d'écoute. Abonnez-vous pour ne rater aucun épisode et rejoignez une communauté de passionnés qui, comme vous, ne veulent plus attendre la permission pour réussir.
+            </p>
+        </div>
+    </div>
+</section>
+
+        <div class="mt-8">
+            <a href="{{ path('app_main') }}" class="inline-block px-8 py-4 bg-[#4ADE80] text-black font-medium rounded-full hover:bg-[#22c55e] transition duration-300">
+                Retour à l'accueil
+            </a>
+        </div>
+    
+    </div>
+</section>
+{% endblock %}
