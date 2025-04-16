@@ -12,8 +12,6 @@
 
         {# Section de droite avec le formulaire #}
         <div class="flex items-center justify-center flex-col md:w-2/3 xl:w-1/2 p-8 space-y-6">
-        
-
             <div class="container-title">
                 <h1 class="text-3xl font-bold text-center text-gray-900">Inscription</h1>
             </div>
@@ -21,8 +19,26 @@
             <div class="w-3/4 space-y-4">
             {{ form_errors(registrationForm) }}
 
-{{ form_start(registrationForm) }}
+<div class="flex flex-col">
+   
+{{ form_start(registrationForm, {
+    attr: {'class': 'flex flex-col w-full'}
+}) }} 
+<div class="flex flex-row gap-10">
+    <div class="w-1/2">
+    {{ form_row(registrationForm.nom, {
+        label_attr: {'class': 'block text-sm font-medium text-gray-700'}
+    }) }}
+        {{ form_row(registrationForm.prenom, {
+        label_attr: {'class': 'block text-sm font-medium text-gray-700'}
+    }) }}
     {{ form_row(registrationForm.email, {
+        label_attr: {'class': 'block text-sm font-medium text-gray-700'}
+    }) }}
+    </div>
+
+    <div class="w-1/2">
+        {{ form_row(registrationForm.age, {
         label_attr: {'class': 'block text-sm font-medium text-gray-700'}
     }) }}
     {{ form_row(registrationForm.pseudo, {
@@ -31,9 +47,12 @@
     {{ form_row(registrationForm.plainPassword, {
         label: 'Mot de Passe'
     }) }}
+    </div>
+    </div>
     <div class="__registerForm__customAlignment">
         {{ form_row(registrationForm.rgpd) }}
     </div>
+</div>
 
                    <div class="container_button mt-2">
                     <button type="submit" class="w-full py-2 px-4 bg-[#450996] text-white font-medium rounded-md hover:bg-[#4B25B6] transition duration-300">

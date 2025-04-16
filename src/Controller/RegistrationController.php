@@ -10,22 +10,17 @@ use App\Service\JWTService;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
-    public function register(
-        Request $request, 
-        UserPasswordHasherInterface $userPasswordHasher, 
-        Security $security, 
-        EntityManagerInterface $entityManager,
-        SendMailService $mail,
-        JWTService $jwt): Response
+    #[Route('/inscription', name: 'app_register')]
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator, EntityManagerInterface $entityManager, SendMailService $mail, JWTService $jwt): Response
     {
         $user = new Users();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -42,10 +37,9 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-
             // do anything else you need here, like send an email
 
-            //On génère le jwt de l'utilisateur
+             //On génère le jwt de l'utilisateur
             //On crée le header
             $header = [
                 'type' => 'JWT',
@@ -59,9 +53,9 @@ class RegistrationController extends AbstractController
 
             //On génère le token
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
-            //On envoie un mail
-            $mail->send(
-                'no-replay@j-stream.fr',
+             //On envoie un mail
+             $mail->send(
+                'contact@sanspermission.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
@@ -71,16 +65,21 @@ class RegistrationController extends AbstractController
                 ]
             );
 
-            return $security->login($user, UsersAuthenticator::class, 'main');
+
+            return $userAuthenticator->authenticateUser(
+                $user,
+                $authenticator,
+                $request
+            );
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 
     #[Route('/verification/{token}', name:'verification_user')]
-    public function verifyUser($token, JWTService $jwt, UsersRepository $usersRepository, entityManagerInterface $em): Response
+    public function verifyUser($token, JWTService $jwt, UsersRepository $usersRepository, entityManagerInterface $em,\MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
     {
         //On vérifie si le token est valide, n'a pas expiré et n'a pas été modifié
         if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret')))
@@ -97,11 +96,13 @@ class RegistrationController extends AbstractController
                 $user->setisVerified(true);
                 $em->flush($user);
                 $this->addFlash('succes', 'Utilisateur activé 🚀 !');
-                return $this->redirectToRoute('app_main');
+                // $flashy->success('Félicitations ! Votre compte est activé 🚀 !');
+                return $this->redirectToRoute('app_home');
             }
         }
         //Ici un problème se pose sur le token
-        $this->addFlash('danger', 'Le token est invalid, ou à expiré !');
+        // $flashy->error('Le token est invalid, ou à expiré ⛔!');
+        $this->addFlash('danger', 'Le token est invalid, ou à expiré ⛔!');
         return $this->redirectToRoute('app_login');
     }
 
@@ -111,14 +112,16 @@ class RegistrationController extends AbstractController
         $user = $this->getUser();
 
         if(!$user){
+            // $flashy->error('Vous devez être connecté pour accéder à cette page ⛔ !');
             $this->addFlash('danger', 'Vous devez être connecté pour accéder à cette page ⛔ !');
             return $this->redirectToRoute('app_login');
         }
 
         if($user->getIsVerified())
         {
+            // $flashy->warning('Le compte utilisateur est déja activé !', '');
             $this->addFlash('warring', 'Cet utilisateur est déja activé !');
-            return $this->redirectToRoute('app_main');
+            return $this->redirectToRoute('app_home');
         }
 
             //On génère le jwt de l'utilisateur
@@ -137,7 +140,7 @@ class RegistrationController extends AbstractController
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
             //On envoie un mail
             $mail->send(
-                'no-replay@j-stream.fr',
+                'contact@sanspermission.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
@@ -147,8 +150,10 @@ class RegistrationController extends AbstractController
                 ]
             );
 
+            // $flashy->success('Email de vérification envoyé ✅ !');
+
             $this->addFlash('success', 'Email de vérification envoyé ✅ !');
-            return $this->redirectToRoute('app_main');
+            return $this->redirectToRoute('app_home');
 
     }
 }
