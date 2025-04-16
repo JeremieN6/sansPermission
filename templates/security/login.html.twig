@@ -1,40 +1,63 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_login.html.twig' %}
 
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+<div class="flex items-center justify-center bg-gray-100">
+    <div class="flex w-full bg-white shadow-md overflow-hidden h-screen">
+        {# Section de gauche avec l'illustration - cachée en mobile #}
+        <div class="hidden sm:flex w-1/3 xl:w-1/2 bg-[#450996] container-logo flex justify-center items-center">
+            <img src="{{asset('assets/images/logo-no-bg.png')}}" alt="" class="container-logo w-1/3">
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Connexion</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Mot de passe</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+        {# Section de droite avec le formulaire #}
+        <div class="flex items-center justify-center flex-col md:w-2/3 xl:w-1/2 p-8 space-y-6">
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+            <div class="container-title">
+                <h1 class="text-3xl font-bold text-center text-gray-900">Connexion</h1>
+            </div>
+            
+            {% if error %}
+                <div class="alert alert-danger mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Se souvenir de moi
-        </label>
+            {% if app.user %}
+                <div class="mb-3 text-center">
+                    Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" class="text-blue-500 hover:underline">Déconnexion</a>
+                </div>
+            {% endif %}
+
+            <form method="post" class="w-3/4 space-y-4">
+                <div>
+                    <label for="inputEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2" autocomplete="email" required autofocus>
+                </div>
+                <div>
+                    <label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                    <input type="password" name="password" id="inputPassword" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2" autocomplete="current-password" required>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="_remember_me" id="rememberMe" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                        <label for="rememberMe" class="ml-2 block text-sm text-gray-900">Se souvenir de moi</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-2 px-4 bg-[#450996] text-white font-medium rounded-md hover:bg-[#4B25B6] transition duration-300">
+                    Connexion
+                </button>
+                <p class="text-center">
+                    <a href="#" class="text-blue-500 hover:underline">Mot de passe oublié ?</a>
+                </p>
+                <p class="text-center">
+                    Pas encore inscrit(e) ? <a href="{{ path('app_register') }}" class="text-blue-500 hover:underline">M'inscrire</a>
+                </p>
+            </form>
+        </div>
     </div>
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Connexion
-    </button>
-    <p><a href="#">Mot de passe oublié</a></p>
-    <p>Pas encore inscrit(e) ?<a href="{{ path('app_register')}}"> M'inscrire</a></p>
-</form>
-
+</div>
 {% endblock %}
