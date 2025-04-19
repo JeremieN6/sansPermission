@@ -1,12 +1,21 @@
 {% for label, messages in app.flashes %}
     {% for message in messages %}
-        <div class="alert alert-{{ label }} alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <div class="alert-message">
-                {{message|raw}}
-            </div>
+<div class="fixed top-4 right-4 bg-{{ label }}-100 border-l-4 border-{{ label }}-500 text-{{ label }}-700 p-4 rounded-lg shadow-lg flex items-start space-x-4" role="alert">
+    <div class="flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-{{ label }}-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 18h.01M21 12c0-4.97-4.03-9-9-9S3 7.03 3 12s4.03 9 9 9 9-4.03 9-9z" />
+        </svg>
+    </div>
+    <div>
+        <div class="alert-message">
+            {{ message|raw }}
         </div>
+    </div>
+    <button type="button" class="text-{{ label }}-700 hover:text-{{ label }}-900 focus:outline-none" aria-label="Close" onclick="this.parentElement.remove()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+</div>
     {% endfor %}
 {% endfor %}

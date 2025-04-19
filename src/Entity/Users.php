@@ -77,11 +77,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserScores::class, mappedBy: 'user')]
     private Collection $userScores;
 
+    /**
+     * @var Collection<int, QuizAtempt>
+     */
+    #[ORM\OneToMany(targetEntity: QuizAtempt::class, mappedBy: 'user')]
+    private Collection $quizAtempts;
+
     public function __construct()
     {
         $this->subscriptions = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
         $this->userScores = new ArrayCollection();
+        $this->quizAtempts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -344,6 +351,36 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userScore->getUser() === $this) {
                 $userScore->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, QuizAtempt>
+     */
+    public function getQuizAtempts(): Collection
+    {
+        return $this->quizAtempts;
+    }
+
+    public function addQuizAtempt(QuizAtempt $quizAtempt): static
+    {
+        if (!$this->quizAtempts->contains($quizAtempt)) {
+            $this->quizAtempts->add($quizAtempt);
+            $quizAtempt->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuizAtempt(QuizAtempt $quizAtempt): static
+    {
+        if ($this->quizAtempts->removeElement($quizAtempt)) {
+            // set the owning side to null (unless already changed)
+            if ($quizAtempt->getUser() === $this) {
+                $quizAtempt->setUser(null);
             }
         }
 

@@ -3,6 +3,7 @@
 {% block title %}PodQuizMaster - Accueil{% endblock %}
 
 {% block body %}
+{% set podcasteurs = ['podcasteur-1.webp', 'podcasteur-2.webp', 'podcasteur-3.webp'] %}
 <div class="flex h-screen bg-gray-50">
     {% include 'quiz/_navbar.html.twig' %}
 
@@ -20,11 +21,11 @@
                 <div class="w-2/3">
                     {# Episode Info #}
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4">Les derniers invités</h3>
+                        <h3 class="text-lg font-semibold mb-4">Nos podcasteurs</h3>
                         <div class="flex gap-4 mb-4">
-                            {% for i in 1..5 %}
+                            {% for podcasteur in podcasteurs %}
                                 <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-                                    <img src="https://www.placehold.co/48x48" alt="Speaker {{ i }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset('assets/images/podcasteurs/' ~ podcasteur) }}" alt="Speaker {{ loop.index }}" class="w-full h-full object-cover">
                                 </div>
                             {% endfor %}
                         </div>
@@ -75,7 +76,7 @@
                             <h3 class="font-semibold">🙋 Mon Profil Quiz</h3>
                             <button class="px-4 py-2 bg-black text-white rounded-lg">Voir</button>
                         </div>
-                        <p class="text-sm text-gray-600">Voir mes performances sur les précédents quizzes.</p>
+                        <p class="text-sm text-gray-600">Voir mes performances sur les précédents quiz.</p>
                     </div>
                 </div>
                 <div class="flex flex-col gap-10 w-1/3">

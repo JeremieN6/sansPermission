@@ -21,13 +21,24 @@
     </head>
     <body>
         {% if app.user and app.user.isVerified == false %}
-        <div class="alert alert--warning alert-dismissable" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" 
-            aria-label="Close"></button>
-            <div class="alert-message">
-                <strong>Bonjour, {{app.user.pseudo}}</strong>, <br> votre compte n'est pas encore activé. <br> Un lien d'activation vous a été envoyé par mail.<br>
-                <a class="flashy__body" href="{{path('resend_verif')}}" target="_blank">Pas de lien ? <strong>Renvoyez le lien d'activation.</strong></a>
+        <div class="fixed top-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-lg flex items-start space-x-4" role="alert">
+            <div class="flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 18h.01M21 12c0-4.97-4.03-9-9-9S3 7.03 3 12s4.03 9 9 9 9-4.03 9-9z" />
+                </svg>
             </div>
+            <div>
+                <p class="font-bold">Bonjour, {{ app.user.pseudo }}</p>
+                <p class="mt-1 text-sm">Votre compte n'est pas encore activé. Un lien d'activation vous a été envoyé par mail.</p>
+                <a href="{{ path('resend_verif') }}" target="_blank" class="text-blue-600 hover:underline mt-2 inline-block">
+                    Pas de lien ? <strong>Renvoyez le lien d'activation.</strong>
+                </a>
+            </div>
+            <button type="button" class="text-yellow-700 hover:text-yellow-900 focus:outline-none" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
         {% endif %}
         {% include '_partials/_flash.html.twig' %}

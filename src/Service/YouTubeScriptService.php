@@ -82,7 +82,7 @@ class YouTubeScriptService
         return sprintf("%02dmin", $interval->i);
     }
 
-    public function getLatestVideos(int $maxResults = 3): array
+    public function getLatestVideos(int $maxResults = 4): array
     {
         return $this->cache->get('youtube_latest_videos', function (ItemInterface $item) use ($maxResults) {
             $item->expiresAfter(3600); // 🔥 Stocke en cache pour 1 heure

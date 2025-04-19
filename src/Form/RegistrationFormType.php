@@ -30,12 +30,12 @@ class RegistrationFormType extends AbstractType
                 'class' => "mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2",
             ]
         ])
-            ->add('email', NumberType::class, [
+            ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => "mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2",
                 ]
             ])
-            ->add('age', TextType::class, [
+            ->add('age', NumberType::class, [
                 'attr' => [
                     'class' => "mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2",
                 ]
