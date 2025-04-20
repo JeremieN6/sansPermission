@@ -90,9 +90,21 @@ class EpisodesCrudController extends AbstractCrudController
         $url = $episode->getVideoUrl();
 
         try {
-            $updatedEpisode = $this->youTubeScriptService->processYoutubeVideo($url);
-            $this->addFlash('success', 'Transcript récupéré avec succès !');
+            $videoData = $this->youTubeScriptService->processYoutubeVideo($url);
+            
+            // Mise à jour de l'épisode avec les nouvelles données
+            $episode->setTitle($videoData['title']);
+            $episode->setDescription($videoData['description']);
+            $episode->setReleaseDate($videoData['publishedAt']);
+            $episode->setTranscript($videoData['transcript']);
+            $episode->setStatus(Episodes::STATUS_COMPLETED);
+            
+            $this->entityManager->flush();
+            
+            $this->addFlash('success', 'Informations et transcript de la vidéo récupérés avec succès !');
         } catch (\Exception $e) {
+            $episode->setStatus(Episodes::STATUS_ERROR);
+            $this->entityManager->flush();
             $this->addFlash('danger', $e->getMessage());
         }
 

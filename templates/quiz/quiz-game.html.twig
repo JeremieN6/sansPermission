@@ -1,0 +1,40 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}PodQuizMaster - Quiz Game{% endblock %}
+
+{% block body %}
+<div class="flex h-screen bg-gray-50">
+    {% include 'quiz/_navbar.html.twig' %}
+
+    <div class="flex-1 overflow-auto">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">Question {{ currentQuestionIndex + 1 }}:</h2>
+            </div>
+
+            {% if questions[currentQuestionIndex] is defined %}
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h3 class="text-lg font-semibold mb-4">{{ questions[currentQuestionIndex].content }}</h3>
+                    <form method="post" action="{{ path('quiz_game', {'id': quiz.id}) }}">
+                        <div class="space-y-3">
+                            {% for answer in questions[currentQuestionIndex].answers %}
+                                <button name="answer" value="{{ answer.id }}" class="w-full text-left px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">
+                                    {{ answer.content }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="currentQuestionIndex" value="{{ currentQuestionIndex }}">
+                    </form>
+                </div>
+            {% else %}
+                <p>Quiz terminé !</p>
+            {% endif %}
+
+            <div class="bg-pink-100 rounded-lg p-4">
+                <h3 class="font-semibold">Score: <span class="text-red-500">{{ currentScore }}</span></h3>
+                <p>Progress: Question {{ currentQuestionIndex + 1 }} of {{ questions|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

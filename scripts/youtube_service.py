@@ -3,6 +3,7 @@ from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 import json
 import re
+import os
 
 def extract_video_id(url):
     """Extrait l'ID de la vidéo d'une URL YouTube."""
@@ -81,6 +82,7 @@ def process_video(api_key, url):
 
 if __name__ == "__main__":
     import sys
+    import os
     if len(sys.argv) != 3:
         print("Usage: python youtube_service.py API_KEY VIDEO_URL")
         sys.exit(1)
@@ -90,9 +92,13 @@ if __name__ == "__main__":
     
     try:
         result = process_video(api_key, video_url)
-        with open('video_data.json', 'w', encoding='utf-8') as f:
+        # Obtenir le chemin du répertoire du script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        output_file = os.path.join(script_dir, 'video_data.json')
+        
+        with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(result, f, ensure_ascii=False, indent=2)
-        print("Données extraites avec succès")
+        print(f"Données extraites avec succès dans : {os.path.abspath(output_file)}")
     except Exception as e:
         print(f"Erreur: {str(e)}")
         sys.exit(1)

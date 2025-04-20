@@ -12,6 +12,7 @@ use GuzzleHttp\Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Process\Process;
 
 class YouTubeScriptService
 {
@@ -162,5 +163,150 @@ class YouTubeScriptService
             'totalViews' => $this->formatNumber((int) $channel['statistics']['viewCount']),
             'videoCount' => $this->formatNumber((int) $channel['statistics']['videoCount']),
         ];
+    }
+
+    private function extractVideoId(string $url): ?string
+    {
+        $patterns = [
+            '/(?:v=|\/)([0-9A-Za-z_-]{11}).*/',  // URLs standards et partagées
+            '/(?:shorts\/)([0-9A-Za-z_-]{11})/',  // URLs de shorts
+        ];
+        
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $url, $matches)) {
+                return $matches[1];
+            }
+        }
+        return null;
+    }
+
+    public function getVideoThumbnail(string $videoUrl): ?string
+    {
+        $videoId = $this->extractVideoId($videoUrl);
+        if (!$videoId) {
+            return null;
+        }
+
+        $url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id={$videoId}&key={$this->youtube_api_key_2}";
+        
+        try {
+            $response = $this->httpClient->request('GET', $url);
+            $data = $response->toArray();
+            
+            if (empty($data['items'])) {
+                return null;
+            }
+            
+            return $data['items'][0]['snippet']['thumbnails']['medium']['url'];
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération de la miniature : ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function getTranscriptFromPython(string $videoUrl): ?string
+    {
+        try {
+            $this->logger->info('Démarrage de la récupération du transcript pour : ' . $videoUrl);
+            
+            // Vérifier que le script existe
+            if (!file_exists($this->scriptPath)) {
+                throw new \Exception('Le script Python n\'existe pas : ' . $this->scriptPath);
+            }
+
+            // Construire la commande
+            $process = new Process([
+                $this->pythonPath,
+                $this->scriptPath,
+                $this->youtube_api_key_2,
+                $videoUrl
+            ]);
+            
+            $this->logger->info('Exécution de la commande : ' . $process->getCommandLine());
+            
+            // Augmenter le timeout si nécessaire
+            $process->setTimeout(60);
+            
+            // Exécuter le script
+            $process->run();
+
+            // Vérifier si le script s'est bien exécuté
+            if (!$process->isSuccessful()) {
+                $this->logger->error('Erreur lors de l\'exécution du script Python: ' . $process->getErrorOutput());
+                throw new \Exception('Erreur lors de l\'exécution du script Python: ' . $process->getErrorOutput());
+            }
+
+            // Récupérer le chemin du fichier JSON
+            $jsonFile = dirname($this->scriptPath) . '/video_data.json';
+            $this->logger->info('Recherche du fichier JSON : ' . $jsonFile);
+
+            if (!file_exists($jsonFile)) {
+                throw new \Exception('Le fichier video_data.json n\'a pas été créé');
+            }
+
+            // Lire et décoder le fichier JSON
+            $jsonContent = file_get_contents($jsonFile);
+            if ($jsonContent === false) {
+                throw new \Exception('Impossible de lire le fichier video_data.json');
+            }
+
+            $data = json_decode($jsonContent, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception('Erreur de décodage JSON: ' . json_last_error_msg());
+            }
+
+            if (!isset($data['transcript'])) {
+                throw new \Exception('Le transcript n\'est pas présent dans les données JSON');
+            }
+
+            $this->logger->info('Transcript récupéré avec succès');
+            return $data['transcript'];
+
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération du transcript: ' . $e->getMessage());
+            throw $e; // Propager l'erreur pour la gérer dans processYoutubeVideo
+        }
+    }
+
+    public function processYoutubeVideo(string $url): array
+    {
+        $videoId = $this->extractVideoId($url);
+        if (!$videoId) {
+            throw new \Exception("URL YouTube invalide");
+        }
+
+        try {
+            // Récupérer les informations de la vidéo via l'API YouTube
+            $apiUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id={$videoId}&key={$this->youtube_api_key_2}";
+            $response = $this->httpClient->request('GET', $apiUrl);
+            $data = $response->toArray();
+
+            if (empty($data['items'])) {
+                throw new \Exception("Vidéo non trouvée");
+            }
+
+            $videoInfo = $data['items'][0]['snippet'];
+            $contentDetails = $data['items'][0]['contentDetails'];
+
+            // Récupérer le transcript via le script Python
+            $transcript = $this->getTranscriptFromPython($url);
+            if (!$transcript) {
+                throw new \Exception("Impossible de récupérer le transcript de la vidéo");
+            }
+
+            // Formater les données
+            return [
+                'title' => $videoInfo['title'],
+                'description' => $videoInfo['description'],
+                'publishedAt' => new \DateTime($videoInfo['publishedAt']),
+                'duration' => $contentDetails['duration'],
+                'thumbnail' => $videoInfo['thumbnails']['medium']['url'],
+                'videoId' => $videoId,
+                'url' => $url,
+                'transcript' => $transcript
+            ];
+        } catch (\Exception $e) {
+            throw new \Exception("Erreur lors de la récupération des informations de la vidéo : " . $e->getMessage());
+        }
     }
 }
