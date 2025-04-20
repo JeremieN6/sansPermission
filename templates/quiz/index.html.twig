@@ -1,113 +1,89 @@
 {% extends 'base_login.html.twig' %}
 
-{% block title %}PodQuizMaster - Accueil{% endblock %}
+{% block title %}PodQuizMaster - Accueil
+{% endblock %}
 
 {% block body %}
-{% set podcasteurs = ['podcasteur-1.webp', 'podcasteur-2.webp', 'podcasteur-3.webp'] %}
-<div class="flex h-screen bg-gray-50">
-    {% include 'quiz/_navbar.html.twig' %}
+	{% set podcasteurs = ['podcasteur-1.webp', 'podcasteur-2.webp', 'podcasteur-3.webp'] %}
+	<div class="flex h-screen bg-gray-50">
+		{% include 'quiz/_navbar.html.twig' %}
 
-    {# Main Content #}
-    <div class="flex-1 overflow-auto">
-        <div class="p-8">
-            {# Header with User Info #}
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold">Bienvenue sur le Quiz Sans Permission, User!</h2>
-                <div class="flex items-center">
-                    <img src="https://www.placehold.co/48x48" alt="User Avatar" class="w-10 h-10 rounded-full">
-                </div>
-            </div>
-            <div class="flex gap-10 w-full">
-                <div class="w-2/3">
-                    {# Episode Info #}
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4">Nos podcasteurs</h3>
-                        <div class="flex gap-4 mb-4">
-                            {% for podcasteur in podcasteurs %}
-                                <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-                                    <img src="{{ asset('assets/images/podcasteurs/' ~ podcasteur) }}" alt="Speaker {{ loop.index }}" class="w-full h-full object-cover">
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <hr class="border-grey-800 dark:border-neutral-500">
+		{# Main Content #}
+		<div class="flex-1 overflow-auto">
+			<div
+				class="p-8">
+				{# Header with User Info #}
+				<div class="flex justify-between items-center mb-8">
+					<h2 class="text-2xl font-bold">Bienvenue sur le Quiz Sans Permission, User!</h2>
+					<div class="flex items-center">
+						<img src="https://www.placehold.co/48x48" alt="User Avatar" class="w-10 h-10 rounded-full">
+					</div>
+				</div>
+				<div class="flex gap-5 w-full">
+					<div
+						class="w-2/3">
+						{# Episode Info #}
+						<div class="mb-8">
+							<h3 class="text-lg font-semibold mb-4">Nos podcasteurs</h3>
+							<div class="flex gap-4 mb-4">
+								{% for podcasteur in podcasteurs %}
+									<div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+										<img src="{{ asset('assets/images/podcasteurs/' ~ podcasteur) }}" alt="Speaker {{ loop.index }}" class="w-full h-full object-cover">
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+						<hr class="border-grey-800 dark:border-neutral-500">
 
-                    <div class="py-12">
-                        <div class="max-w-7xl mx-auto px-8">
-                            <div class="flex justify-between" id="episodes_ancre">
-                                <h2 class="font-bold text-#091D1C mb-6">Derniers épisodes</h2>
-                                <a href="https://www.youtube.com/@sanspermissionpodcast/videos" target="_blank" class="text-#091D1C font-medium hover:text-green-400">Voir la liste des épisodes</a>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                {% for video in videos %}
-                                <a href="{{ video.url }}" target="_blank">
-                                    <div class="bg-[#003737] rounded-3xl p-6">
-                                        <div class="container-thumnail relative">
-                                            <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="rounded-lg mb-4 w-full">
-                                        </div>
-                                        <h3 class="font-semibold text-white">{{ video.title | raw }}</h3>
-                                    </div>
-                                </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+						<div class="py-12">
+							<div class="max-w-7xl mx-auto px-8">
+								<div class="flex justify-between" id="episodes_ancre">
+									<h2 class="font-bold text-#091D1C mb-6">Derniers épisodes</h2>
+									<a href="https://www.youtube.com/@sanspermissionpodcast/videos" target="_blank" class="text-#091D1C font-medium hover:text-green-400">Voir la liste des épisodes</a>
+								</div>
+								<div class="grid grid-cols-2 gap-4">
+									{% for video in videos %}
+										<a href="{{ video.url }}" target="_blank">
+											<div class="bg-[#003737] rounded-3xl p-6">
+												<div class="container-thumnail relative">
+													<img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="rounded-lg mb-4 w-full">
+												</div>
+												<h3 class="font-semibold text-white">{{ video.title | raw }}</h3>
+											</div>
+										</a>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
 
-                    <div class="bg-pink-50 rounded-lg p-4 mt-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-semibold"> 🎢 Quiz en tendance ou populaires</h3>
-                            <button class="px-4 py-2 bg-black text-white rounded-lg">Démarrer</button>
-                        </div>
-                        <p class="text-sm text-gray-600">Orientez vous vers les quiz les plus vivants et les plus tendances !</p>
-                    </div>
+						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+							<div class="flex justify-between items-center mb-2">
+								<h3 class="font-semibold">
+									🎢 Quiz en tendance ou populaires</h3>
+								<button class="px-4 py-2 bg-black text-white rounded-lg">Démarrer</button>
+							</div>
+							<p class="text-sm text-gray-600">Orientez vous vers les quiz les plus vivants et les plus tendances !</p>
+						</div>
 
-                    
 
-                    <div class="bg-pink-50 rounded-lg p-4 mt-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-semibold">👑 Challenge du jour !</h3>
-                            <button class="px-4 py-2 bg-black text-white rounded-lg">Relever le défi</button>
-                        </div>
-                        <p class="text-sm text-gray-600">Cette semaine relève le défi et répond au quiz le plus rapidement possible tout en ayant le plus de bonne réponse possible.</p>
-                    </div>
+						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+							<div class="flex justify-between items-center mb-2">
+								<h3 class="font-semibold">👑 Challenge du jour !</h3>
+								<button class="px-4 py-2 bg-black text-white rounded-lg">Relever le défi</button>
+							</div>
+							<p class="text-sm text-gray-600">Cette semaine relève le défi et répond au quiz le plus rapidement possible tout en ayant le plus de bonne réponse possible.</p>
+						</div>
 
-                    <div class="bg-pink-50 rounded-lg p-4 mt-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-semibold">🙋 Mon Profil Quiz</h3>
-                            <button class="px-4 py-2 bg-black text-white rounded-lg">Voir</button>
-                        </div>
-                        <p class="text-sm text-gray-600">Voir mes performances sur les précédents quiz.</p>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-10 w-1/3">
-                {# Left Column #}
-                <div class="bg-pink-50 rounded-lg p-4 mt-6">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold">Quiz de l'épisode</h3>
-                        <button class="px-4 py-2 bg-black text-white rounded-lg">Démarrer</button>
-                    </div>
-                    <p class="text-sm text-gray-600">Lancez le quiz du dernier épisode du podcast !</p>
-                </div>
-
-                {# Right Column #}
-                <div class="bg-pink-50 rounded-lg p-6">
-                    <h3 class="font-semibold mb-4">Rankings</h3>
-                    <div class="space-y-4">
-                        {% for position in ['Top', 'Second', 'Third'] %}
-                            <div class="flex items-center justify-between bg-white p-3 rounded-lg">
-                                <div class="flex items-center gap-3">
-                                    <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">{{ loop.index }}</span>
-                                    <span>Pseudo</span>
-                                </div>
-                                <span class="text-sm">Points</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <button class="w-full mt-4 px-4 py-2 bg-white text-black rounded-lg">View</button>
-                </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+							<div class="flex justify-between items-center mb-2">
+								<h3 class="font-semibold">🙋 Mon Profil Quiz</h3>
+								<button class="px-4 py-2 bg-black text-white rounded-lg">Voir</button>
+							</div>
+							<p class="text-sm text-gray-600">Voir mes performances sur les précédents quiz.</p>
+						</div>
+					</div>
+					{% include 'quiz/_side.html.twig' %}
+				</div>
+			</div>
+		</div>
+	{% endblock %}

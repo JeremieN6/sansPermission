@@ -52,7 +52,7 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz-home', name: 'quiz_home')]
-    public function indexQuiz(
+    public function quizIndex (
         Request $request,
         EntityManagerInterface $entityManager,
         UserScoresRepository $userScoresRepository,
@@ -70,4 +70,19 @@ class QuizController extends AbstractController
             // 'allQuizzes' => $allQuizzes,
         ]);
     }
+
+    #[Route('/quiz-list', name: 'quiz_list')]
+    public function quizList(
+        QuizzesRepository $quizzesRepository
+    ){
+
+        // Récupérer tous les quiz
+        $allQuizzes = $quizzesRepository->findAll();
+
+        return $this->render('quiz/list.html.twig', [
+            'controller_name' => 'QuizController',
+            'allQuizzes' => $allQuizzes,
+        ]);
+    }
+
 }
