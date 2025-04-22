@@ -389,21 +389,22 @@ class OpenAIService
                     - Ne posez jamais deux fois la même question
                     - Chaque réponse doit être une phrase complète et significative
                     - Les réponses doivent être claires et non ambiguës
-                    - La bonne réponse n'est pas forcéement la première réponse
+                    - Il est INTERDIT de mettre systématiquement la bonne réponse en première position
+                    - Vous DEVEZ varier la position de la bonne réponse pour chaque question
                     
                     Format STRICT à respecter pour CHAQUE question :
                     1. [La question complète]
-                    (+) [La bonne réponse]
                     (-) [Première mauvaise réponse]
                     (-) [Deuxième mauvaise réponse]
+                    (+) [La bonne réponse]
                     (-) [Troisième mauvaise réponse]
 
                     [ligne vide obligatoire entre chaque question]
 
                     Exemple de format attendu :
                     1. Quelle est la capitale de la France ?
-                    (+) Paris est la capitale de la France.
                     (-) Londres est la capitale de la France.
+                    (+) Paris est la capitale de la France.
                     (-) Berlin est la capitale de la France.
                     (-) Madrid est la capitale de la France.
 
