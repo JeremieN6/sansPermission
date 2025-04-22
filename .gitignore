@@ -25,4 +25,4 @@
 ###< symfony/asset-mapper ###
 
 ###> cursor ###
-.specstory/
+.specstory/*
