@@ -76,6 +76,10 @@ class QuizGeneratorService extends AbstractController
     
             $questions = $this->openAIService->generateQuestion($chunk);
             
+            $this->logger->info('Réponse OpenAI reçue', [
+                'response' => $questions
+            ]);
+            
             if (!isset($questions['choices'][0]['message']['content'])) {
                 $this->logger->error("Réponse OpenAI sans contenu valide", ['response' => $questions]);
                 continue;
@@ -83,15 +87,28 @@ class QuizGeneratorService extends AbstractController
     
             $content = $questions['choices'][0]['message']['content'];
             $questionsArray = explode("\n", trim($content)); // Sépare les lignes
+            
+            $this->logger->info('Questions extraites', [
+                'questions_array' => $questionsArray
+            ]);
     
             foreach ($questionsArray as $line) {
                 $line = trim($line);
                 if (empty($line)) continue;
     
                 $currentQuestionSet[] = $line;
+                
+                $this->logger->debug('Ligne ajoutée au set courant', [
+                    'line' => $line,
+                    'current_set_size' => count($currentQuestionSet)
+                ]);
     
                 // Quand nous avons 5 lignes (1 question + 4 réponses), on traite le groupe
                 if (count($currentQuestionSet) === 5) {
+                    $this->logger->info('Traitement d\'un groupe de questions complet', [
+                        'question_set' => $currentQuestionSet
+                    ]);
+                    
                     $this->saveQuestionGroup($currentQuestionSet, $quiz);
                     $currentQuestionSet = []; // Réinitialiser pour le prochain groupe
                     $totalQuestions++;
@@ -106,7 +123,8 @@ class QuizGeneratorService extends AbstractController
         // Gérer le dernier groupe s'il est incomplet
         if (!empty($currentQuestionSet)) {
             $this->logger->warning("Groupe de questions incomplet ignoré", [
-                'count' => count($currentQuestionSet)
+                'count' => count($currentQuestionSet),
+                'content' => $currentQuestionSet
             ]);
         }
     
@@ -121,17 +139,18 @@ class QuizGeneratorService extends AbstractController
         // Vérifier que nous avons exactement 5 éléments
         if (count($questionSet) !== 5) {
             $this->logger->warning('Format de question invalide - nombre incorrect d\'éléments', [
-                'count' => count($questionSet)
+                'count' => count($questionSet),
+                'question_set' => $questionSet
             ]);
             return;
         }
     
-        // Trouver la question (la ligne qui ne commence pas par [✓] ou [✗])
+        // Trouver la question (la ligne qui ne commence pas par (+) ou (-))
         $questionText = null;
         $answers = [];
         
         foreach ($questionSet as $line) {
-            if (!str_starts_with($line, '[✓]') && !str_starts_with($line, '[✗]')) {
+            if (!str_starts_with($line, '(+)') && !str_starts_with($line, '(-)')) {
                 $questionText = preg_replace('/^\d+\.\s*/', '', $line);
             } else {
                 $answers[] = $line;
@@ -142,7 +161,9 @@ class QuizGeneratorService extends AbstractController
         if ($questionText === null || count($answers) !== 4) {
             $this->logger->warning('Format de question invalide - structure incorrecte', [
                 'has_question' => ($questionText !== null),
-                'answers_count' => count($answers)
+                'answers_count' => count($answers),
+                'question_text' => $questionText,
+                'answers' => $answers
             ]);
             return;
         }
@@ -158,7 +179,7 @@ class QuizGeneratorService extends AbstractController
     
         // Créer les réponses
         foreach ($answers as $answer) {
-            $isCorrect = str_starts_with($answer, '[✓]');
+            $isCorrect = str_starts_with($answer, '(+)');
             $answerText = trim(substr($answer, 3));
     
             $answerEntity = new Answers();
@@ -167,12 +188,11 @@ class QuizGeneratorService extends AbstractController
             $answerEntity->setQuestionId($questionEntity);
             $answerEntity->setCreatedAt(new \DateTimeImmutable());
             $answerEntity->setUpdatedAt(new \DateTimeImmutable());
-            $answerEntity->setQuestionId($questionEntity);
 
             $this->entityManager->persist($answerEntity);
         }
     
-        $this->entityManager->flush();
+        // On ne fait plus de flush ici, il sera fait dans generateQuiz
     }
 
 }

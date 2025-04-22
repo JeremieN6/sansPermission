@@ -377,7 +377,7 @@ class OpenAIService
             $data = [
                 'model' => $modelId,
                 'messages' => [
-                    ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Générez EXACTEMENT 20 questions pertinentes avec leurs réponses.'],
+                    ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Votre tâche est de générer EXACTEMENT 20 questions pertinentes avec leurs réponses, en suivant strictement le format spécifié.'],
                     ['role' => 'user', 'content' => "Analysez cette transcription et générez EXACTEMENT 20 questions en traversant tous les sujets du transcript.
                     Autrement dit en choisissant les sujets abordés tout le long de la vidéo, jusqu'à la fin. Ne posez jamais deux fois la même question.
 
@@ -386,16 +386,27 @@ class OpenAIService
                     - Chaque question DOIT avoir EXACTEMENT 4 réponses
                     - Une seule réponse doit être correcte par question
                     - Les questions doivent être variées et pertinentes
-                    - Ne pose jamais deux fois la même question
+                    - Ne posez jamais deux fois la même question
+                    - Chaque réponse doit être une phrase complète et significative
+                    - Les réponses doivent être claires et non ambiguës
+                    - La bonne réponse n'est pas forcéement la première réponse
                     
-                    Format STRICT à respecter :
-                    1. Question
-                    [✓] Bonne réponse
-                    [✗] Mauvaise réponse 1
-                    [✗] Mauvaise réponse 2
-                    [✗] Mauvaise réponse 3
+                    Format STRICT à respecter pour CHAQUE question :
+                    1. [La question complète]
+                    (+) [La bonne réponse]
+                    (-) [Première mauvaise réponse]
+                    (-) [Deuxième mauvaise réponse]
+                    (-) [Troisième mauvaise réponse]
 
-                    (ligne vide entre chaque question)
+                    [ligne vide obligatoire entre chaque question]
+
+                    Exemple de format attendu :
+                    1. Quelle est la capitale de la France ?
+                    (+) Paris est la capitale de la France.
+                    (-) Londres est la capitale de la France.
+                    (-) Berlin est la capitale de la France.
+                    (-) Madrid est la capitale de la France.
+
 
                     Transcription à analyser :
                     $transcript"],
@@ -406,6 +417,11 @@ class OpenAIService
                 'frequency_penalty' => 0.3
             ];
 
+            $this->logger->info('Envoi de la requête à OpenAI', [
+                'model' => $modelId,
+                'transcript_length' => strlen($transcript)
+            ]);
+
             $response = HttpClient::create()->request('POST', $endpoint, [
                 'headers' => [
                     'Authorization' => "Bearer {$this->apiKey}",
@@ -415,7 +431,13 @@ class OpenAIService
                 'timeout' => 180 // 3 minutes pour permettre la génération complète
             ]);
 
-            return $response->toArray();
+            $result = $response->toArray();
+            
+            $this->logger->info('Réponse reçue de OpenAI', [
+                'content' => $result['choices'][0]['message']['content'] ?? 'Pas de contenu'
+            ]);
+
+            return $result;
         } catch (\Exception $e) {
             $this->logger->error('Erreur lors de la génération des questions', [
                 'error' => $e->getMessage()

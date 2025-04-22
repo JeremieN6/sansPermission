@@ -23,8 +23,8 @@
                         <div class="question-block mb-4">
                             <h5>{{ question }}</h5>
                     {% else %}
-                        <div class="answer-option {% if '[✓]' in question %}correct-answer{% endif %}">
-                            {{ question|replace({'[✓]': '<span class="badge bg-success">Correct</span>', '[✗]': '<span class="badge bg-danger">Incorrect</span>'}) | raw }}
+                        <div class="answer-option {% if '(+)' in question %}correct-answer{% endif %}">
+                            {{ question|replace({'(+)': '<span class="badge bg-success">Correct</span>', '(-)': '<span class="badge bg-danger">Incorrect</span>'}) | raw }}
                         </div>
                     {% endif %}
                     

@@ -21,6 +21,392 @@ Could not find file '/d:/Development/sansPermission/scripts/youtube_service.py'.
 
 ---
 
+Read file: scripts/youtube_service.py
+
+---
+
+D'après ce que je vois dans les logs et le code, voici ce qui se passe :
+
+1. Le script Python est appelé avec la commande :
+```
+"C:/Users/Ngoyi/AppData/Local/Programs/Python/Python312/python.exe" "D:\Development\sansPermission/scripts/youtube_service.py" AIzaSyC6s9sCcJhIgtlep-iYE8cQ43t5aUh2wRA "https://www.youtube.com/watch?v=7iiyBz2NOsA&ab_channel=SansPermission"
+```
+
+2. Le script tente de créer un fichier `video_data.json` dans le répertoire courant, mais il semble y avoir un problème avec le chemin.
+
+3. Dans les logs, on voit :
+```
+[2025-04-20T17:58:00.034325+00:00] app.INFO: Recherche du fichier JSON : D:\Development\sansPermission/scripts/video_data.json [] []
+[2025-04-20T17:58:00.034824+00:00] app.ERROR: Erreur lors de la récupération du transcript: Le fichier video_data.json n'a pas été créé [] []
+```
+
+Voici ce que je suggère de faire :
+
+1. D'abord, modifions le script Python pour qu'il écrive le fichier JSON dans le bon répertoire :
+
+---
+
+```diff
+  import json
+  import re
++ import os
+  
+  def extract_video_id(url):
+      try:
+          result = process_video(api_key, video_url)
+-         with open('video_data.json', 'w', encoding='utf-8') as f:
++         # Obtenir le chemin du répertoire du script
++         script_dir = os.path.dirname(os.path.abspath(__file__))
++         output_file = os.path.join(script_dir, 'video_data.json')
++         
++         with open(output_file, 'w', encoding='utf-8') as f:
+              json.dump(result, f, ensure_ascii=False, indent=2)
+-         print("Données extraites avec succès")
++         print(f"Données extraites avec succès dans {output_file}")
+      except Exception as e:
+          print(f"Erreur: {str(e)}")
+```
+
+---
+
+Maintenant, vérifions le code qui appelle ce script Python. Je vais chercher où il est appelé :
+
+---
+
+<details>
+            <summary>Searched codebase "getTranscriptFromPython" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `scripts/youtube_service.py` | L37-54 |
+| `scripts/youtube_service.py` | L54-80 |
+| `src/Service/YouTubeScriptService.php` | L189-238 |
+| `src/Service/YouTubeScriptService.php` | L283-313 |
+| `scripts/preprocess_transcript.py` | L28-31 |
+| `src/Controller/TranscriptController.php` | L49-96 |
+| `scripts/preprocess_transcript.py` | L9-28 |
+| `scripts/youtube_service.py` | L1-18 |
+| `scripts/preprocess_transcript.py` | L1-9 |
+| `src/Controller/TranscriptController.php` | L1-49 |
+| `src/Controller/TranscriptController.php` | L96-138 |
+| `scripts/requirements.txt` | L1-2 |
+| `src/Service/YouTubeScriptService.php` | L238-283 |
+| `src/Service/TextPreprocessor.php` | L1-49 |
+| `src/Service/OpenAIService.php` | L366-402 |
+| `src/Service/OpenAIService.php` | L74-142 |
+| `public/scripts.json` | L16-23 |
+| `src/Service/OpenAIService.php` | L190-220 |
+| `src/Entity/Transcript.php` | L1-37 |
+| `src/Service/TextPreprocessor.php` | L49-103 |
+| `src/Repository/TranscriptRepository.php` | L1-44 |
+| `public/scripts.json` | L324-331 |
+| `src/Controller/OpenAIController.php` | L51-86 |
+| `public/scripts.json` | L254-268 |
+| `public/scripts.json` | L100-114 |
+
+</details>
+
+---
+
+D'après mon analyse, voici ce qui se passe :
+
+1. Le script Python `youtube_service.py` est appelé correctement et il tente de créer le fichier `video_data.json` dans le répertoire courant.
+
+2. Le service PHP `YouTubeScriptService` cherche le fichier à cet emplacement :
+```php
+$jsonFile = dirname($this->scriptPath) . '/video_data.json';
+```
+
+3. Le problème semble être que le fichier est créé dans un répertoire différent de celui où le service PHP le cherche.
+
+Voici ce que je propose de faire :
+
+1. Modifions le script Python pour qu'il affiche le chemin complet du fichier JSON créé :
+
+---
+
+```diff
+  if __name__ == "__main__":
+      import sys
++     import os
+      if len(sys.argv) != 3:
+          print("Usage: python youtube_service.py API_KEY VIDEO_URL")
+          with open(output_file, 'w', encoding='utf-8') as f:
+              json.dump(result, f, ensure_ascii=False, indent=2)
+-         print(f"Données extraites avec succès dans {output_file}")
++         print(f"Données extraites avec succès dans : {os.path.abspath(output_file)}")
+      except Exception as e:
+          print(f"Erreur: {str(e)}")
+```
+
+---
+
+Maintenant, je suggère de tester à nouveau la fonctionnalité. Quand vous exécuterez le script, il affichera le chemin complet du fichier JSON créé. Cela nous aidera à comprendre où le fichier est réellement créé par rapport à où le service PHP le cherche.
+
+Voici ce que vous devriez faire :
+
+1. Essayez à nouveau de récupérer le transcript d'une vidéo
+2. Regardez dans les logs le chemin où le fichier JSON est créé (il sera affiché dans la sortie du script Python)
+3. Comparez ce chemin avec celui où le service PHP cherche le fichier
+
+Si les chemins ne correspondent pas, nous pourrons ajuster soit le script Python, soit le service PHP pour qu'ils utilisent le même chemin.
+
+Je vous recommande également de vérifier les permissions du dossier où le fichier JSON est créé pour s'assurer que le service PHP a les droits de lecture nécessaires.
+
+---
+
+_**User**_
+
+Tout fonctionne nickel ! Le seul soucis maintenant c'est que je ne vois pas les réponses aux questions dans la base de donnée. Il est prévu que lorsque les questions sont générés les réponses aussi. Il devrait y avoir 4 réponses dont une bonne réponse. Je vois dans la base de donnée que la bonne réponse est bien identifié avec le champs boolen isCorrect, mais dans les champs "content" je ne vois rien, il n'y a rien... Je génère 4 réponses pour chaque questions et il y a 20 questions. Je le fais via le bouton générer un quiz dans le controller admin de Quiz. Voilà tu sais tout, corrige moi ce problème. Tu as les logs et les fichiers correspondants à cette fonctionnalité. Si tu penses qu'il manques des fichiers libre a toi de les lire bien entendu. Fais tout pour corriger ce problème. 
+
+---
+
+_**Assistant**_
+
+Je vais examiner ce problème de réponses manquantes dans la base de données. D'abord, je vais chercher le code qui gère la génération des quiz et des réponses.
+
+---
+
+<details>
+            <summary>Searched codebase "generateQuiz QuizzesCrudController" • **25** results</summary>
+        
+| File | Lines |
+|------|-------|
+| `src/Controller/Admin/QuizzesCrudController.php` | L1-48 |
+| `src/Controller/Admin/QuizzesCrudController.php` | L48-94 |
+| `src/Service/QuizGeneratorService.php` | L1-31 |
+| `src/Entity/Quizzes.php` | L1-81 |
+| `src/Service/QuizGeneratorService.php` | L31-67 |
+| `src/Controller/Admin/QuestionsCrudController.php` | L1-34 |
+| `src/Controller/TranscriptController.php` | L188-219 |
+| `src/Controller/TranscriptController.php` | L219-241 |
+| `src/Repository/QuizzesRepository.php` | L1-44 |
+| `src/Entity/Questions.php` | L1-85 |
+| `src/Entity/Quizzes.php` | L81-174 |
+| `src/Service/QuizGeneratorService.php` | L118-158 |
+| `src/Controller/TranscriptController.php` | L241-279 |
+| `src/Service/QuizGeneratorService.php` | L158-179 |
+| `src/Controller/TranscriptController.php` | L279-305 |
+| `src/Controller/Admin/AnswersCrudController.php` | L1-35 |
+| `templates/admin/generate_quiz_form.html.twig` | L1-14 |
+| `src/Entity/QuizAtempt.php` | L1-105 |
+| `src/Entity/Episodes.php` | L1-81 |
+| `src/Repository/QuizAtemptRepository.php` | L1-44 |
+| `src/Form/GenerateQuizType.php` | L1-34 |
+| `src/Controller/QuizController.php` | L54-99 |
+| `src/Entity/Quizzes.php` | L174-230 |
+| `src/Controller/QuizController.php` | L99-137 |
+| `src/Controller/Admin/UserAnswersCrudController.php` | L1-31 |
+
+</details>
+
+---
+
+Je vois que le problème pourrait venir de la méthode `generateQuiz` dans `QuizGeneratorService`. Je vais vérifier comment les réponses sont traitées :
+
+---
+
+Read file: src/Service/QuizGeneratorService.php
+
+---
+
+Je vois le problème. Dans la méthode `saveQuestionGroup`, il y a une double assignation de `questionId` pour chaque réponse :
+
+```php
+$answerEntity->setQuestionId($questionEntity);
+$answerEntity->setCreatedAt(new \DateTimeImmutable());
+$answerEntity->setUpdatedAt(new \DateTimeImmutable());
+$answerEntity->setQuestionId($questionEntity); // Cette ligne est en double
+```
+
+De plus, il y a un autre problème potentiel : le `flush` est appelé à la fois dans `saveQuestionGroup` et dans `generateQuiz`. Cela pourrait causer des problèmes de persistance.
+
+Je vais corriger ces problèmes :
+
+---
+
+```diff
+          if (count($questionSet) !== 5) {
+              $this->logger->warning('Format de question invalide - nombre incorrect d\'éléments', [
+-                 'count' => count($questionSet)
++                 'count' => count($questionSet),
++                 'question_set' => $questionSet
+              ]);
+              return;
+              $this->logger->warning('Format de question invalide - structure incorrecte', [
+                  'has_question' => ($questionText !== null),
+-                 'answers_count' => count($answers)
++                 'answers_count' => count($answers),
++                 'question_text' => $questionText,
++                 'answers' => $answers
+              ]);
+              return;
+              $answerEntity->setCreatedAt(new \DateTimeImmutable());
+              $answerEntity->setUpdatedAt(new \DateTimeImmutable());
+-             $answerEntity->setQuestionId($questionEntity);
+  
+              $this->entityManager->persist($answerEntity);
+          }
+      
+-         $this->entityManager->flush();
++         // On ne fait plus de flush ici, il sera fait dans generateQuiz
+      }
+  
+```
+
+---
+
+Maintenant, je vais vérifier le format des questions générées par OpenAI pour m'assurer qu'elles suivent bien le format attendu :
+
+---
+
+Read file: src/Service/OpenAIService.php
+
+---
+
+Le prompt pour OpenAI semble correct. Je vais ajouter plus de logging pour voir exactement ce qui est reçu d'OpenAI et comment c'est traité :
+
+---
+
+```diff
+      
+              $questions = $this->openAIService->generateQuestion($chunk);
++             
++             $this->logger->info('Réponse OpenAI reçue', [
++                 'response' => $questions
++             ]);
+              
+              if (!isset($questions['choices'][0]['message']['content'])) {
+              $content = $questions['choices'][0]['message']['content'];
+              $questionsArray = explode("\n", trim($content)); // Sépare les lignes
++             
++             $this->logger->info('Questions extraites', [
++                 'questions_array' => $questionsArray
++             ]);
+      
+              foreach ($questionsArray as $line) {
+      
+                  $currentQuestionSet[] = $line;
++                 
++                 $this->logger->debug('Ligne ajoutée au set courant', [
++                     'line' => $line,
++                     'current_set_size' => count($currentQuestionSet)
++                 ]);
+      
+                  // Quand nous avons 5 lignes (1 question + 4 réponses), on traite le groupe
+                  if (count($currentQuestionSet) === 5) {
++                     $this->logger->info('Traitement d\'un groupe de questions complet', [
++                         'question_set' => $currentQuestionSet
++                     ]);
++                     
+                      $this->saveQuestionGroup($currentQuestionSet, $quiz);
+                      $currentQuestionSet = []; // Réinitialiser pour le prochain groupe
+          if (!empty($currentQuestionSet)) {
+              $this->logger->warning("Groupe de questions incomplet ignoré", [
+-                 'count' => count($currentQuestionSet)
++                 'count' => count($currentQuestionSet),
++                 'content' => $currentQuestionSet
+              ]);
+          }
+```
+
+---
+
+Maintenant, je vais modifier le prompt OpenAI pour m'assurer qu'il génère bien les réponses dans le bon format :
+
+---
+
+```diff
+                  'model' => $modelId,
+                  'messages' => [
+-                     ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Générez EXACTEMENT 20 questions pertinentes avec leurs réponses.'],
++                     ['role' => 'system', 'content' => 'Vous êtes un expert en création de quiz. Votre tâche est de générer EXACTEMENT 20 questions pertinentes avec leurs réponses, en suivant strictement le format spécifié.'],
+                      ['role' => 'user', 'content' => "Analysez cette transcription et générez EXACTEMENT 20 questions en traversant tous les sujets du transcript.
+                      Autrement dit en choisissant les sujets abordés tout le long de la vidéo, jusqu'à la fin. Ne posez jamais deux fois la même question.
+                      - Une seule réponse doit être correcte par question
+                      - Les questions doivent être variées et pertinentes
+-                     - Ne pose jamais deux fois la même question
++                     - Ne posez jamais deux fois la même question
++                     - Chaque réponse doit être une phrase complète et significative
++                     - Les réponses doivent être claires et non ambiguës
+                      
+-                     Format STRICT à respecter :
+-                     1. Question
+-                     [✓] Bonne réponse
+-                     [✗] Mauvaise réponse 1
+-                     [✗] Mauvaise réponse 2
+-                     [✗] Mauvaise réponse 3
+- 
+-                     (ligne vide entre chaque question)
++                     Format STRICT à respecter pour CHAQUE question :
++                     1. [La question complète]
++                     [✓] [La bonne réponse]
++                     [✗] [Première mauvaise réponse]
++                     [✗] [Deuxième mauvaise réponse]
++                     [✗] [Troisième mauvaise réponse]
++ 
++                     [ligne vide obligatoire entre chaque question]
++ 
++                     Exemple de format attendu :
++                     1. Quelle est la capitale de la France ?
++                     [✓] Paris est la capitale de la France.
++                     [✗] Londres est la capitale de la France.
++                     [✗] Berlin est la capitale de la France.
++                     [✗] Madrid est la capitale de la France.
++ 
++                     2. Qui a écrit 'Les Misérables' ?
++                     [✓] Victor Hugo est l'auteur des Misérables.
++                     [✗] Émile Zola est l'auteur des Misérables.
++                     [✗] Gustave Flaubert est l'auteur des Misérables.
++                     [✗] Alexandre Dumas est l'auteur des Misérables.
+  
+                      Transcription à analyser :
+                  'frequency_penalty' => 0.3
+              ];
++ 
++             $this->logger->info('Envoi de la requête à OpenAI', [
++                 'model' => $modelId,
++                 'transcript_length' => strlen($transcript)
++             ]);
+  
+              $response = HttpClient::create()->request('POST', $endpoint, [
+              ]);
+  
+-             return $response->toArray();
++             $result = $response->toArray();
++             
++             $this->logger->info('Réponse reçue de OpenAI', [
++                 'content' => $result['choices'][0]['message']['content'] ?? 'Pas de contenu'
++             ]);
++ 
++             return $result;
+          } catch (\Exception $e) {
+              $this->logger->error('Erreur lors de la génération des questions', [
+```
+
+---
+
+Ces modifications devraient résoudre le problème des réponses manquantes dans la base de données. Voici ce que j'ai fait :
+
+1. J'ai supprimé la double assignation de `questionId` dans `saveQuestionGroup`
+2. J'ai déplacé le `flush` pour qu'il ne soit fait qu'une seule fois à la fin de `generateQuiz`
+3. J'ai amélioré le prompt OpenAI pour s'assurer que les réponses sont bien formatées et complètes
+4. J'ai ajouté plus de logging pour pouvoir mieux déboguer le processus
+
+Vous pouvez maintenant essayer de générer un nouveau quiz. Les réponses devraient être correctement sauvegardées dans la base de données. Si vous voyez encore des problèmes, les logs nous donneront plus d'informations sur ce qui se passe exactement.
+
+---
+
+_**User**_
+
+Ca n' a pas fonctionné. Mais avec les logs je vois qu'il y a quelque chose d'étrange sur les réponses . Comme tu peux le constater il y a un caractère spécial "�" , un caractère de remplacement , caractère unicode peu importe le nom, au début dans la chaque réponses. Je pense que c'est qui est en cause dans le fait que les réponses ne s'envoient pas en base. 
+Surement que ça : [✓] et ça [✗], s'interprète mal et crée ce caractère spécial. Je ne suis pas sur de moi, à toi de tirer les conclusions.
+Regarde pourquoi ça ne s'envoie toujours pas, toutes les autres données s'envoient sauf les réponses. Regarde, regarde les logs, tout ce que tu veux et corrige le problème.
+
+---
+
+_**Assistant**_
+
 
 
 ---

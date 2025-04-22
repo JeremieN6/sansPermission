@@ -154,8 +154,8 @@ class TranscriptController extends AbstractController
                             $currentQuestion = $line;
                             $currentAnswers = [];
                         }
-                        // Si c'est une réponse (commence par [✓] ou [✗])
-                        elseif (strpos($line, '[✓]') === 0 || strpos($line, '[✗]') === 0) {
+                        // Si c'est une réponse (commence par (+) ou (-))
+                        elseif (strpos($line, '(+)') === 0 || strpos($line, '(-)') === 0) {
                             $currentAnswers[] = $line;
                         }
                     }
@@ -253,10 +253,10 @@ class TranscriptController extends AbstractController
                     $currentQuestion->setQuizId($quiz);
                     $currentQuestion->setCreatedAt(new \DateTimeImmutable());
                     $currentQuestion->setUpdatedAt(new \DateTimeImmutable());
-                } elseif (strpos($line, '[✓]') === 0 || strpos($line, '[✗]') === 0) {
+                } elseif (strpos($line, '(+)') === 0 || strpos($line, '(-)') === 0) {
                     // Ajouter la réponse
-                    $isCorrect = strpos($line, '[✓]') === 0;
-                    $answerText = trim(mb_substr($line, 3)); // Supprimer le préfixe [✓] ou [✗] avec mb_substr pour une gestion plus précise des caractères spéciaux
+                    $isCorrect = strpos($line, '(+)') === 0;
+                    $answerText = trim(mb_substr($line, 3)); // Supprimer le préfixe (+) ou (-) avec mb_substr pour une gestion plus précise des caractères spéciaux
                     
                     $answer = new Answers();
                     $answer->setContent($answerText);
