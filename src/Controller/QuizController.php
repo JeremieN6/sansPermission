@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Answers;
 use App\Entity\Quizzes;
+use App\Entity\QuizAtempt;
 use App\Repository\QuestionsRepository;
 use App\Repository\QuizzesRepository;
 use App\Repository\UserScoresRepository;
@@ -25,40 +26,9 @@ class QuizController extends AbstractController
         $this->YouTubeScriptService = $YouTubeScriptService;
     }
 
-    #[Route('/quiz/{id}/submit', name: 'quiz_submit', methods: ['POST'])]
-    public function submitQuiz(
-        Request $request,
-        Quizzes $quiz,
-        EntityManagerInterface $entityManager,
-        ScoreService $scoreService // Injection du service
-    ): Response {
-        $user = $this->getUser();
-        $answers = $request->request->all();
-        $correctAnswers = 0;
-
-        foreach ($answers as $questionId => $answerId) {
-            $answer = $entityManager->getRepository(Answers::class)->find($answerId);
-
-            if ($answer && $answer->isCorrect()) {
-                $correctAnswers++; // Incrémente le score si la réponse est correcte
-            }
-        }
-
-        // 🔥 Ajoute l'enregistrement du score ici
-        $scoreService->saveUserScore($user, $quiz, $correctAnswers);
-
-        $this->addFlash('success', "Tu as obtenu $correctAnswers bonnes réponses !");
-
-        return $this->redirectToRoute('quiz_results', ['id' => $quiz->getId()]);
-    }
-
     #[Route('/quiz-home', name: 'quiz_home')]
-    public function quizIndex (
-        Request $request,
-        EntityManagerInterface $entityManager,
-        UserScoresRepository $userScoresRepository,
-        QuizzesRepository $quizzesRepository
-    ){
+    public function quizIndex()
+    {
         // Récupérer tous les quiz
         // $allQuizzes = $quizzesRepository->findAll();
 
@@ -76,7 +46,7 @@ class QuizController extends AbstractController
     public function quizList(
         QuizzesRepository $quizzesRepository,
         YouTubeScriptService $youTubeScriptService
-    ){
+    ) {
         // Récupérer tous les quiz
         $allQuizzes = $quizzesRepository->findAll();
 
@@ -109,23 +79,36 @@ class QuizController extends AbstractController
         if (!$quiz) {
             throw $this->createNotFoundException('Quiz non trouvé');
         }
-    
+
+        $session = $request->getSession();
         $questions = $questionsRepository->findBy(['quizId' => $quiz]);
         $currentQuestionIndex = $request->request->getInt('currentQuestionIndex', 0);
-        $currentScore = $request->getSession()->get('currentScore', 0);
-    
+
+        // Réinitialiser le score et enregistrer le timestamp de début si c'est la première question
+        if ($currentQuestionIndex === 0) {
+            $session->set('currentScore', 0);
+            $session->set('quiz_start_time', new \DateTimeImmutable());
+        }
+
+        $currentScore = $session->get('currentScore', 0);
+
         if ($request->isMethod('POST')) {
             $answerId = $request->request->getInt('answer');
             $answer = $entityManager->getRepository(Answers::class)->find($answerId);
-    
+
             if ($answer && $answer->isCorrect()) {
                 $currentScore++;
+                $session->set('currentScore', $currentScore);
             }
-    
+
             $currentQuestionIndex++;
-            $request->getSession()->set('currentScore', $currentScore);
         }
-    
+
+        // Si c'est la dernière question
+        // if ($currentQuestionIndex >= count($questions)) {
+        //     return $this->redirectToRoute('quiz_submit', ['id' => $quiz->getId()]);
+        // }
+
         return $this->render('quiz/quiz-game.html.twig', [
             'questions' => $questions,
             'currentScore' => $currentScore,
@@ -134,4 +117,50 @@ class QuizController extends AbstractController
         ]);
     }
 
+    #[Route('/quiz/{id}/submit', name: 'quiz_submit', methods: ['GET', 'POST'])]
+    public function submitQuiz(
+        Request $request,
+        Quizzes $quiz,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour soumettre un quiz.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        $session = $request->getSession();
+
+        // Ne traiter la soumission que si c'est une requête POST
+        if ($request->isMethod('POST')) {
+            // Récupérer le temps de début et calculer la durée
+            $startTime = $session->get('quiz_start_time');
+            if (!$startTime instanceof \DateTimeImmutable) {
+                $startTime = new \DateTimeImmutable($startTime->format('Y-m-d H:i:s'));
+            }
+            $endTime = new \DateTimeImmutable();
+            
+            // Calculer la durée en secondes
+            $duration = $endTime->getTimestamp() - $startTime->getTimestamp();
+
+            // Créer une nouvelle tentative
+            $attempt = new QuizAtempt();
+            $attempt->setUser($user);
+            $attempt->setQuiz($quiz);
+            $attempt->setScore($session->get('currentScore', 0));
+            $attempt->setStartedAt($startTime);
+            $attempt->setEndedAt($endTime);
+            $attempt->setDuration($duration);
+
+            $entityManager->persist($attempt);
+            $entityManager->flush();
+
+            // Nettoyer la session
+            $session->remove('currentScore');
+            $session->remove('quiz_start_time');
+
+            $this->addFlash('success', "Quiz terminé ! Score final : {$attempt->getScore()}");
+        }
+        return $this->redirectToRoute('quiz_list');
+    }
 }

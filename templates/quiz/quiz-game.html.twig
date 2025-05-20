@@ -27,11 +27,18 @@
                     </form>
                 </div>
             {% else %}
-                <p>Quiz terminé !</p>
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h3 class="text-lg font-semibold mb-4">Quiz terminé !</h3>
+                <form method="post" action="{{ path('quiz_submit', {'id': quiz.id}) }}">
+                    <button type="submit" class="w-full px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600">
+                        Voir mon score
+                    </button>
+                </form>
+            </div>
             {% endif %}
 
             <div class="bg-pink-100 rounded-lg p-4">
-                <h3 class="font-semibold">Score: <span class="text-red-500">{{ currentScore }}</span></h3>
+                {# <h3 class="font-semibold">Score: <span class="text-red-500">{{ currentScore }}</span></h3> #}
                 <p>Progress: Question {{ currentQuestionIndex + 1 }} of {{ questions|length }}</p>
             </div>
         </div>
