@@ -62,7 +62,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, UserAnswers>
      */
-    #[ORM\OneToMany(targetEntity: UserAnswers::class, mappedBy: 'user_id')]
+    #[ORM\OneToMany(targetEntity: UserAnswers::class, mappedBy: 'user')]
     private Collection $userAnswers;
 
     #[ORM\Column(nullable: true)]
@@ -280,7 +280,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->userAnswers->contains($userAnswer)) {
             $this->userAnswers->add($userAnswer);
-            $userAnswer->setUserId($this);
+            $userAnswer->setUser($this);
         }
 
         return $this;
@@ -290,8 +290,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->userAnswers->removeElement($userAnswer)) {
             // set the owning side to null (unless already changed)
-            if ($userAnswer->getUserId() === $this) {
-                $userAnswer->setUserId(null);
+            if ($userAnswer->getUser() === $this) {
+                $userAnswer->setUser(null);
             }
         }
 

@@ -9,12 +9,14 @@
 		<div class="flex-1 overflow-auto">
 			<div class="p-8">
 				<div class="flex items-center gap-6 mb-8">
-					<img src="https://www.placehold.co/120x120" alt="User Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
+					<div class="w-28 h-28 rounded-full flex items-center justify-center bg-gray-300 border-4 border-gray-300 text-6xl font-bold text-gray-700 select-none">
+						{{ pseudo|slice(0, 1)|upper }}
+					</div>
 					<div>
 						<h1 class="text-3xl font-bold mb-1">Paramètres</h1>
-						<div class="flex items-center text-sm text-gray-600 gap-2">
+						<div class="flex items-center text-sm text-gray-600">
 							<span>⚙️</span>
-							<span>Paramètres du profil Sans Permission de Jérémie</span>
+							<span>Paramètres du profil Sans Permission de {{prenom}}</span>
 						</div>
 					</div>
 				</div>
@@ -23,33 +25,34 @@
 				<div class="flex w-full gap-4">
 					<div class="w-2/3">
 						<div class="bg-gray-400 rounded-2xl p-6 mb-6">
+							{{ form_start(form) }}
 							<div class="flex flex-col gap-4 mb-4">
-								<div class="flex items-center justify-between">
-									<div class="flex items-center gap-3">
-										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="John Doe">
-										<span>John Doe</span>
-									</div>
-									<span class="text-sm">host</span>
+								<div>
+									{{ form_label(form.nom) }}
+									{{ form_widget(form.nom, {'attr': {'class': 'w-full rounded-lg p-2'}}) }}
 								</div>
-								<div class="flex items-center justify-between">
-									<div class="flex items-center gap-3">
-										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Emily Smith">
-										<span>Emily Smith</span>
-									</div>
-									<span class="text-sm">participant</span>
+								<div>
+									{{ form_label(form.prenom) }}
+									{{ form_widget(form.prenom, {'attr': {'class': 'w-full rounded-lg p-2'}}) }}
 								</div>
-								<div class="flex items-center justify-between">
-									<div class="flex items-center gap-3">
-										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Sam Green">
-										<span>Sam Green</span>
-									</div>
-									<span class="text-sm">participant</span>
+								<div>
+									{{ form_label(form.pseudo) }}
+									{{ form_widget(form.pseudo, {'attr': {'class': 'w-full rounded-lg p-2'}}) }}
+								</div>
+								<div>
+									{{ form_label(form.email) }}
+									{{ form_widget(form.email, {'attr': {'class': 'w-full rounded-lg p-2'}}) }}
+								</div>
+								<div>
+									{{ form_label(form.age) }}
+									{{ form_widget(form.age, {'attr': {'class': 'w-full rounded-lg p-2'}}) }}
 								</div>
 							</div>
-							<div class="flex gap-2 mb-4">
-								<input type="email" placeholder="Enter email address" class="flex-1 rounded-full p-2">
-								<button class="bg-red-500 text-white rounded-full px-8 py-2 font-semibold">Add</button>
+							<div class="flex gap-4 mb-4">
+								<button type="submit" class="bg-red-500 text-white rounded-full px-8 py-2 font-semibold">Enregistrer</button>
+								<a href="{{ path('forgetten_password') }}" class="bg-black text-white rounded-full px-8 py-2 font-semibold flex items-center">Modifier mon mot de passe</a>
 							</div>
+							{{ form_end(form) }}
 						</div>
 						{# <div class="bg-gray-400 rounded-2xl p-6 flex items-center justify-between">
 							<span>Enhance your quiz experience. Finished with this quiz?</span>

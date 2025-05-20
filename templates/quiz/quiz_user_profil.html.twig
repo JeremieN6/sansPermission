@@ -9,12 +9,14 @@
 		<div class="flex-1 overflow-auto">
 			<div class="p-8">
 				<div class="flex items-center gap-6 mb-8">
-					<img src="https://www.placehold.co/120x120" alt="User Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
+					<div class="w-32 h-32 rounded-full flex items-center justify-center bg-gray-300 border-4 border-gray-300 text-6xl font-bold text-gray-700 select-none">
+						{{ pseudo|slice(0, 1)|upper }}
+					</div>
 					<div>
 						<h2 class="text-3xl font-bold mb-1">Mon Profil</h2>
 						<div class="flex items-center text-sm text-gray-600 gap-2">
 							<span>🎧</span>
-							<span>Profil Sans Permission de Jérémie</span>
+							<span>Profil Sans Permission de {{ prenom }}</span>
 						</div>
 					</div>
 				</div>
@@ -24,11 +26,11 @@
 					<div class="flex gap-6">
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<span class="text-2xl font-bold">Quiz Total</span>
-							<span class="text-2xl font-bold">6</span>
+							<span class="text-2xl font-bold">{{ quiz_total }}</span>
 						</div>
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<span class="text-2xl font-bold">Épisodes Total</span>
-							<span class="text-2xl font-bold">150</span>
+							<span class="text-2xl font-bold">{{ episode_total }}</span>
 						</div>
 						{# <div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
                             <span class="text-lg font-semibold">Podcast</span>
@@ -46,26 +48,25 @@
 								<span class="text-xl font-bold">Quiz terminé</span>
 							</div>
 							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
-								<span class="text-2xl font-bold">7</span>
+								<span class="text-2xl font-bold">{{ user_quiz_total }}</span>
 							</div>
 						</div>
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<div class="flex flex-row items-center">
 								<span class="text-4xl mb-2">⏳</span>
-								<span class="text-xl font-bold">Temps de Quiz total</span>
+								<span class="text-xl font-bold">Score total</span>
 							</div>
 							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
-								<span class="text-2xl font-bold">100 secondes</span>
+								<span class="text-2xl font-bold">{{ user_score_total }}</span>
 							</div>
 						</div>
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<div class="flex flex-row items-center">
 								<span class="text-4xl mb-2">🏆</span>
-								<span class="text-xl font-bold">
-									TOP 1</span>
+								<span class="text-xl font-bold">TOP 1</span>
 							</div>
 							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
-								<span class="text-2xl font-bold">7</span>
+								<span class="text-2xl font-bold">-</span>
 							</div>
 						</div>
 					</div>
@@ -111,11 +112,11 @@
 					<div class="flex gap-6">
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<span class="text-lg font-semibold">Score moyen global</span>
-							<span class="text-2xl font-bold text-blue-700">12</span>
+							<span class="text-2xl font-bold text-blue-700">{{ global_avg }}</span>
 						</div>
 						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
 							<span class="text-lg font-semibold">% de bonnes réponses</span>
-							<span class="text-2xl font-bold text-green-700">78%</span>
+							<span class="text-2xl font-bold text-green-700">{{ percent_correct }}%</span>
 						</div>
 					</div>
 				</div>

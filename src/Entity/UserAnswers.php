@@ -17,7 +17,7 @@ class UserAnswers
 
     #[ORM\ManyToOne(inversedBy: 'userAnswers')]
     #[ORM\JoinColumn(name:'user_id', referencedColumnName:'id')]
-    private ?Users $userId = null;
+    private ?Users $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAnswers')]
     #[ORM\JoinColumn(name:'question_id', referencedColumnName:'id')]
@@ -50,14 +50,14 @@ class UserAnswers
         return $this->id;
     }
 
-    public function getUserId(): ?Users
+    public function getUser(): ?Users
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?Users $userId): static
+    public function setUser(?Users $user): static
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }

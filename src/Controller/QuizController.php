@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\YouTubeScriptService;
+use App\Form\UserSettingsType;
+use App\Entity\UserScores;
+use App\Entity\Episodes;
 
 class QuizController extends AbstractController
 {
@@ -165,14 +168,83 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz-user-profil', name: 'quiz_user_profil')]
-    public function quizUserProfil(): Response
+    public function quizUserProfil(EntityManagerInterface $em): Response
     {
-        return $this->render('quiz/quiz_user_profil.html.twig');
+        $connectedUser = $this->getUser();
+        if (!$connectedUser || !($connectedUser instanceof \App\Entity\Users)) {
+            return $this->redirectToRoute('app_login,');
+        }
+
+        // Récupérer toutes les tentatives de l'utilisateur connecté
+        $quizAtempts = $em->getRepository(QuizAtempt::class)->findBy(['user' => $connectedUser]);
+
+        $totalQuiz = count($quizAtempts);
+        $totalScore = 0;
+        $totalCorrect = 0;
+        $totalAnswers = 0;
+
+        foreach ($quizAtempts as $attempt) {
+            $totalScore += $attempt->getScore();
+            // Si tu veux compter les bonnes réponses, adapte ici selon ta logique métier
+        }
+
+        // Score moyen global (tous les utilisateurs)
+        $allAtempts = $em->getRepository(QuizAtempt::class)->findAll();
+        $globalScore = 0;
+        foreach ($allAtempts as $attempt) {
+            $globalScore += $attempt->getScore();
+        }
+        $globalAvg = count($allAtempts) > 0 ? round($globalScore / count($allAtempts), 2) : 0;
+
+        $userAnswers = $connectedUser->getUserAnswers();
+        foreach ($userAnswers as $answer) {
+            $totalAnswers++;
+            if ($answer->isCorrect()) $totalCorrect++;
+        }
+        $percentCorrect = $totalAnswers > 0 ? round($totalCorrect / $totalAnswers * 100) : 0;
+
+        $quizRepo = $em->getRepository(Quizzes::class);
+        $quizTotal = $quizRepo->count([]);
+        $episodeTotal = 0;
+        if (class_exists(Episodes::class)) {
+            $episodeTotal = $em->getRepository(Episodes::class)->count([]);
+        }
+
+        return $this->render('quiz/quiz_user_profil.html.twig', [
+            'prenom' => $connectedUser->getPrenom(),
+            'pseudo' => $connectedUser->getPseudo(),
+            'quiz_total' => $quizTotal,
+            'episode_total' => $episodeTotal,
+            'user_quiz_total' => $totalQuiz,
+            'user_score_total' => $totalScore,
+            'global_avg' => $globalAvg,
+            'percent_correct' => $percentCorrect,
+        ]);
     }
 
     #[Route('/quiz-setting-profil', name: 'quiz_setting_profil')]
-    public function quizSettingProfil(): Response
+    public function quizSettingProfil(Request $request, EntityManagerInterface $em): Response
     {
-        return $this->render('quiz/quiz_setting_profil.html.twig');
+        $user = $this->getUser();
+        if (!$user || !($user instanceof \App\Entity\Users)) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $form = $this->createForm(UserSettingsType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
+            return $this->redirectToRoute('quiz_setting_profil');
+        }
+
+        return $this->render('quiz/quiz_setting_profil.html.twig', [
+            'prenom' => $user->getPrenom(),
+            'pseudo' => $user->getPseudo(),
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
     }
 }
