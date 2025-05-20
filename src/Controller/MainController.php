@@ -125,5 +125,9 @@ class MainController extends AbstractController
         ]);
     }
 
-
+    #[Route('/abonnement', name: 'abonnement')]
+    public function abonnement(): Response
+    {
+        return $this->render('abonnement/index.html.twig');
+    }
 }
