@@ -1,0 +1,141 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}Classement Général - Sans Permission
+{% endblock %}
+
+{% block body %}
+	<div class="flex h-screen bg-gray-50">
+		{% include 'quiz/_navbar.html.twig' %}
+		<div class="flex-1 overflow-auto">
+			<div class="p-8">
+				<div class="flex gap-5">
+					<div class="w-full">
+						<h1 class="text-2xl font-bold leading-none text-gray-900">Classement Général</h1>
+						<div class="w-full max-w-full mx-auto my-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-8">
+							<div class="flex flex-col items-start justify-end mb-4 gap-1">
+								<h2 class="text-2xl font-bold leading-none text-gray-900">Les différents classements</h2>
+								<div class="flex items-center justify-between w-full gap-2">
+									<div>
+										<span class="text-sm text-gray-500">Classement général</span>
+										<span class="text-sm text-gray-500">|</span>
+										<span class="text-sm text-gray-500">Classement par quiz</span>
+									</div>
+									<div>
+										<a href="#" class="text-sm font-medium text-[#003737] hover:underline">
+											Voir tout
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="flow-root">
+								<ul role="list" class="divide-y divide-gray-200">
+									<li class="py-3 sm:py-4">
+										<div class="flex items-center">
+											<div class="shrink-0">
+												<div class="w-8 h-8 rounded-full bg-[#003737] text-white flex items-center justify-center font-bold">
+													N
+												</div>
+											</div>
+											<div class="flex-1 min-w-0 ms-4">
+												<p class="text-sm font-medium text-gray-900 truncate">
+													Neil Sims
+												</p>
+												<p class="text-sm text-gray-500 truncate">
+													Quiz complétés: 25
+												</p>
+											</div>
+											<div class="inline-flex items-center text-base font-semibold text-[#003737]">
+												320 pts
+											</div>
+										</div>
+									</li>
+									<li class="py-3 sm:py-4">
+										<div class="flex items-center">
+											<div class="shrink-0">
+												<div class="w-8 h-8 rounded-full bg-[#003737] text-white flex items-center justify-center font-bold">
+													B
+												</div>
+											</div>
+											<div class="flex-1 min-w-0 ms-4">
+												<p class="text-sm font-medium text-gray-900 truncate">
+													Bonnie Green
+												</p>
+												<p class="text-sm text-gray-500 truncate">
+													Quiz complétés: 18
+												</p>
+											</div>
+											<div class="inline-flex items-center text-base font-semibold text-[#003737]">
+												3467 pts
+											</div>
+										</div>
+									</li>
+									<li class="py-3 sm:py-4">
+										<div class="flex items-center">
+											<div class="shrink-0">
+												<div class="w-8 h-8 rounded-full bg-[#003737] text-white flex items-center justify-center font-bold">
+													M
+												</div>
+											</div>
+											<div class="flex-1 min-w-0 ms-4">
+												<p class="text-sm font-medium text-gray-900 truncate">
+													Michael Gough
+												</p>
+												<p class="text-sm text-gray-500 truncate">
+													Quiz complétés: 15
+												</p>
+											</div>
+											<div class="inline-flex items-center text-base font-semibold text-[#003737]">
+												67 pts
+											</div>
+										</div>
+									</li>
+									<li class="py-3 sm:py-4">
+										<div class="flex items-center">
+											<div class="shrink-0">
+												<div class="w-8 h-8 rounded-full bg-[#003737] text-white flex items-center justify-center font-bold">
+													L
+												</div>
+											</div>
+											<div class="flex-1 min-w-0 ms-4">
+												<p class="text-sm font-medium text-gray-900 truncate">
+													Lana Byrd
+												</p>
+												<p class="text-sm text-gray-500 truncate">
+													Quiz complétés: 12
+												</p>
+											</div>
+											<div class="inline-flex items-center text-base font-semibold text-[#003737]">
+												367 pts
+											</div>
+										</div>
+									</li>
+									<li class="pt-3 pb-0 sm:pt-4">
+										<div class="flex items-center">
+											<div class="shrink-0">
+												<div class="w-8 h-8 rounded-full bg-[#003737] text-white flex items-center justify-center font-bold">
+													T
+												</div>
+											</div>
+											<div class="flex-1 min-w-0 ms-4">
+												<p class="text-sm font-medium text-gray-900 truncate">
+													Thomas Lean
+												</p>
+												<p class="text-sm text-gray-500 truncate">
+													Quiz complétés: 10
+												</p>
+											</div>
+											<div class="inline-flex items-center text-base font-semibold text-[#003737]">
+												2367 pts
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					{# {% include 'quiz/_side.html.twig' %} #}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -130,4 +130,10 @@ class MainController extends AbstractController
     {
         return $this->render('abonnement/index.html.twig');
     }
+
+    #[Route('/classement-general', name: 'classement_general')]
+    public function classementGeneral(): Response
+    {
+        return $this->render('classement/index.html.twig');
+    }
 }
