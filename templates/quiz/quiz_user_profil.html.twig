@@ -1,0 +1,192 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}Profil Quiz - Sans Permission
+{% endblock %}
+
+{% block body %}
+	<div class="flex h-screen bg-gray-50">
+		{% include 'quiz/_navbar.html.twig' %}
+		<div class="flex-1 overflow-auto">
+			<div class="p-8">
+				<div class="flex items-center gap-6 mb-8">
+					<img src="https://www.placehold.co/120x120" alt="User Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
+					<div>
+						<h2 class="text-3xl font-bold mb-1">Mon Profil</h2>
+						<div class="flex items-center text-sm text-gray-600 gap-2">
+							<span>🎧</span>
+							<span>Profil Sans Permission de Jérémie</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-8">
+					<h3 class="text-xl font-semibold mb-4">Statistiques de Quiz général</h3>
+					<div class="flex gap-6">
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<span class="text-2xl font-bold">Quiz Total</span>
+							<span class="text-2xl font-bold">6</span>
+						</div>
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<span class="text-2xl font-bold">Épisodes Total</span>
+							<span class="text-2xl font-bold">150</span>
+						</div>
+						{# <div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+                            <span class="text-lg font-semibold">Podcast</span>
+                            <span class="text-2xl font-bold">Quiz Followers</span>
+                        </div> #}
+					</div>
+				</div>
+
+				<div class="mb-8">
+					<h3 class="text-xl font-semibold mb-4">Mes statistiques de Quiz</h3>
+					<div class="flex gap-6">
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<div class="flex flex-row items-center">
+								<span class="text-4xl mb-2">✅</span>
+								<span class="text-xl font-bold">Quiz terminé</span>
+							</div>
+							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
+								<span class="text-2xl font-bold">7</span>
+							</div>
+						</div>
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<div class="flex flex-row items-center">
+								<span class="text-4xl mb-2">⏳</span>
+								<span class="text-xl font-bold">Temps de Quiz total</span>
+							</div>
+							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
+								<span class="text-2xl font-bold">100 secondes</span>
+							</div>
+						</div>
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<div class="flex flex-row items-center">
+								<span class="text-4xl mb-2">🏆</span>
+								<span class="text-xl font-bold">
+									TOP 1</span>
+							</div>
+							<div class="rounded-xl p-4 flex items-center justify-center mr-4">
+								<span class="text-2xl font-bold">7</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mb-8">
+					<h3 class="text-xl font-semibold mb-4">Mes réalisations sur les Quiz</h3>
+					<div class="flex flex-col gap-4">
+						<div class="flex bg-gray-300 rounded-xl p-4 items-center">
+							<div class="bg-pink-200 rounded-xl p-4 flex items-center justify-center mr-4">
+								<span class="text-3xl">⏳</span>
+							</div>
+							<div class="flex-1">
+								<div class="flex justify-between items-center mb-1">
+									<span class="font-bold">Série de Quiz</span>
+									<span class="text-sm">2/3 semaines</span>
+								</div>
+								<div class="w-full h-2 bg-gray-200 rounded-full mb-1">
+									<div class="h-2 bg-gray-500 rounded-full" style="width:66%"></div>
+								</div>
+								<span class="text-xs text-gray-600">Série du nombre de quiz terminé</span>
+							</div>
+						</div>
+						<div class="flex bg-gray-300 rounded-xl p-4 items-center">
+							<div class="bg-pink-200 rounded-xl p-4 flex items-center justify-center mr-4">
+								<span class="text-3xl">🏆</span>
+							</div>
+							<div class="flex-1">
+								<div class="flex justify-between items-center mb-1">
+									<span class="font-bold">Nombre de points de Quiz</span>
+									<span class="text-sm">1200/3000 Points</span>
+								</div>
+								<div class="w-full h-2 bg-gray-200 rounded-full mb-1">
+									<div class="h-2 bg-gray-500 rounded-full" style="width:40%"></div>
+								</div>
+								<span class="text-xs text-gray-600">Nombre de points total obtenu lors des quiz</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-8">
+					<h3 class="text-xl font-semibold mb-4">Comparaison avec la moyenne des joueurs</h3>
+					<div class="flex gap-6">
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<span class="text-lg font-semibold">Score moyen global</span>
+							<span class="text-2xl font-bold text-blue-700">12</span>
+						</div>
+						<div class="flex-1 bg-gray-300 rounded-xl p-6 flex flex-col items-center">
+							<span class="text-lg font-semibold">% de bonnes réponses</span>
+							<span class="text-2xl font-bold text-green-700">78%</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="flex gap-8 mb-8">
+					<div class="flex-1 bg-gray-300 rounded-2xl p-6">
+						<h3 class="text-lg font-semibold mb-4">Récompenses - Mes Badges</h3>
+						<div class="flex flex-col gap-4 mb-4">
+							<div class="flex items-center justify-between bg-gray-400 rounded-xl p-3">
+								<div class="flex items-center gap-3">
+									<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Speaker 2">
+									<span>Finir 1 Quiz</span>
+								</div>
+							</div>
+							<div class="flex items-center justify-between bg-gray-400 rounded-xl p-3">
+								<div class="flex items-center gap-3">
+									<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Speaker 1">
+									<span>Faire 3 TOP #1</span>
+								</div>
+							</div>
+						</div>
+						<button class="bg-black text-white rounded-lg px-6 py-2">Tableau des récompenses</button>
+					</div>
+					<div class="flex-1 bg-gray-300 rounded-2xl p-6">
+						<h3 class="text-lg font-semibold mb-4">Classement par Quiz</h3>
+						<div class="mb-4">
+							<label for="quiz-select" class="block mb-2 text-sm font-medium">Choisir un quiz :</label>
+							<select id="quiz-select" class="w-full rounded-lg p-2" onchange="updateClassement()">
+								<option value="1">Quiz 1</option>
+								<option value="2">Quiz 2</option>
+								<option value="3">Quiz 3</option>
+								<!-- À rendre dynamique -->
+							</select>
+						</div>
+						<div
+							id="classement-quiz">
+							<!-- Classement dynamique ici -->
+							<div class="flex flex-col gap-4 mb-4">
+								<div class="flex items-center justify-between bg-gray-400 rounded-xl p-3">
+									<div class="flex items-center gap-3">
+										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Avatar 1">
+										<span>Pseudo du joueur</span>
+									</div>
+									<button class="bg-black text-white rounded-full px-4 py-1">1<sup>er</sup>
+									</button>
+								</div>
+								<!-- ... -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function updateClassement() {
+            // Ici, tu pourrais faire un appel AJAX pour charger le classement du quiz sélectionné
+            // Pour la démo, tu peux juste changer le contenu de #classement-quiz
+            // Exemple :
+            const select = document.getElementById('quiz-select');
+            const classementDiv = document.getElementById('classement-quiz');
+            classementDiv.innerHTML = `<div class="flex items-center justify-between bg-gray-400 rounded-xl p-3">
+                    <div class="flex items-center gap-3">
+                        <img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Avatar 1">
+                        <span>Joueur du quiz ${
+            select.value
+            }</span>
+                    </div>
+                    <button class="bg-black text-white rounded-full px-4 py-1">1<sup>er</sup></button>
+                </div>`;
+        }
+	</script>
+{% endblock %}

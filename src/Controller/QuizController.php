@@ -163,4 +163,10 @@ class QuizController extends AbstractController
         }
         return $this->redirectToRoute('quiz_list');
     }
+
+    #[Route('/quiz-user-profil', name: 'quiz_user_profil')]
+    public function quizUserProfil(): Response
+    {
+        return $this->render('quiz/quiz_user_profil.html.twig');
+    }
 }
