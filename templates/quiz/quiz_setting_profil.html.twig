@@ -1,0 +1,80 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}PodQuizMaster Settings
+{% endblock %}
+
+{% block body %}
+	<div class="flex h-screen bg-gray-50">
+		{% include 'quiz/_navbar.html.twig' %}
+		<div class="flex-1 overflow-auto">
+			<div class="p-8">
+				<div class="flex items-center gap-6 mb-8">
+					<img src="https://www.placehold.co/120x120" alt="User Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300">
+					<div>
+						<h1 class="text-3xl font-bold mb-1">Paramètres</h1>
+						<div class="flex items-center text-sm text-gray-600 gap-2">
+							<span>⚙️</span>
+							<span>Paramètres du profil Sans Permission de Jérémie</span>
+						</div>
+					</div>
+				</div>
+				<h2 class="text-xl font-semibold mb-4">Mes informations personnelles</h2>
+
+				<div class="flex w-full gap-4">
+					<div class="w-2/3">
+						<div class="bg-gray-400 rounded-2xl p-6 mb-6">
+							<div class="flex flex-col gap-4 mb-4">
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-3">
+										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="John Doe">
+										<span>John Doe</span>
+									</div>
+									<span class="text-sm">host</span>
+								</div>
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-3">
+										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Emily Smith">
+										<span>Emily Smith</span>
+									</div>
+									<span class="text-sm">participant</span>
+								</div>
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-3">
+										<img src="https://www.placehold.co/40x40" class="w-10 h-10 rounded-full" alt="Sam Green">
+										<span>Sam Green</span>
+									</div>
+									<span class="text-sm">participant</span>
+								</div>
+							</div>
+							<div class="flex gap-2 mb-4">
+								<input type="email" placeholder="Enter email address" class="flex-1 rounded-full p-2">
+								<button class="bg-red-500 text-white rounded-full px-8 py-2 font-semibold">Add</button>
+							</div>
+						</div>
+						{# <div class="bg-gray-400 rounded-2xl p-6 flex items-center justify-between">
+							<span>Enhance your quiz experience. Finished with this quiz?</span>
+							<button class="bg-black text-white rounded-full px-8 py-2 font-semibold">Delete quiz</button>
+						</div> #}
+					</div>
+					<div class="flex flex-col gap-6 w-1/3">
+						<div class="bg-gray-400 rounded-2xl p-6">
+							<h3 class="text-lg font-semibold mb-2">Plan Premium</h3>
+							<p class="mb-4">Accédez à tous les quiz en illimités. Mettez toutes les chances de votre côté pour décrocher les meilleurs récompenses ?</p>
+							<button class="bg-black text-white rounded-full px-8 py-2 font-semibold">S'abonner</button>
+						</div>
+						<div class="bg-gray-400 rounded-2xl p-6">
+							<h3 class="text-lg font-semibold mb-2">Alerte &amp; Notifications</h3>
+							<p class="mb-4">Comment souhaitez vous recevoir les notifications ? Soyez au courant des derniers quiz ajoutés, des nouvelles récompenses, d'un évenement ou d'un tirage au sort.</p>
+							<div class="flex gap-4">
+								<button class="flex flex-row items-center justify-center text-center bg-black text-white rounded-full px-8 py-2 font-semibold">📧 Mail</button>
+								<button class="flex flex-row items-center justify-center text-center bg-black text-white rounded-full px-8 py-2 font-semibold">
+									📨 SMS</button>
+								<button class="flex flex-row items-center justify-center text-center bg-red-500 text-white rounded-full px-8 py-2 font-semibold">✖️ Désactiver les notifications</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
