@@ -136,4 +136,10 @@ class MainController extends AbstractController
     {
         return $this->render('classement/index.html.twig');
     }
+
+    #[Route('/recompenses', name: 'recompenses')]
+    public function mentionsLegales(): Response
+    {
+        return $this->render('recompenses/index.html.twig');
+    }
 }

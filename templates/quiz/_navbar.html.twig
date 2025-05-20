@@ -19,13 +19,19 @@
                     </svg>
                     Quiz
                 </a>
-                <a href="#" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{{path('classement_general')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
                     </svg>
                     Classement
                 </a>
-                <a href="#" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="{{path('abonnement')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm0 2h12v10H4V5zm6 1a1 1 0 01.894.553L11.618 8H13a1 1 0 01.832 1.555l-1.26 1.79.48 1.72a1 1 0 01-1.478 1.11L10 12.883l-1.574.792a1 1 0 01-1.478-1.11l.48-1.72-1.26-1.79A1 1 0 016.382 8h1.382l.724-1.447A1 1 0 0110 6z" />
+                    </svg>
+                    Abonnement
+                </a> 
+                <a href="{{path('recompenses')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M6 2a1 1 0 00-1 1v2a4 4 0 003.5 3.95V11H7a1 1 0 000 2h6a1 1 0 100-2h-1.5V8.95A4 4 0 0015 5V3a1 1 0 00-1-1H6zm1 3V4h6v1a2 2 0 11-6 0zm-1 9a1 1 0 011-1h6a1 1 0 011 1v1a4 4 0 01-8 0v-1z" />
                     </svg>
@@ -36,13 +42,19 @@
 
         {# Section inférieure : Settings et Logout #}
         <div class="p-4 border-t border-gray-200">
-            <a href="#" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+            <a href="{{path('quiz_user_profil')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a4 4 0 100 8 4 4 0 000-8zM2 16a8 8 0 0116 0v1a1 1 0 01-1 1H3a1 1 0 01-1-1v-1z" clip-rule="evenodd" />
+                </svg>
+                Mon Profil
+            </a>
+            <a href="{{path('quiz_setting_profil')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M4 4a1 1 0 011-1h10a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4zm2 2v8h8V6H6z"/>
                 </svg>
                 Paramètres
             </a>
-            <a href="#" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+            <a href="{{path('app_logout')}}" class="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm7 3a1 1 0 00-1 1v2H7a1 1 0 000 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                 </svg>

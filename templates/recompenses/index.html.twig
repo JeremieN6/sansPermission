@@ -1,0 +1,87 @@
+{% extends 'base_login.html.twig' %}
+
+{% block title %}Abonnement - Sans Permission
+{% endblock %}
+
+{% block body %}
+	<div class="flex h-screen bg-gray-50">
+		{% include 'quiz/_navbar.html.twig' %}
+		<div class="flex-1 overflow-auto">
+			<div class="p-8">
+				<div class="flex gap-5">
+					<section class="w-full bg-white px-6 py-24 sm:py-32 lg:px-8">
+						<div class="relative isolate">
+							<div class="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl" aria-hidden="true">
+								<div class="mx-auto aspect-1155/678 w-288.75 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+							</div>
+
+							<div class="mx-auto max-w-4xl text-center">
+								<h2 class="text-base font-semibold text-indigo-600">Récompenses Premium</h2>
+								<p class="mt-2 text-5xl font-semibold tracking-tight text-gray-900 sm:text-6xl">Pourquoi s’abonner ?</p>
+							</div>
+							<p class="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-gray-600 sm:text-xl">Débloquez l’accès à des fonctionnalités exclusives et des avantages qui rendent votre expérience encore plus fun, engageante et gratifiante.</p>
+
+							<div class="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🔓</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Accès total</h3>
+									<p class="mt-2 text-sm text-gray-600">Tous les quiz disponibles sans limite, pour progresser à votre rythme et sans contrainte.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🧠</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Quiz exclusifs</h3>
+									<p class="mt-2 text-sm text-gray-600">Quiz réservés aux abonnés : backstage, invités surprises, quiz à cadeaux, etc.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🎁</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Points bonus</h3>
+									<p class="mt-2 text-sm text-gray-600">Gagnez plus de points à chaque participation pour grimper plus vite dans les classements.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🛍</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Boutique de récompenses</h3>
+									<p class="mt-2 text-sm text-gray-600">Échangez vos points contre des bonus exclusifs, des réducs, des accès early, des goodies...</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">👥</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Événements exclusifs</h3>
+									<p class="mt-2 text-sm text-gray-600">Accès à des lives privés, meet & greet, tirages au sort avec les podcasteurs.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🧭</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Stats avancées</h3>
+									<p class="mt-2 text-sm text-gray-600">Suivez votre progression avec un historique détaillé, des stats précises et des classements.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🌟</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Badges Premium</h3>
+									<p class="mt-2 text-sm text-gray-600">Des badges rares visibles sur votre profil pour montrer votre statut d’abonné.</p>
+								</div>
+
+								<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+									<div class="text-3xl">🚀</div>
+									<h3 class="mt-4 text-xl font-semibold text-gray-900">Mode compétition</h3>
+									<p class="mt-2 text-sm text-gray-600">Participez à des tournois spéciaux avec des lots, classements en temps réel et challenges.</p>
+								</div>
+
+							</div>
+
+							<div class="mt-16 flex justify-center">
+								<a href="{{path('abonnement')}}" class="rounded-xl bg-indigo-600 px-8 py-4 text-white text-lg font-semibold shadow hover:bg-indigo-700 transition">S’abonner maintenant</a>
+							</div>
+						</div>
+					</section>
+
+					{# {% include 'quiz/_side.html.twig' %} #}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
