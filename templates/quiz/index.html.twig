@@ -5,7 +5,7 @@
 
 {% block body %}
 	{% set podcasteurs = ['podcasteur-1.webp', 'podcasteur-2.webp', 'podcasteur-3.webp'] %}
-	<div class="flex h-screen bg-gray-50">
+	<div class="flex h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 		{% include 'quiz/_navbar.html.twig' %}
 
 		{# Main Content #}
@@ -36,50 +36,61 @@
 						<hr class="border-grey-800 dark:border-neutral-500">
 
 						<div class="py-12">
-							<div class="max-w-7xl mx-auto px-8">
+							<div class="max-w-7xl mx-auto">
 								<div class="flex justify-between" id="episodes_ancre">
 									<h2 class="font-bold text-#091D1C mb-6">Derniers épisodes</h2>
 									<a href="https://www.youtube.com/@sanspermissionpodcast/videos" target="_blank" class="text-#091D1C font-medium hover:text-green-400">Voir la liste des épisodes</a>
 								</div>
-								<div class="grid grid-cols-2 gap-4">
-									{% for video in videos %}
-										<a href="{{ video.url }}" target="_blank">
-											<div class="bg-[#003737] rounded-3xl p-6">
-												<div class="container-thumnail relative">
-													<img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="rounded-lg mb-4 w-full">
-												</div>
-												<h3 class="font-semibold text-white">{{ video.title | raw }}</h3>
-											</div>
-										</a>
-									{% endfor %}
-								</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+    {% for video in videos %}
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <a href="{{ video.url }}" target="_blank">
+                <img class="rounded-t-lg w-full h-48 object-cover" src="{{ video.thumbnail }}" alt="{{ video.title }}" />
+            </a>
+            <div class="p-5">
+                <a href="{{ video.url }}" target="_blank">
+                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {{ video.title | raw }}
+                    </h5>
+                </a>
+                {% if video.description is defined and video.description %}
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        {{ video.description | raw }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
 							</div>
 						</div>
 
-						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+                        <div class="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-lg p-4 mt-6">
 							<div class="flex justify-between items-center mb-2">
-								<h3 class="font-semibold">
+								<h3 class="font-semibold text-gray-900 dark:text-white">
 									🎢 Quiz en tendance ou populaires</h3>
-								<button class="px-4 py-2 bg-black text-white rounded-lg">Démarrer</button>
+								<button class="px-4 py-2 bg-[#000000] text-[#000000] font-semibold dark:bg-white rounded-lg">Démarrer</button>
 							</div>
-							<p class="text-sm text-gray-600">Orientez vous vers les quiz les plus vivants et les plus tendances !</p>
+							<p class="text-sm text-gray-900 dark:text-white">Orientez vous vers les quiz les plus vivants et les plus tendances !</p>
 						</div>
 
 
-						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+                        <div class="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-lg p-4 mt-6">
 							<div class="flex justify-between items-center mb-2">
-								<h3 class="font-semibold">👑 Challenge du jour !</h3>
-								<button class="px-4 py-2 bg-black text-white rounded-lg">Relever le défi</button>
+								<h3 class="font-semibold text-gray-900 dark:text-white">
+									👑 Challenge du jour !</h3>
+								<button class="px-4 py-2 bg-[#000000] text-[#000000] dark:bg-white font-semibold rounded-lg">Relever le défi</button>
 							</div>
-							<p class="text-sm text-gray-600">Cette semaine relève le défi et répond au quiz le plus rapidement possible tout en ayant le plus de bonne réponse possible.</p>
+							<p class="text-sm text-gray-900 dark:text-white">Cette semaine relève le défi et répond au quiz le plus rapidement possible tout en ayant le plus de bonne réponse possible.</p>
 						</div>
 
-						<div class="bg-pink-50 rounded-lg p-4 mt-6">
+                        <div class="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 rounded-lg p-4 mt-6">
 							<div class="flex justify-between items-center mb-2">
-								<h3 class="font-semibold">🙋 Mon Profil Quiz</h3>
-								<button class="px-4 py-2 bg-black text-white rounded-lg">Voir</button>
+								<h3 class="font-semibold text-gray-900 dark:text-white">
+									🙋 Mon Profil Quiz</h3>
+								<button class="px-4 py-2 bg-[#000000] text-[#000000] dark:bg-white font-semibold rounded-lg">Voir</button>
 							</div>
-							<p class="text-sm text-gray-600">Voir mes performances sur les précédents quiz.</p>
+							<p class="text-sm text-gray-900 dark:text-white">Voir mes performances sur les précédents quiz.</p>
 						</div>
 					</div>
 					{% include 'quiz/_side.html.twig' %}
