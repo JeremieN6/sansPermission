@@ -6,7 +6,11 @@ module.exports = {
     './assets/**/*.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'xl2': '1600px', // Ajoute ce breakpoint personnalisé
+      },
+    },
   },
   plugins: [],
 }
