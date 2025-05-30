@@ -18,27 +18,32 @@ class UserSettingsType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'required' => false,
-                'attr' => ['class' => 'form-input']
+                'attr' => ['class' => 'form-input'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white']
             ])
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
                 'required' => false,
-                'attr' => ['class' => 'form-input']
+                'attr' => ['class' => 'form-input'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white']
             ])
             ->add('pseudo', TextType::class, [
                 'label' => 'Pseudo',
                 'required' => true,
-                'attr' => ['class' => 'form-input']
+                'attr' => ['class' => 'form-input'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white']
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'required' => true,
-                'attr' => ['class' => 'form-input']
+                'attr' => ['class' => 'form-input'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white']
             ])
             ->add('age', NumberType::class, [
                 'label' => 'Âge',
                 'required' => false,
-                'attr' => ['class' => 'form-input']
+                'attr' => ['class' => 'form-input'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white']
             ])
         ;
     }
