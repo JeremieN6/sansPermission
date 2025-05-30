@@ -19,9 +19,9 @@
 						<img src="https://www.placehold.co/48x48" alt="User Avatar" class="w-10 h-10 rounded-full">
 					</div>
 				</div>
-				<div class="flex gap-5 w-full">
+				<div class="flex flex-col lg:flex-row gap-5 w-full">
 					<div
-						class="w-2/3">
+						class="w-full lg:w-2/3">
 						{# Episode Info #}
 						<div class="mb-8">
 							<h3 class="text-lg font-semibold mb-4">Nos podcasteurs</h3>
@@ -41,9 +41,9 @@
 									<h2 class="font-bold text-#091D1C mb-6">Derniers épisodes</h2>
 									<a href="https://www.youtube.com/@sanspermissionpodcast/videos" target="_blank" class="text-#091D1C font-medium hover:text-green-400">Voir la liste des épisodes</a>
 								</div>
-								<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+								<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 									{% for video in videos %}
-										<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden dark:hover:bg-gray-700 transition">
+										<div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden dark:hover:bg-gray-700 transition duration-300">
 											<a href="{{ video.url }}" target="_blank">
 												<img class="rounded-t-lg w-full h-48 object-cover" src="{{ video.thumbnail }}" alt="{{ video.title }}" />
 											</a>

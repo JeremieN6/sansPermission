@@ -14,7 +14,7 @@
 				</div>
 
 				<div
-					class="flex gap-5">
+					class="flex flex-col lg:flex-row gap-5 w-full">
 					{# Quiz Grid #}
 					<div
 						class="w-full">
@@ -31,7 +31,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {# Quiz Cards #}
                             {% if allQuizzes is empty %}
                                 <div class="col-span-4 text-center text-gray-500">
@@ -39,7 +39,7 @@
                                 </div>
                             {% endif %}
 							{% for quizzes in allQuizzes %}
-								<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+								<div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden dark:hover:bg-gray-700 transition duration-300 overflow-hidden">
 									<div class="aspect-video bg-gray-100">
 										{% if quizzes.thumbnail is defined %}
 											<img src="{{ quizzes.thumbnail }}" alt="Miniature épisode {{ quizzes.episodeId.id }}" class="w-full h-full object-cover">
