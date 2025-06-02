@@ -59,24 +59,26 @@
 					<div class="w-full lg:w-1/2">
 						{# Deuxième bloc (Premium + Notifications) #}
 						<div class="flex flex-col gap-6">
-							<div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 rounded-2xl p-6">
+							<div class="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded-2xl p-6">
 								<h3 class="text-lg font-semibold mb-2">Plan Premium</h3>
 								<p class="mb-4">Accédez à tous les quiz en illimités. Mettez toutes les chances de votre côté pour décrocher les meilleurs récompenses ?</p>
-								<button class="bg-black text-white rounded-full px-8 py-2 font-semibold">S'abonner</button>
+								<a href="{{ path('abonnement')}}" class="inline-flex bg-black text-white rounded-full px-8 py-2 font-semibold">
+									<span class="mr-2">💳</span>S'abonner
+								</a>
 							</div>
-							<div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 rounded-2xl p-6">
+							<div class="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded-2xl p-6">
 								<h3 class="text-lg font-semibold mb-2">Alerte &amp; Notifications</h3>
 								<p class="mb-4">Comment souhaitez vous recevoir les notifications ? Soyez au courant des derniers quiz ajoutés, des nouvelles récompenses, d'un évenement ou d'un tirage au sort.</p>
 								<div class="flex flex-col lg:flex-row w-full gap-2 sm:gap-4">
-									<button class="flex items-center justify-center text-center bg-black text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
-										<span class="mr-2">📧</span> Mail
-									</button>
-									<button class="flex items-center justify-center text-center bg-black text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
-										<span class="mr-2">📨</span> SMS
-									</button>
-									<button class="flex items-center justify-center text-center bg-red-500 text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
-										<span class="mr-2">✖️</span> Désactiver
-									</button>
+								<a href="#" class="flex items-center justify-center text-center bg-black text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
+									<span class="mr-2">📧</span> Mail
+								</a>
+								<a href="#" class="flex items-center justify-center text-center bg-black text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
+									<span class="mr-2">📨</span> SMS
+								</a>
+								<a href="#" class="flex items-center justify-center text-center bg-red-500 text-white rounded-full px-4 sm:px-8 py-2 font-semibold w-full sm:w-auto">
+									<span class="mr-2">✖️</span> Désactiver
+								</a>
 								</div>
 							</div>
 						</div>

@@ -3,7 +3,7 @@
 {% block title %}PodQuizMaster - Quiz Game{% endblock %}
 
 {% block body %}
-<div class="flex h-screen bg-gray-50">
+<div class="flex h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
     {% include 'quiz/_navbar.html.twig' %}
 
     <div class="flex-1 overflow-auto">
@@ -13,7 +13,7 @@
             </div>
 
             {% if questions[currentQuestionIndex] is defined %}
-                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500rounded-xl p-6 mb-8">
                     <h3 class="text-lg font-semibold mb-4">{{ questions[currentQuestionIndex].content }}</h3>
                     <form method="post" action="{{ path('quiz_game', {'id': quiz.id}) }}">
                         <div class="space-y-3">
@@ -27,7 +27,7 @@
                     </form>
                 </div>
             {% else %}
-            <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500rounded-xl p-6 mb-8">
                 <h3 class="text-lg font-semibold mb-4">Quiz terminé !</h3>
                 <form method="post" action="{{ path('quiz_submit', {'id': quiz.id}) }}">
                     <button type="submit" class="w-full px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600">
@@ -37,7 +37,7 @@
             </div>
             {% endif %}
 
-            <div class="bg-pink-100 rounded-lg p-4">
+            <div class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500rounded-xl dark:text-gray-700 rounded-lg p-4">
                 {# <h3 class="font-semibold">Score: <span class="text-red-500">{{ currentScore }}</span></h3> #}
                 <p>Progression: Question {{ currentQuestionIndex + 1 }} of {{ questions|length }}</p>
             </div>

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html class="dark">
+<html class="">
     <head>
+        <!-- Tailwind CDN-->
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <!-- Flowbite CSS and JS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
         <!-- Toggle light/dark mode -->
         <script>
-            const theme = localStorage.getItem('theme');
-            if (
-                theme === 'dark' ||
-                (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
-            ) {
-                document.documentElement.classList.add('dark');
+            // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
             } else {
-                document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove('dark')
             }
         </script>
         <meta charset="UTF-8">
@@ -33,7 +35,7 @@
     </head>
     <body>
         {% if app.user and app.user.isVerified == false %}
-        <div class="fixed top-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-lg flex items-start space-x-4" role="alert">
+        {# <div class="fixed top-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-lg flex items-start space-x-4" role="alert">
             <div class="flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 18h.01M21 12c0-4.97-4.03-9-9-9S3 7.03 3 12s4.03 9 9 9 9-4.03 9-9z" />
@@ -51,20 +53,24 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-        </div>
+        </div> #}
         {% endif %}
         {% include '_partials/_flash.html.twig' %}
-        <button id="theme-toggle" class="fixed right-4 bottom-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">
-            <svg id="icon-sun" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        <div class="fixed right-4 bottom-4 z-[9999]">
+            <button id="theme-toggle" type="button"
+            class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 cursor-pointer">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
             </svg>
-            <svg id="icon-moon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                fill-rule="evenodd" clip-rule="evenodd"></path>
             </svg>
-        </button>
+            </button>
+        </div>
         {% include 'header.html.twig' %}
         {% block body %}{% endblock %}
         {% include 'footer.html.twig' %}
@@ -74,38 +80,51 @@
             {# // <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> #}
         {% endblock %}
             <script>
-                const themeToggle = document.getElementById('theme-toggle');
-                const iconSun = document.getElementById('icon-sun');
-                const iconMoon = document.getElementById('icon-moon');
+                document.addEventListener('DOMContentLoaded', function () {
+                    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+                    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+                    const themeToggleBtn = document.getElementById('theme-toggle');
 
-                // Function to update icons based on theme
-                function updateIcons(isDark) {
-                    if (isDark) {
-                        iconSun.classList.remove('hidden');
-                        iconMoon.classList.add('hidden');
+                    // Sécurité : vérifier que les éléments existent
+                    if (!themeToggleBtn || !themeToggleDarkIcon || !themeToggleLightIcon) return;
+
+                    // Afficher l’icône correspondant au thème actuel
+                    if (
+                    localStorage.getItem('color-theme') === 'dark' ||
+                    (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+                    ) {
+                    document.documentElement.classList.add('dark');
+                    themeToggleLightIcon.classList.remove('hidden');
                     } else {
-                        iconSun.classList.add('hidden');
-                        iconMoon.classList.remove('hidden');
+                    document.documentElement.classList.remove('dark');
+                    themeToggleDarkIcon.classList.remove('hidden');
                     }
-                }
 
-                // Initial icon state
-                updateIcons(document.documentElement.classList.contains('dark'));
+                    // Ajouter l’écouteur sur le bouton
+                    themeToggleBtn.addEventListener('click', function () {
+                    // Toggle des icônes
+                    themeToggleDarkIcon.classList.toggle('hidden');
+                    themeToggleLightIcon.classList.toggle('hidden');
 
-                themeToggle.addEventListener('click', () => {
-                    const htmlEl = document.documentElement;
-                    const isDark = htmlEl.classList.contains('dark');
-                    
-                    if (isDark) {
-                        htmlEl.classList.remove('dark');
-                        localStorage.setItem('theme', 'light');
+                    // Gestion du thème
+                    if (localStorage.getItem('color-theme')) {
+                        if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                        } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                        }
                     } else {
-                        htmlEl.classList.add('dark');
-                        localStorage.setItem('theme', 'dark');
+                        if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                        } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                        }
                     }
-                    
-                    // Update icons after theme change
-                    updateIcons(!isDark);
+                    });
                 });
             </script>
     </body>

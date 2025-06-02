@@ -31,13 +31,14 @@
 								</div>
 							</div>
 						</div>
-						<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {# Quiz Cards #}
-                            {% if allQuizzes is empty %}
-                                <div class="col-span-4 text-center text-gray-500">
-                                    Aucun quiz disponible pour le moment.
-                                </div>
-                            {% endif %}
+						<div
+							class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+							{# Quiz Cards #}
+							{% if allQuizzes is empty %}
+								<div class="col-span-4 text-center text-gray-500">
+									Aucun quiz disponible pour le moment.
+								</div>
+							{% endif %}
 							{% for quizzes in allQuizzes %}
 								<div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden dark:hover:bg-gray-700 transition duration-300 overflow-hidden">
 									<div class="aspect-video bg-gray-100">
@@ -51,9 +52,11 @@
 										<span class="text-sm text-gray-500">Episode Quiz #{{quizzes.episodeId.id}}</span>
 										<h3 class="font-semibold text-lg mb-3">{{quizzes.title}}</h3>
 										<a href="{{ path('quiz_game', {'id': quizzes.id}) }}">
-											<button class="w-full bg-[#003737] text-white py-2 px-4 rounded-lg hover:bg-[#004747] transition">
-												Démarrer le Quiz
-											</button>
+											<div class="bg-[#003737] text-white py-2 px-4 rounded-lg hover:bg-[#004747] transition">
+												<button>
+													Démarrer le Quiz
+												</button>
+											</div>
 										</a>
 									</div>
 								</div>
@@ -62,39 +65,40 @@
 
 						{# Rewards Section #}
 						<div class="mt-12">
-                            <section class="bg-white dark:bg-gray-900">
-                            <div class="py-8 px-4 mx-auto w-screen-xl sm:py-16 lg:px-6">
-                                <div class="max-w-screen-md mb-8 lg:mb-16">
-                                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">🎁 Cumulez des points et gagnez des récompenses</h2>
-                                    <p class="text-gray-500 sm:text-xl dark:text-gray-400">En répondant correctement aux quiz, vous cumulez des points qui vous permettront de gagner des cadeaux de grande valeur. Plus vous participez, plus vous augmentez vos chances de gagner !</p>
-                                </div>
-                                <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
-                                    <div>
-                                        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-                                        {# <p class="text-4xl mb-4">🎯</p> #}
-                                           <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 2a1 1 0 011 1v1.07a8.001 8.001 0 017.93 7.068h1.07a1 1 0 110 2h-1.07a8.001 8.001 0 01-7.068 7.93V21a1 1 0 11-2 0v-1.07a8.001 8.001 0 01-7.93-7.068H3a1 1 0 110-2h1.07a8.001 8.001 0 017.068-7.93V3a1 1 0 011-1zm0 4a6 6 0 100 12 6 6 0 000-12zm0 2a4 4 0 110 8 4 4 0 010-8zm0 2a2 2 0 100 4 2 2 0 000-4z" clip-rule="evenodd" /></svg>
-                                        </div>
-                                        <h3 class="mb-2 text-xl font-bold dark:text-white">Précision</h3>
-                                        <p class="text-gray-500 dark:text-gray-400">Plan it, create it, launch it. Collaborate seamlessly with all  the organization and hit your marketing goals every month with our marketing plan.</p>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-                                            <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.3 1.046a1 1 0 011.35 1.2L11.868 6H15a1 1 0 01.8 1.6l-8 11a1 1 0 01-1.75-.9L8.132 14H5a1 1 0 01-.8-1.6l7-11a1 1 0 01.1-.12z" clip-rule="evenodd" /></svg>
+							<section class="bg-white dark:bg-gray-900">
+								<div class="py-8 px-4 mx-auto w-screen-xl sm:py-16 lg:px-6">
+									<div class="max-w-screen-md mb-8 lg:mb-16">
+										<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">🎁 Cumulez des points et gagnez des récompenses</h2>
+										<p class="text-gray-500 sm:text-xl dark:text-gray-400">En répondant correctement aux quiz, vous cumulez des points qui vous permettront de gagner des cadeaux de grande valeur. Plus vous participez, plus vous augmentez vos chances de gagner !</p>
+									</div>
+									<div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+										<div>
+											<div
+												class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
+												{# <p class="text-4xl mb-4">🎯</p> #}
+												<svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12 2a1 1 0 011 1v1.07a8.001 8.001 0 017.93 7.068h1.07a1 1 0 110 2h-1.07a8.001 8.001 0 01-7.068 7.93V21a1 1 0 11-2 0v-1.07a8.001 8.001 0 01-7.93-7.068H3a1 1 0 110-2h1.07a8.001 8.001 0 017.068-7.93V3a1 1 0 011-1zm0 4a6 6 0 100 12 6 6 0 000-12zm0 2a4 4 0 110 8 4 4 0 010-8zm0 2a2 2 0 100 4 2 2 0 000-4z" clip-rule="evenodd"/></svg>
+											</div>
+											<h3 class="mb-2 text-xl font-bold dark:text-white">Précision</h3>
+											<p class="text-gray-500 dark:text-gray-400">Plan it, create it, launch it. Collaborate seamlessly with all  the organization and hit your marketing goals every month with our marketing plan.</p>
+										</div>
+										<div>
+											<div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
+												<svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M11.3 1.046a1 1 0 011.35 1.2L11.868 6H15a1 1 0 01.8 1.6l-8 11a1 1 0 01-1.75-.9L8.132 14H5a1 1 0 01-.8-1.6l7-11a1 1 0 01.1-.12z" clip-rule="evenodd"/></svg>
 
-                                        </div>
-                                        <h3 class="mb-2 text-xl font-bold dark:text-white">Rapidité</h3>
-                                        <p class="text-gray-500 dark:text-gray-400">Protect your organization, devices and stay compliant with our structured workflows and custom permissions made for you.</p>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
-                                            <svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a1 1 0 011-1h2a1 1 0 011 1v1h8V4a1 1 0 011-1h2a1 1 0 011 1v2a5 5 0 01-4.005 4.9A6 6 0 0113 14.9V17h3a1 1 0 110 2H8a1 1 0 110-2h3v-2.1a6 6 0 01-4.995-4A5 5 0 014 6V4zm2 2a3 3 0 002.24 2.9 6.04 6.04 0 01-.228-1.02L8 4H6v2zm12-2v2a3 3 0 01-2.24 2.9 6.04 6.04 0 00.228-1.02L16 4h2z" clip-rule="evenodd"/></svg>
-                                        </div>
-                                        <h3 class="mb-2 text-xl font-bold dark:text-white">Récompenses</h3>
-                                        <p class="text-gray-500 dark:text-gray-400">Auto-assign tasks, send Slack messages, and much more. Now power up with hundreds of new templates to help you get started.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            </section>
+											</div>
+											<h3 class="mb-2 text-xl font-bold dark:text-white">Rapidité</h3>
+											<p class="text-gray-500 dark:text-gray-400">Protect your organization, devices and stay compliant with our structured workflows and custom permissions made for you.</p>
+										</div>
+										<div>
+											<div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-blue-100 lg:h-12 lg:w-12 dark:bg-blue-900">
+												<svg class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a1 1 0 011-1h2a1 1 0 011 1v1h8V4a1 1 0 011-1h2a1 1 0 011 1v2a5 5 0 01-4.005 4.9A6 6 0 0113 14.9V17h3a1 1 0 110 2H8a1 1 0 110-2h3v-2.1a6 6 0 01-4.995-4A5 5 0 014 6V4zm2 2a3 3 0 002.24 2.9 6.04 6.04 0 01-.228-1.02L8 4H6v2zm12-2v2a3 3 0 01-2.24 2.9 6.04 6.04 0 00.228-1.02L16 4h2z" clip-rule="evenodd"/></svg>
+											</div>
+											<h3 class="mb-2 text-xl font-bold dark:text-white">Récompenses</h3>
+											<p class="text-gray-500 dark:text-gray-400">Auto-assign tasks, send Slack messages, and much more. Now power up with hundreds of new templates to help you get started.</p>
+										</div>
+									</div>
+								</div>
+							</section>
 						</div>
 					</div>
 					{% include 'quiz/_side.html.twig' %}
