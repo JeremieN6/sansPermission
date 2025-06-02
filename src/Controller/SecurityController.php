@@ -102,8 +102,7 @@ class SecurityController extends AbstractController
         Request $request,
         UsersRepository $usersRepository,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher,
-        \MercurySeries\FlashyBundle\FlashyNotifier $flashy
+        UserPasswordHasherInterface $passwordHasher
     ): Response
     {
         //On vérifie si on a ce token dans la base de donnée

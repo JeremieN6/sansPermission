@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verification/{token}', name:'verification_user')]
-    public function verifyUser($token, JWTService $jwt, UsersRepository $usersRepository, entityManagerInterface $em,\MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
+    public function verifyUser($token, JWTService $jwt, UsersRepository $usersRepository, entityManagerInterface $em): Response
     {
         //On vérifie si le token est valide, n'a pas expiré et n'a pas été modifié
         if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret')))

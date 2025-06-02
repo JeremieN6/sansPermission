@@ -22,7 +22,7 @@ class MainController extends AbstractController
         $this->YouTubeScriptService = $YouTubeScriptService;
     }
 
-    #[Route('/', name: 'app_main')]
+    #[Route('/', name: 'app_home')]
     public function index(PlanRepository $planRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         // $plans = $planRepository->findAll();
@@ -47,7 +47,7 @@ class MainController extends AbstractController
 
             $this->addFlash('success', 'Votre demande de collaboration a bien été envoyée !');
 
-            return $this->redirectToRoute('app_main');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('main/index.html.twig', [
@@ -113,7 +113,7 @@ class MainController extends AbstractController
 
             $this->addFlash('success', 'Votre message a bien été envoyée !');
 
-            return $this->redirectToRoute('app_main');
+            return $this->redirectToRoute('app_home');
         }
                 
         return $this->render('_components/contact.html.twig', [

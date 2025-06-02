@@ -214,14 +214,14 @@ class TranscriptController extends AbstractController
             $existingQuiz = $entityManager->getRepository(Quizzes::class)->findOneBy(['episodeId' => $episode]);
             if ($existingQuiz !== null) {
                 $this->addFlash('error', 'Un quiz existe déjà pour cet épisode. La génération de nouvelles questions est refusée.');
-                return $this->redirectToRoute('app_main');
+                return $this->redirectToRoute('app_home');
             }
 
             // Vérifier si des questions existent déjà pour ce quiz
             $existingQuestions = $entityManager->getRepository(Questions::class)->findBy(['quizId' => $existingQuiz]);
             if (!empty($existingQuestions)) {
                 $this->addFlash('error', 'Des questions existent déjà pour ce quiz. La génération de nouvelles questions est refusée.');
-                return $this->redirectToRoute('app_main');
+                return $this->redirectToRoute('app_home');
             } 
             
             // Créer un nouveau quiz
