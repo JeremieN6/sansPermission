@@ -3,22 +3,43 @@
 {% block title %}Abonnement - Sans Permission{% endblock %}
 
 {% block body %}
+<style>
+.custom-blur{
+	--tw-blur: blur(var(--blur-3xl));
+}
+.custom-border{
+	--tw-ring-color: var(--color-gray-200);
+}
+@media (min-width: 80rem){
+	.custom-title{
+		font-size: var(--text-6xl);
+	}
+}
+@media (min-width: 64rem){
+	.custom-padding{
+		padding-inline: calc(var(--spacing) * 8);
+	}
+    .custom-grid{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+</style>
 <div class="flex h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
     {% include 'quiz/_navbar.html.twig' %}
     <div class="flex-1 overflow-auto">
         <div class="p-8">
             <div class="flex gap-5">
                 <div class="w-full">
-                    <div class="isolate px-6 py-24 sm:py-32 lg:px-8">
-                        <div class="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl" aria-hidden="true">
+                    <div class="isolate px-6 py-28 sm:py-32 lg:px-8">
+                        <div class="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl custom-blur" aria-hidden="true">
                             <div class="mx-auto aspect-1155/678 w-288.75 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
                         </div>
                         <div class="mx-auto max-w-4xl text-center">
                             <h2 class="text-base/7 font-semibold text-indigo-600">Abonnement</h2>
-                            <p class="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 dark:text-white dark:text-white sm:text-6xl">Quel plan vous convient ?</p>
+                            <p class="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 dark:text-white dark:text-white sm:text-6xl custom-title">Quel plan vous convient ?</p>
                         </div>
                         <p class="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-700 dark:text-gray-400 sm:text-xl/8">Choisissez la formule la plus abordable, dotée des fonctionnalités qui vous convienne pour une immersion totale. De quoi suivre l'aventure à votre rythme et pourquoi pas challenger les autres auditeurs.</p>
-                        <div class="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
+                        <div class="mx-auto mt-16 grid max-w-4xl grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2 custom-grid">
                             <div class="rounded-3xl rounded-t-3xl bg-white p-8 border-2 border-gray-200 dark:border-gray-700 sm:mx-8 sm:rounded-b-none sm:p-10 lg:mx-0 lg:rounded-tr-none lg:rounded-bl-3xl">
                                 <h3 id="tier-hobby" class="text-base/7 font-semibold text-indigo-600">Passe temps</h3>
                                 <p class="mt-4 flex items-baseline gap-x-2">
