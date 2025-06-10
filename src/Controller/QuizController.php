@@ -18,6 +18,7 @@ use App\Service\YouTubeScriptService;
 use App\Form\UserSettingsType;
 use App\Entity\UserScores;
 use App\Entity\Episodes;
+use App\Repository\QuizAtemptRepository;
 
 class QuizController extends AbstractController
 {
@@ -30,43 +31,95 @@ class QuizController extends AbstractController
     }
 
     #[Route('/quiz-home', name: 'quiz_home')]
-    public function quizIndex()
+    public function quizIndex(QuizzesRepository $quizRepository, QuizAtemptRepository $quiz_atempt_repository): Response
     {
-        // Récupérer tous les quiz
-        // $allQuizzes = $quizzesRepository->findAll();
+        // Utilisateur connecté
+        $currentUser = $this->getUser();
 
         // Récupérer les vidéos
         $videos = $this->YouTubeScriptService->getLatestVideos(4);
 
+        // Récupérer le dernier quiz créé
+        $dernierQuiz = $quizRepository->findOneBy([], ['createdAt' => 'DESC']); // ou 'id' => 'DESC' si pas de date
+
+        //Récupérer la liste des joueurs par score
+        $listPlayer = $quiz_atempt_repository->findBy([], ['score' => 'DESC'], 3); // Top 3 joueurs par score
+
         return $this->render('quiz/index.html.twig', [
             'controller_name' => 'QuizController',
             'videos' => $videos,
-            // 'allQuizzes' => $allQuizzes,
+            'dernierQuiz' => $dernierQuiz,
+            'listPlayer' => $listPlayer,
+            'currentUser' => $currentUser,
         ]);
     }
 
     #[Route('/quiz-list', name: 'quiz_list')]
     public function quizList(
+        YouTubeScriptService $youTubeScriptService,
         QuizzesRepository $quizzesRepository,
-        YouTubeScriptService $youTubeScriptService
+        QuizAtemptRepository $quiz_atempt_repository,
+        Request $request
     ) {
+        
+        // Récupérer le filtre depuis la requête
+        $filter = $request->query->get('filter', 'quiz_latest');
+        
+        if (!in_array($filter, ['mostFamous', 'quiz_latest', 'quiz_oldest', 'video_latest', 'video_oldest'])) {
+            $filter = 'quiz_latest';
+        }
+
         // Récupérer tous les quiz
         $allQuizzes = $quizzesRepository->findAll();
+
+        // Récupérer le dernier quiz créé
+        $dernierQuiz = $quizzesRepository->findOneBy([], ['createdAt' => 'DESC']); // ou 'id' => 'DESC' si pas de date        
+
+        //Récupérer la liste des joueurs par score
+        $listPlayer = $quiz_atempt_repository->findBy([], ['score' => 'DESC'], 3); // Top 3 joueurs par score        
 
         // Récupérer les miniatures pour chaque quiz
         foreach ($allQuizzes as $quiz) {
             $episode = $quiz->getEpisodeId();
             if ($episode && $episode->getVideoUrl()) {
+                $videoId = $youTubeScriptService->getVideoIdFromUrl($episode->getVideoUrl());
                 $thumbnail = $youTubeScriptService->getVideoThumbnail($episode->getVideoUrl());
+                $quiz->views = $youTubeScriptService->getVideoViews($episode->getVideoUrl());
+                $quiz->publishedAt = $youTubeScriptService->getVideoPublishDate($videoId);
                 if ($thumbnail) {
                     $quiz->thumbnail = $thumbnail;
                 }
             }
         }
 
+        // Trier les quiz selon le filtre
+        usort($allQuizzes, function($a, $b) use ($filter) {
+            switch ($filter) {
+                case 'mostFamous':
+                    return ($b->views ?? 0) <=> ($a->views ?? 0);
+                case 'quiz_latest':
+                    return $b->getCreatedAt() <=> $a->getCreatedAt();
+                case 'quiz_oldest':
+                    return $a->getCreatedAt() <=> $b->getCreatedAt();
+                case 'video_latest':
+                    $dateB = $b->publishedAt ?? $b->getCreatedAt();
+                    $dateA = $a->publishedAt ?? $a->getCreatedAt();
+                    return $dateB <=> $dateA;
+                case 'video_oldest':
+                    $dateA = $a->publishedAt ?? $a->getCreatedAt();
+                    $dateB = $b->publishedAt ?? $b->getCreatedAt();
+                    return $dateA <=> $dateB;
+                default:
+                    return $b->getCreatedAt() <=> $a->getCreatedAt();
+            }
+        });
+
         return $this->render('quiz/list.html.twig', [
             'controller_name' => 'QuizController',
             'allQuizzes' => $allQuizzes,
+            'dernierQuiz' => $dernierQuiz,
+            'listPlayer' => $listPlayer,
+            'currentFilter' => $filter,
         ]);
     }
 
@@ -246,5 +299,67 @@ class QuizController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/abonnement', name: 'abonnement')]
+    public function abonnement(): Response
+    {
+        return $this->render('abonnement/index.html.twig');
+    }
+
+    #[Route('/classement-general', name: 'classement_general')]
+    public function classementGeneral(
+        QuizAtemptRepository $quiz_atempt_repository, 
+        Request $request
+        ): Response
+    {
+        $sort = $request->query->get('sort', 'score'); // valeur par défaut : score
+
+        $classement = $quiz_atempt_repository->findAll(); // on ne trie pas ici, on trie plus tard
+
+        // Compter le nombre de quiz tentés par utilisateur
+        $userQuizCounts = [];
+        $userScores = [];
+
+        foreach ($classement as $attempt) {
+            $userId = $attempt->getUser()->getId();
+            $pseudo = $attempt->getUser()->getPseudo();
+
+            // Incrémenter nombre de quiz
+            if (!isset($userQuizCounts[$userId])) {
+                $userQuizCounts[$userId] = 0;
+                $userScores[$userId] = [
+                    'user' => $attempt->getUser(),
+                    'score' => 0
+                ];
+            }
+
+            $userQuizCounts[$userId]++;
+            $userScores[$userId]['score'] += $attempt->getScore();
+        }
+
+        // Trier selon le paramètre GET
+        if ($sort === 'quiz') {
+            uasort($userScores, function ($a, $b) use ($userQuizCounts) {
+                return $userQuizCounts[$b['user']->getId()] <=> $userQuizCounts[$a['user']->getId()];
+            });
+        } else {
+            uasort($userScores, function ($a, $b) {
+                return $b['score'] <=> $a['score'];
+            });
+        }
+        
+        return $this->render('classement/index.html.twig', [
+            'classement' => $userScores,
+            'userQuizCounts' => $userQuizCounts,
+            'totalUsers' => count($userQuizCounts),
+            'sort' => $sort
+        ]);
+    }
+
+    #[Route('/recompenses', name: 'recompenses')]
+    public function mentionsLegales(): Response
+    {
+        return $this->render('recompenses/index.html.twig');
     }
 }

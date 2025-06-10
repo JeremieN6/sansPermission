@@ -124,22 +124,4 @@ class MainController extends AbstractController
             'contactForm' => $contactForm->createView(),
         ]);
     }
-
-    #[Route('/abonnement', name: 'abonnement')]
-    public function abonnement(): Response
-    {
-        return $this->render('abonnement/index.html.twig');
-    }
-
-    #[Route('/classement-general', name: 'classement_general')]
-    public function classementGeneral(): Response
-    {
-        return $this->render('classement/index.html.twig');
-    }
-
-    #[Route('/recompenses', name: 'recompenses')]
-    public function mentionsLegales(): Response
-    {
-        return $this->render('recompenses/index.html.twig');
-    }
 }

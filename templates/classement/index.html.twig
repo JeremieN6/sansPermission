@@ -140,14 +140,16 @@
 								<h2 class="text-2xl font-bold leading-none text-gray-900 dark:text-white dark:text-white">Les différents classements</h2>
 								<div class="flex items-center justify-between w-full gap-2">
 									<div>
+									<a href="{{ path('classement_general', {sort: 'score'}) }}" class="text-sm font-medium text-gray-400 hover:underline">
 										<span class="text-sm text-gray-400 dark:text-gray-40">Classement général</span>
-										<span class="text-sm text-gray-400 dark:text-gray-40">|</span>
+									</a>
+									<span class="text-sm text-gray-400">|</span>
+									<a href="{{ path('classement_general', {sort: 'quiz'}) }}" class="text-sm font-medium text-gray-400 hover:underline">
 										<span class="text-sm text-gray-400 dark:text-gray-40">Classement par quiz</span>
-									</div>
-									<div>
-										<a href="#" class="text-sm font-medium text-gray-400 dark:text-gray-40 hover:underline">
-											Voir tout
-										</a>
+									</a>
+										{# <span class="text-sm text-gray-400 dark:text-gray-40">Classement général</span> #}
+										{# <span class="text-sm text-gray-400 dark:text-gray-40">|</span>
+										<span class="text-sm text-gray-400 dark:text-gray-40">Classement par quiz</span> #}
 									</div>
 								</div>
 							</div>
@@ -166,61 +168,20 @@
 								</tr>
 							</thead>
 							<tbody>
+								{% for player in classement %}
 								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
 									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										Neil Sims
+										{{player.user.pseudo}}
 									</th>
 									<td class="px-6 py-4">
-										Quiz complétés: 25
+										{% set quizCount = userQuizCounts[player.user.id] ?? 0 %}
+										Quiz complét{{ quizCount > 1 ? 'és' : 'é' }} : {{ quizCount }}
 									</td>
 									<td class="px-6 py-4">
-										320 pts
+										{{player.score}} pts
 									</td>
 								</tr>
-								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										Bonnie Green
-									</th>
-									<td class="px-6 py-4">
-										Quiz complétés: 18
-									</td>
-									<td class="px-6 py-4">
-										3467 pts
-									</td>
-								</tr>
-								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										Michael Gough
-									</th>
-									<td class="px-6 py-4">
-										Quiz complétés: 15
-									</td>
-									<td class="px-6 py-4">
-										67 pts
-									</td>
-								</tr>
-								<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										Lana Byrd
-									</th>
-									<td class="px-6 py-4">
-										Quiz complétés: 12
-									</td>
-									<td class="px-6 py-4">
-										2367 pts
-									</td>
-								</tr>
-								<tr class="bg-white dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-									<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-										Thomas Lean
-									</th>
-									<td class="px-6 py-4">
-										Quiz complétés: 10
-									</td>
-									<td class="px-6 py-4">
-										367 pts
-									</td>
-								</tr>
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>

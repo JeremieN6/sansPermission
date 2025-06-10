@@ -180,6 +180,14 @@ class YouTubeScriptService
         return null;
     }
 
+    // J'ai créer cette méthode pour extraire l'ID de la vidéo à partir de l'URL
+    // Cela permet de réutiliser la logique d'extraction dans d'autres méthodes et de garder la méthode exctratVideoId private
+    // et de ne pas exposer la logique d'extraction à l'extérieur de cette classe. 
+    public function getVideoIdFromUrl(string $url): ?string 
+    {
+        return $this->extractVideoId($url);
+    }
+
     public function getVideoThumbnail(string $videoUrl): ?string
     {
         $videoId = $this->extractVideoId($videoUrl);
@@ -200,6 +208,42 @@ class YouTubeScriptService
             return $data['items'][0]['snippet']['thumbnails']['medium']['url'];
         } catch (\Exception $e) {
             $this->logger->error('Erreur lors de la récupération de la miniature : ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    public function getVideoViews(string $videoId): int
+    {
+        try {
+            $url = "https://www.googleapis.com/youtube/v3/videos?part=statistics&id={$videoId}&key={$this->youtube_api_key_2}";
+            $response = $this->httpClient->request('GET', $url);
+            $data = $response->toArray();
+
+            if (empty($data['items'])) {
+                return 0;
+            }
+
+            return (int) $data['items'][0]['statistics']['viewCount'];
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération des vues : ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function getVideoPublishDate(string $videoId): ?\DateTimeImmutable
+    {
+        try {
+            $url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id={$videoId}&key={$this->youtube_api_key}";
+            $response = $this->httpClient->request('GET', $url);
+            $data = $response->toArray();
+
+            if (empty($data['items'])) {
+                return null;
+            }
+
+            return new \DateTimeImmutable($data['items'][0]['snippet']['publishedAt']);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la récupération de la date de publication : ' . $e->getMessage());
             return null;
         }
     }

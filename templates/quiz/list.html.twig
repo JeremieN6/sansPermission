@@ -4,6 +4,15 @@
 {% endblock %}
 
 {% block body %}
+<style>
+.truncate2 {
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* Nombre de lignes à afficher */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
 	<div class="flex h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
 		{% include 'quiz/_navbar.html.twig' %}
 
@@ -20,13 +29,19 @@
 						class="w-full">
 						{# Sidebar Filters #}
 						<div class="w-full mb-4">
-							<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700rounded-lg shadow p-4">
+							<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow p-4">
 								<h3 class="font-semibold mb-4">Filtrer les Quiz</h3>
 								<div class="space-y-3">
-									<select id="quizFilter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-										<option value="mostFamous">Par popularité</option>
-										<option value="lastest">Plus récent</option>
-										<option value="oldest">Plus ancien</option>
+									<select id="quizFilter" name="filter" onchange="location.href='?filter=' + this.value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+										<option value="mostFamous" {{ currentFilter == 'mostFamous' ? 'selected' }}>Les plus populaires</option>
+										<optgroup label="Date de création du quiz">
+											<option value="quiz_latest" {{ currentFilter == 'quiz_latest' ? 'selected' }}>Quiz - Plus récents</option>
+											<option value="quiz_oldest" {{ currentFilter == 'quiz_oldest' ? 'selected' }}>Quiz - Plus anciens</option>
+										</optgroup>
+										<optgroup label="Date de publication YouTube">
+											<option value="video_latest" {{ currentFilter == 'video_latest' ? 'selected' }}>Vidéo - Plus récentes</option>
+											<option value="video_oldest" {{ currentFilter == 'video_oldest' ? 'selected' }}>Vidéo - Plus anciennes</option>
+										</optgroup>
 									</select>
 								</div>
 							</div>
@@ -42,17 +57,27 @@
 							{% for quizzes in allQuizzes %}
 								<div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden dark:hover:bg-gray-700 transition duration-300 overflow-hidden">
 									<div class="aspect-video bg-gray-100">
+
+										{# Thumbnail #}
 										{% if quizzes.thumbnail is defined %}
+										<div class="relative">
+											{# Number #}
+											<div class="absolute top-2 left-2 z-[9999] bg-gray-100 opacity-70 text-gray-400 text-xs font-semibold px-2 py-1 rounded-full">
+												{{ quizzes.episodeId.id }}
+											</div>
+											{# Thumbnail Image #}
 											<img src="{{ quizzes.thumbnail }}" alt="Miniature épisode {{ quizzes.episodeId.id }}" class="w-full h-full object-cover">
+											{# Overlay for hover effect #}
 										{% else %}
 											<img src="https://placehold.co/400x225" alt="Miniature épisode par défaut" class="w-full h-full object-cover">
 										{% endif %}
+										</div>
 									</div>
 									<div class="p-4">
 										<span class="text-sm text-gray-500">Episode Quiz #{{quizzes.episodeId.id}}</span>
-										<h3 class="font-semibold text-lg mb-3">{{quizzes.title}}</h3>
+										<h3 class="font-semibold text-lg mb-3 truncate2">{{quizzes.title}}</h3>
 										<a href="{{ path('quiz_game', {'id': quizzes.id}) }}">
-											<div class="bg-[#003737] text-white py-2 px-4 rounded-lg hover:bg-[#004747] transition">
+											<div class="text-white text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer transition">
 												<button>
 													Démarrer le Quiz
 												</button>
