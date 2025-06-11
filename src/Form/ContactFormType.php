@@ -20,29 +20,29 @@ class ContactFormType extends AbstractType
                 'label' => 'Email',
                 'attr' => [
                     'placeholder' => 'Email',
-                    'class' => 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2',
+                    'class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
                 ],
-                'label_attr' => ['class' => 'block text-sm font-medium text-gray-700'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'],
             ])
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
                     'placeholder' => 'Votre nom',
-                    'class' => 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2',
+                    'class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
                 ],
-                'label_attr' => ['class' => 'block text-sm font-medium text-gray-700'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'],
             ])
             ->add('message', TextareaType::class, [
                 'label' => 'Message',
                 'attr' => [
                     'placeholder' => 'Message',
-                    'class' => 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2',
+                    'class' => 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
                 ],
-                'label_attr' => ['class' => 'block text-sm font-medium text-gray-700 my-2'],
+                'label_attr' => ['class' => 'block mb-2 text-sm font-medium text-gray-900 dark:text-white my-2'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
-                'attr' => ['class' => 'inline-block px-8 py-4 my-4 bg-[#4ADE80] text-black w-full font-medium rounded-2xl hover:bg-[#22c55e] transition duration-300'],
+                'attr' => ['class' => 'w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-4'],
             ])
         ;
     }
