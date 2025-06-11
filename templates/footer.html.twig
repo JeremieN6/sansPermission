@@ -1,72 +1,89 @@
-<footer
-	class="bg-[#002626] text-center text-lg-start pt-24">
-	<!-- Copyright -->
-	<div
-		class="max-w-7xl mx-auto px-8 grid grid-cols-2 gap-8">
-		<!-- Right Column -->
-		<div class="flex flex-col">
-			<div class="text-2xl text-white text-left font-bold mb-2">SANS PERMISSION</div>
-			<p class="text-white text-left mb-4">Entreprendre sans limites. Apprendre sans permission !</p>
-			<div class="flex space-x-4">
-				<a href="https://www.youtube.com/@sanspermissionpodcast" class="text-gray-300 hover:text-green-400">
-					<i class="fa-brands fa-youtube text-white text-2xl"></i>
+<!-- Footer -->
+<footer class="p-4 bg-white sm:p-6 dark:bg-gray-800">
+	<div class="mx-auto max-w-screen-xl">
+		<div class="md:flex md:justify-between">
+			<div class="mb-6 md:mb-0">
+				<a href="{{path('app_home')}}">
+						<img src="{{asset('assets/images/logo-no-bg.png')}}" width="100px" height="100px" loading="lazy"
+							alt="Logo Sans Permission">
 				</a>
-				{# <a href="#" class="text-gray-300 hover:text-green-400">Tiktok</a> #}
-				<a href="https://www.instagram.com/sanspermissionpodcast/" class="text-gray-300 hover:text-green-400">
-					<i class="fa-brands fa-instagram text-white text-2xl"></i>
-				</a>
-				{# <a href="#" class="text-gray-300 hover:text-green-400">LinkedIn</a> #}
+				<p class="text-white text-left mb-4">Apprendre sans limites. Entreprendre sans permission !</p>
+			</div>
+			<div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+				<div>
+					<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
+					<ul class="text-gray-600 dark:text-gray-400">
+						<li class="mb-4">
+							<a href="#" class="hover:underline">Privacy Policy</a>
+						</li>
+						<li>
+							<a href="#" class="hover:underline">Cookie Policy</a>
+						</li>
+						<li>
+							<a href="#" class="hover:underline">Terms &amp; Conditions</a>
+						</li>
+						<li>
+							<a href="#" class="hover:underline">Licenses</a>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Les casteurs</h2>
+					<ul class="text-gray-600 dark:text-gray-400">
+						<li class="mb-4">
+							<a href="https://www.yomidenzel.com" class="hover:underline ">Yomi Denzel</a>
+						</li>
+						<li>
+							<a href="https://www.daedalium.com" class="hover:underline">Oussama Ammar</a>
+						</li>
+						<li>
+							<a href="https://go.antoineblancocoaching.com" class="hover:underline">Antoine Blanco</a>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Liens Utiles</h2>
+					<ul class="text-gray-600 dark:text-gray-400">
+						<li class="mb-4">
+							<a href="{{path('app_aboutus')}}" class="hover:underline">A Propos</a>
+						</li>
+						<li>
+							<a href="/#episodes_ancre"class="hover:underline">Épisodes</a>
+						</li>
+						<li>
+							<a href="#"class="hover:underline">Blog</a>
+						</li>
+						<li>
+							<a href="#"class="hover:underline">FAQ</a>
+						</li>
+						<li>
+							<a href="{{path('app_contact')}}"class="hover:underline">Contact</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-
-		<!-- Left Column -->
-		<div class="grid grid-cols-4 gap-8">
-			<div>
-				<h4 class="font-semibold text-white mb-2">Les casteurs</h4>
-				<ul>
-					<li><a href="https://www.yomidenzel.com" class="text-gray-300 transition duration-300 hover:text-green-400">Yomi Denzel</a></li>
-					<li><a href="https://www.daedalium.com" class="text-gray-300 transition duration-300 hover:text-green-400">Oussama Ammar</a></li>
-					<li><a href="https://go.antoineblancocoaching.com" class="text-gray-300 transition duration-300 hover:text-green-400">Antoine Blanco</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h4 class="font-semibold text-white mb-2">Liens Utiles</h4>
-				<ul>
-					<li><a href="{{path('app_aboutus')}}" class="text-gray-300 transition duration-300 hover:text-green-400">A Propos</a></li>
-					<li><a href="/#episodes_ancre" class="text-gray-300 transition duration-300 hover:text-green-400">Episodes</a></li>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">Blog</a></li>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">FAQ</a></li>
-					<li><a href="{{path('app_contact')}}" class="text-gray-300 transition duration-300 hover:text-green-400">Contact</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h4 class="font-semibold text-white mb-2">Resources</h4>
-				<ul>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">Privacy Policy</a></li>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">Cookie Policy</a></li>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">Terms &amp; Conditions</a></li>
-					<li><a href="#" class="text-gray-300 transition duration-300 hover:text-green-400">Licenses</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h4 class="font-semibold text-white mb-2">Disponible sur</h4>
-				<ul>
-					<li><a href="https://open.spotify.com/show/1smmmXX9zxgkfLwLb7bZD6" class="text-gray-300 transition duration-300 hover:text-green-400">Spotify</a></li>
-					<li><a href="https://music.youtube.com/playlist?list=PLcxnqvMBUiP2JhgqxQeBlB8SjWmqhWwGJ" class="text-gray-300 transition duration-300 hover:text-green-400">Youtube Music</a></li>
-					<li><a href="https://podcasts.apple.com/fr/podcast/sans-permission/id1615977553" class="text-gray-300 transition duration-300 hover:text-green-400">Apple Podcast</a></li>
-					<li><a href="https://www.youtube.com/@sanspermissionpodcast" class="text-gray-300 transition duration-300 hover:text-green-400">YouTube</a></li>
-					<li><a href="https://www.instagram.com/sanspermissionpodcast/" class="text-gray-300 transition duration-300 hover:text-green-400">Instagram</a></li>
-				</ul>
+		<hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+		<div class="sm:flex sm:items-center sm:justify-between">
+			<span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="{{path('app_home')}}" class="hover:underline">Quiz - Sans Permission™</a>. Développé avec 💖 par • <a class="text-gray-700 dark:text-white hover:underline" href="https://www.jeremiecode.fr/">JeremieCode™ Corp</a>. All Rights Reserved.
+			</span>
+			<div class="flex items-center mt-4 space-x-6 sm:justify-center sm:mt-0">
+				<a href="https://open.spotify.com/show/1smmmXX9zxgkfLwLb7bZD6" class="text-gray-500 hover:text-gray-900 dark:hover:text-white m-0">
+					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm5.09 17.03a.75.75 0 0 1-1.03.25c-2.52-1.54-5.7-1.89-9.45-1.03a.75.75 0 0 1-.34-1.44c3.76-0.84 7.2-0.45 9.96 1.08a.75.75 0 0 1 .26 1.14zm1.34-3.45a.94.94 0 0 1-1.28.32c-2.45-1.49-6.19-1.92-9.09-1.05a.94.94 0 1 1-.43-1.82c3.43-.89 7.53-.43 10.31 1.19a.94.94 0 0 1 .49 1.36zM18.5 8.6c-.03.05-.04.11-.08.16-3.1-1.02-8.92-.8-11.61 1.04a1.12 1.12 0 1 1-1.07-1.96c3.16-1.73 9.58-1.96 13.03 1.01z"></path></svg>
+				</a>
+				<a href="https://music.youtube.com/playlist?list=PLcxnqvMBUiP2JhgqxQeBlB8SjWmqhWwGJ" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+					<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M18.6216 3.21667c.2391.1897.3784.47817.3784.78334V15.6667c0 .0412-.0025.0818-.0073.1218.0048.0698.0073.1404.0073.2115 0 1.6569-1.3431 3-3 3s-3-1.3431-3-3 1.3431-3 3-3c.3506 0 .6872.0602 1 .1707V9.2602l-8 1.8667V18l-.00001.0032C8.99824 19.6586 7.65577 21 6 21c-1.65685 0-3-1.3431-3-3s1.34315-3 3-3c.35064 0 .68722.0602 1 .1707V6.33334c0-.46474.32018-.86823.77277-.97384l9.99953-2.33321c.1486-.03477.3012-.03465.4467-.00201.1427.03202.2783.09532.3964.18752.0021.00162.0041.00324.0062.00487Z"/></svg>
+				</a>
+				<a href="https://podcasts.apple.com/fr/podcast/sans-permission/id1615977553" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+					<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M17.537 12.625a4.421 4.421 0 0 0 2.684 4.047 10.96 10.96 0 0 1-1.384 2.845c-.834 1.218-1.7 2.432-3.062 2.457-1.34.025-1.77-.794-3.3-.794-1.531 0-2.01.769-3.275.82-1.316.049-2.317-1.318-3.158-2.532-1.72-2.484-3.032-7.017-1.27-10.077A4.9 4.9 0 0 1 8.91 6.884c1.292-.025 2.51.869 3.3.869.789 0 2.27-1.075 3.828-.917a4.67 4.67 0 0 1 3.66 1.984 4.524 4.524 0 0 0-2.16 3.805m-2.52-7.432A4.4 4.4 0 0 0 16.06 2a4.482 4.482 0 0 0-2.945 1.516 4.185 4.185 0 0 0-1.061 3.093 3.708 3.708 0 0 0 2.967-1.416Z"/></svg>
+				</a>
+				<a href="https://www.youtube.com/@sanspermissionpodcast" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+					<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M21.7 8.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.839c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.839 4.225 4.225 0 0 0-.79 1.965 30.146 30.146 0 0 0-.2 3.206v1.5a30.12 30.12 0 0 0 .2 3.206c.094.712.364 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.151 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965 30.12 30.12 0 0 0 .2-3.206v-1.516a30.672 30.672 0 0 0-.202-3.206Zm-11.692 6.554v-5.62l5.4 2.819-5.4 2.801Z" clip-rule="evenodd"/></svg>
+				</a>
+				<a href="https://www.instagram.com/sanspermissionpodcast/" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+				</a>
 			</div>
 		</div>
 	</div>
-</div>
-  <div class="text-center p-3 text-white pt-12">
-    © 2024 Copyright: Développé avec 💖 par •
-    <a class="text-white" href="https://www.jeremiecode.fr/">JeremieCode™ Corp</a>
-  </div>
-<!-- Copyright -->
 </footer>

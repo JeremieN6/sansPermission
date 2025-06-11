@@ -1,26 +1,25 @@
-<div class="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 py-24">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="flex justify-between mb-4" id="episodes_ancre">
-            <h2 class="text-4xl font-bold text-#091D1C mb-12">Derniers épisodes</h2>
-            <a href="https://www.youtube.com/@sanspermissionpodcast/videos" target="_blank" class="text-green-600 dark:text-#091D1C font-medium hover:text-green-400">Voir tous les épisodes</a>
-        </div>
-        <div class="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-8">
-            {% for video in videos %}
-            <div class="bg-[#003737] rounded-3xl p-6">
-                <div class="container-thumnail relative">
-                    <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="rounded-lg mb-4 w-full">
-                    <p class="bg-[#003737] rounded-xl contentDuration text-white text-lg text-bold px-2 absolute top-2 right-6">{{ video.duration }}</p>
-                </div>
-                <h3 class="text-xl font-semibold text-white">{{ video.title }}</h3>
-                <p class="text-white/80">Publié le : {{ video.publishedAt|date('d/m/Y') }}</p>
-                <div class="mt-4">
-                    <a href="{{ video.url }}"
-                        class="inline-block px-4 py-2 bg-[#4ADE80] text-black dark:text-gray-800 font-medium rounded-full hover:bg-[#22c55e] hover:scale-95 transition duration-300">
-                        Regarder maintenant
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
+<div class="flex flex-wrap justify-center gap-4 py-8 bg-white dark:bg-gray-900" id="episodes_ancre">
+    {% for video in videos %}
+    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <a href="{{ video.url }}" class="container-thumnail relative">
+            <img class="rounded-t-lg w-full" src="{{ video.thumbnail }}" alt="{{ video.title }}" />
+            <p class="text-gray-200 front-bold rounded-xl contentDuration text-white text-lg text-bold px-2 absolute top-2 right-4">{{ video.duration }}</p>
+        </a>
+        <div class="p-5">
+            <a href="{{ video.url }}">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-700 dark:text-white">{{ video.title }}</h5>
+            </a>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Publié le : {{ video.publishedAt|date('d/m/Y') }}</p>
+            <a href="{{ video.url }}"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Regarder maintenant
+                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 5h12m0 0L9 1m4 4L9 9" />
+                </svg>
+            </a>
         </div>
     </div>
+    {% endfor %}
 </div>

@@ -1,28 +1,32 @@
-<div class="bg-[#002626] py-24">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="flex justify-center items-center flex-col">
-            <div class="text-2xl italic text-white text-center mb-4">
-                <span class="text-4xl" style="font-family: fantasy;">"</span><br>
-                <span id="testimonial-quote" class="testimonial-quote">Tous les gens pourraient devenir millionnaire, en partant de ZÉRO, avec la bourse !</span>
-                <br>
-                <span class="text-4xl" style="font-family: fantasy;">"</span>
-            </div>
-            <div class="flex justify-center items-center flex-col mb-4">
-                <p id="testimonial-name" class="text-lg font-semibold text-[#FFFFFF]">Mounir Laggoune</p>
-                <p id="testimonial-profession" class="text-white">CEO de Finary</p>
-            </div>
-            <div class="flex justify-center items-center">
-                <img id="testimonial-image" src="{{asset('assets/images/guests/mounir-laggoune.jpg')}}" alt="Invité Sans Permission" class="rounded-full w-24 h-24 object-cover">
-            </div>
-        </div>
-
+<section class="bg-gray-50 dark:bg-gray-800 border-t border-b border-gray-100 dark:border-gray-700">
+    <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
+        <figure class="max-w-screen-md mx-auto">
+            <svg class="h-12 mx-auto mb-3 text-gray-400 dark:text-gray-600" viewBox="0 0 24 27" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z"
+                    fill="currentColor" />
+            </svg>
+            <blockquote>
+                <p class="text-2xl font-medium text-gray-900 dark:text-white testimonial-quote" id="testimonial-quote">"Tous les gens pourraient devenir millionnaire, en partant de ZÉRO, avec la bourse !"</p>
+            </blockquote>
+            <figcaption class="flex items-center justify-center mt-6 space-x-3">
+                <img class="w-6 h-6 rounded-full"
+                    id="testimonial-image" src="{{asset('assets/images/guests/mounir-laggoune.jpg')}}"
+                    alt="Invité Sans Permission">
+                <div class="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
+                    <div class="pr-3 font-medium text-gray-900 dark:text-white" id="testimonial-name">Mounir Laggoune</div>
+                    <div class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400" id="testimonial-profession">CEO de Finary</div>
+                </div>
+            </figcaption>
+        </figure>
         <!-- Carousel Controls -->
         <div class="flex justify-center mt-6">
-            <button id="prevTestimonial" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300">←</button>
-            <button id="nextTestimonial" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300 ml-4">→</button>
+            <button id="prevTestimonial" class="px-4 py-2 bg-gray-800 dark:bg-white text-white dark:text-gray-700 rounded-full hover:bg-700 dark:hover:bg-500 transition duration-300">←</button>
+            <button id="nextTestimonial" class="px-4 py-2 bg-gray-800 dark:bg-white text-white dark:text-gray-700 rounded-full hover:bg-700 dark:hover:bg-500 transition duration-300 ml-4">→</button>
         </div>
     </div>
-</div>
+</section>
 
 <script>
     const testimonials = [

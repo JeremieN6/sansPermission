@@ -1,17 +1,13 @@
-<div class="bg-white dark:bg-gray-900 py-24">
-	<div class="max-w-7xl mx-auto px-8">
-		<div class="flex justify-center items-center flex-col">
-			<div class="flex justify-center items-center w-full">
-				<div class="w-1/2 pr-8">
-			        <h2 class="text-4xl font-bold text-[#091D1C] mb-4">Nos derniers invités</h2>
-					<div class="mb-6">
-						<h3 id="host-name" class="text-2xl font-semibold text-gray-700 dark:text-gray-300 ">Mounir Laggoune</h3>
-						<p id="host-location" class="text-gray-700 dark:text-gray-400">Paris, France</p>
-					</div>
-					<p id="host-description" class="text-lg text-gray-800 dark:text-gray-300 mb-4">
-						Mounir Laggoune est le co-fondateur et PDG de Finary, une plateforme innovante de gestion de patrimoine lancée en 2020. Finary permet aux investisseurs de suivre, gérer et optimiser leurs investissements via une application unique.
-					</p>
-					<div class="flex space-x-4 mb-4 text-gray-500 dark:text-white">
+<section class="bg-white dark:bg-gray-900">
+	<div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+		<div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+			<h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Nos derniers invités</h2>
+				<div class="mb-6">
+					<h3 id="host-name" class="text-2xl font-semibold text-gray-700 dark:text-gray-300 ">Mounir Laggoune</h3>
+					<p id="host-location" class="text-gray-700 dark:text-gray-400">Paris, France</p>
+				</div>
+				<p class="mb-4" id="host-description">Mounir Laggoune est le co-fondateur et PDG de Finary, une plateforme innovante de gestion de patrimoine lancée en 2020. Finary permet aux investisseurs de suivre, gérer et optimiser leurs investissements via une application unique.</p>
+							<div class="flex space-x-4 mb-4 text-gray-500 dark:text-white">
 						<a id="host-linkedin" href="#" target="_blank" style="display: none;">
 							<i class="fa-brands fa-linkedin text-lg"></i>
 						</a>
@@ -28,21 +24,21 @@
 							<i class="fa-brands fa-tiktok text-lg"></i>
 						</a>
 					</div>
-				</div>
-
-				<div class="flex justify-center items-center w-1/2">
-					<img id="host-image" src="{{ asset('assets/images/guests/mounir-laggoune-2.jpg') }}" alt="Guest Image" class="rounded-2xl guest-img">
-				</div>
-			</div>
-
-			<!-- Carousel Controls -->
-			<div class="flex justify-center mt-6">
-				<button id="prevHost" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300">←</button>
-				<button id="nextHost" class="px-4 py-2 bg-[#4ADE80] text-white rounded-full hover:bg-[#22c55e] transition duration-300 ml-4">→</button>
-			</div>
+		</div>
+		<div class="grid grid-cols-1 gap-4 mt-8">
+			<img class="w-full rounded-lg guest-img"
+				id="host-image" src="{{ asset('assets/images/guests/mounir-laggoune-2.jpg') }}"
+				alt="Guest Image"
+			>
 		</div>
 	</div>
-</div>
+	        <!-- Carousel Controls -->
+        <div class="flex justify-center py-4">
+            <button id="prevHost" class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white rounded-full hover:bg-700 dark:hover:bg-500 transition duration-300">←</button>
+            <button id="nextHost" class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white rounded-full hover:bg-700 dark:hover:bg-500 transition duration-300 ml-4">→</button>
+        </div>
+</section>
+
 
 <script>
 	const hosts = [

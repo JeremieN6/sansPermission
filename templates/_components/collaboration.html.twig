@@ -1,27 +1,23 @@
-<div class="bg-white dark:bg-gray-900 py-24">
-    <div class="flex justify-center items-center flex-col md:flex-row max-w-7xl mx-auto px-8 gap-5">
-        <!-- Left Column -->
-        <div class="w-1/2 md:w-full pr-8">
-            <h2 class="text-4xl font-bold text-gray-700 dark:text-gray-200 mb-4">Collaboration</h2>
-            <p class="text-lg md:text-left text-gray-800 dark:text-gray-300 mb-4">
-                Nous sommes toujours ouvert à de nouvelles opportunités de collaborations. Si vous êtes intéressés à l'idée de travailler avec nous, vous pouvez remplir ce formulaire ci-dessous. A très vite !
-            </p>
-            <a href="" class="inline-flex px-6 py-2 bg-[#4ADE80] text-black font-medium rounded-full hover:bg-[#22c55e] transition duration-300">
-                <i class="ri-mail-line"></i> Contactez-nous
-            </a>
+    <section class="bg-white dark:bg-gray-900">
+    <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+        <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
+            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Collaboration</h2>
+                <p class="mb-4">Nous sommes toujours ouvert à de nouvelles opportunités de collaborations. Si vous êtes intéressés à l'idée de travailler avec nous, vous pouvez remplir ce formulaire ci-dessous. A très vite !</p>
+            <button type="button" id="collaborationButton" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            <i class="ri-mail-line"></i> <span>Contactez-nous</span>
             </button>
         </div>
-
-        <!-- Right Column -->
-        <div class="w-1/2 md:w-full">
-            <img src="{{asset('assets/images/collab-youtube.webp')}}" loading="lazy" alt="Collaboration Youtube Illustration" class="rounded-lg">
+        <div class="grid grid-cols-1 gap-4 mt-8">
+            <img class="w-full rounded-lg"
+               src="{{asset('assets/images/collab-youtube.webp')}}" loading="lazy" alt="Collaboration Youtube Illustration">
         </div>
     </div>
+</section>
 
     <!-- Modal for Collaboration Form -->
     <div id="collaborationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-[#002626]  rounded-lg p-8 w-1/3 relative">
-            <h3 class="text-2xl text-white font-bold mb-4 px-8">Collaborons ensemble</h3>
+        <div class="bg-white rounded-lg shadow-sm dark:bg-gray-700 p-8 w-1/3 relative">
+            <h3 class="text-2xl text-gray-800 dark:text-white font-bold mb-4 px-8">Collaborons ensemble</h3>
             <div class="w-full px-8">
                 {{ form_start(form) }}
                 <div class="flex flex-row gap-8 w-full">
