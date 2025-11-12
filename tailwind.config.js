@@ -10,6 +10,17 @@ module.exports = {
       screens: {
         'xl2': '1600px', // Ajoute ce breakpoint personnalisé
       },
+      colors: {
+        primary: {
+          DEFAULT: '#450996',
+          hover: '#4B25B6',
+        },
+        dark: {
+          DEFAULT: '#002626',
+          light: '#003737',
+        },
+        accent: '#4ADE80',
+      },
     },
   },
   plugins: [],

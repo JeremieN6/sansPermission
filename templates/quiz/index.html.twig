@@ -12,13 +12,15 @@
 		<div class="flex-1 overflow-auto">
 			<div
 				class="p-8">
-				{# Header with User Info #}
-				<div class="flex justify-between items-center mb-8">
-					<h2 class="text-2xl font-bold">Bienvenue sur le Quiz Sans Permission, {{currentUser.prenom}} !</h2>
-					<div class="w-16 h-16 rounded-full flex items-center justify-center bg-white border border-gray-200 rounded-full dark:bg-gray-800 dark:border-gray-700 border-4 border-gray-300 text-xl font-bold text-gray-700 dark:text-white select-none">
-						{{ currentUser.pseudo|slice(0, 1)|upper }}
-					</div>
+			{# Header with User Info #}
+			<div class="flex justify-between items-center mb-8">
+				<h2 class="text-2xl font-bold">Bienvenue sur le Quiz Sans Permission{% if currentUser and currentUser.prenom %}, {{currentUser.prenom}}{% endif %} !</h2>
+				{% if currentUser and currentUser.pseudo %}
+				<div class="w-16 h-16 rounded-full flex items-center justify-center bg-white border border-gray-200 rounded-full dark:bg-gray-800 dark:border-gray-700 border-4 border-gray-300 text-xl font-bold text-gray-700 dark:text-white select-none">
+					{{ currentUser.pseudo|slice(0, 1)|upper }}
 				</div>
+				{% endif %}
+			</div>
 				<div class="flex flex-col lg:flex-row gap-5 w-full">
 					<div
 						class="w-full lg:w-2/3">

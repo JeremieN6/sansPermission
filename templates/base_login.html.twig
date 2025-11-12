@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html class="">
     <head>
-        <!-- Tailwind CDN-->
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <!-- Flowbite CSS and JS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+        <!-- Tailwind CSS compilé (doit être APRÈS Flowbite pour override) -->
+        <link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}?v={{ 'now'|date('U') }}">
         <!-- Toggle light/dark mode -->
         <script>
             // On page load or when changing themes, best to add inline in `head` to avoid FOUC

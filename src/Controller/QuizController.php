@@ -225,7 +225,7 @@ class QuizController extends AbstractController
     {
         $connectedUser = $this->getUser();
         if (!$connectedUser || !($connectedUser instanceof \App\Entity\Users)) {
-            return $this->redirectToRoute('app_login,');
+            return $this->redirectToRoute('app_login');
         }
 
         // Récupérer toutes les tentatives de l'utilisateur connecté
